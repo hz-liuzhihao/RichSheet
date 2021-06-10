@@ -2,3 +2,6 @@ lib
 dist
 node_modules
 .DS_Store
+knowledge.md
+frame.md
+skill.md

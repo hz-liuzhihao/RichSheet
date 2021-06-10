@@ -6,14 +6,6 @@ import { StyleBuild } from './StyleBuild';
 
 interface CellMeta {
   /**
-   * 单元格内容
-   */
-  text: string;
-  /**
-   * 单元格值
-   */
-  value: string;
-  /**
    * 单元格扩展属性
    */
   extend: JSONObject;
@@ -36,6 +28,8 @@ export class CellBuild extends BaseBuild<CellMeta> {
   private leftBorderBuilds: BorderBuild[];
 
   private styleBuild: StyleBuild;
+
+  private expressionBuild;
 
   restoreUndoItem(undoItem: UndoItem<CellMeta>) {
     const op = undoItem.op;

@@ -1,0 +1,23 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "protocol": "inspector",
+      "name": "Jest Debug",
+      "program": "${workspaceRoot}/node_modules/jest/bin/jest",
+      "stopOnEntry": false,
+      "args": ["--runInBand", "--env=jsdom", "--config jestconfig.json", "${fileBasename}"],
+      "runtimeArgs": [
+          "--inspect-brk"
+       ],
+       "cwd": "${workspaceRoot}",
+       "sourceMaps": true,
+       "console": "integratedTerminal"
+  }
+  ]
+}
