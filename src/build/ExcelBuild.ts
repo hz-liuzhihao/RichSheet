@@ -1,6 +1,7 @@
 import { BaseBuild, Operate, UndoItem, IWorkBench } from '../flow/UndoManage';
 import { SheetBuild } from './SheetBuild';
 import { StyleBuild } from './StyleBuild';
+import { ExcelBehavior } from '../controllers/ToolBar';
 
 /**
  * excel元数据
@@ -18,7 +19,9 @@ export interface ExcelBuildArgs {
   workbench: IWorkBench;
 }
 
-export class ExcelBuild extends BaseBuild<ExcelMeta> {
+export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
+
+  private currentIndex: number;
 
   private sheets: SheetBuild[];
 
@@ -34,7 +37,7 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> {
   /** @implements */
   restoreUndoItem(undoItem: UndoItem<ExcelMeta>) {
     const op = undoItem.op;
-    switch(op) {
+    switch (op) {
       case Operate.Add:
         break;
       case Operate.Remove:
@@ -49,5 +52,13 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> {
         }
         break;
     }
+  }
+
+  /**
+   * 添加行
+   * @param count
+   */
+  public addRow(count: number) {
+    // TOOD
   }
 }
