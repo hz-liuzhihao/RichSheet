@@ -38,6 +38,10 @@ export class RowBuild extends BaseBuild<RowMeta> {
     this.sheet = args.sheet;
   }
 
+  public getCells() {
+    return this.cells;
+  }
+
   restoreUndoItem(undoItem: UndoItem<RowMeta>) {
     const op = undoItem.op;
     const {sheet} = this;

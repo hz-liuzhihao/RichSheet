@@ -35,6 +35,22 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
     this.excelBuild = args.excelBuild;
   }
 
+  /**
+   * 获取行数据
+   * @returns 
+   */
+  public getRows() {
+    return this.rowHeads;
+  }
+
+  /**
+   * 获取列数据
+   * @returns 
+   */
+  public getCols() {
+    return this.colHeads;
+  }
+
   /** @implements */
   public restoreUndoItem(undoItem: UndoItem<SheetMeta>) {
     const op = undoItem.op;

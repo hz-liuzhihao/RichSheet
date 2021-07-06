@@ -1,5 +1,11 @@
+import { BaseBuild } from '../flow/UndoManage';
+
 export interface BaseEditorArgs {
-  // TODO 基础编辑器参数
+  build: BaseBuild<any>;
+
+  domParent?: HTMLElement;
+
+  type?: keyof HTMLElementTagNameMap;
 }
 
 /**
@@ -7,9 +13,62 @@ export interface BaseEditorArgs {
  */
 export default abstract class BaseEditor {
 
+  protected build: BaseBuild<any>;
+
+  protected mainDom: HTMLElement;
+
+  protected parentDom: HTMLElement;
+
   public constructor(args: BaseEditorArgs) {
-    // TODO 基础编辑器初始化
+    this.initMainDom(args.type);
+    this.initDom();
+    this.build = args.build;
+    if (args.domParent) {
+      args.domParent.appendChild(this.mainDom);
+    }
   }
+
+  /**
+   * 获取数据层
+   * @returns 
+   */
+  public getBuild() {
+    return this.build;
+  }
+
+  /**
+   * 设置数据层
+   * @param build 
+   */
+  public setBuild(build: any) {
+    if (build == this.build) {
+      return;
+    }
+    this.build = build;
+    this.requestRender();
+  }
+
+  /**
+   * 设置父元素
+   * @param parentDom 
+   * @returns 
+   */
+  public setParent(parentDom: HTMLElement) {
+    if (this.parentDom == parentDom) {
+      return;
+    }
+    parentDom.appendChild(this.mainDom);
+  }
+
+  /**
+   * 初始化mainDom
+   */
+  protected initMainDom(type = 'div'): void {
+    const mainDom = this.mainDom = document.createElement(type);
+    mainDom.classList.add(`${this.constructor.name.toLowerCase()}_main`);
+  }
+
+  protected abstract initDom(): void;
 
   /**
    * 子类实现渲染方法

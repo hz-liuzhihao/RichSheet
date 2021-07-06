@@ -12,7 +12,7 @@ export default class ExcelEditor extends BaseEditor {
 
   private workbench: IWorkBench;
 
-  private build: ExcelBuild;
+  protected build: ExcelBuild;
 
   public constructor(args: ExcelEditorArgs) {
     super(args);
@@ -20,7 +20,12 @@ export default class ExcelEditor extends BaseEditor {
     this.build = args.build;
   }
 
-  render() {
+
+  protected initDom() {
     
+  }
+
+  protected render() {
+
   }
 }
