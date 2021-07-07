@@ -8,17 +8,17 @@ export interface CellMeta {
   /**
    * 单元格扩展属性
    */
-  extend: JSONObject;
+  extend?: JSONObject;
 
   row: number;
 
   col: number;
 
-  index: number;
+  index?: number;
 
-  styleIndex: number;
+  styleIndex?: number;
 
-  expressionIndex: number;
+  expressionIndex?: number;
 }
 
 export interface CellBuildArgs extends BaseBuildArgs {
@@ -60,11 +60,11 @@ export class CellBuild extends BaseBuild<CellMeta> {
    * 转换元数据
    * @override
    */
-   protected initMeta() {
-     // 在行列中记录单元格
-     const { row, col } = this.metaInfo;
-     this.row[col] = this;
-     this.col[row] = this;
+  protected initMeta() {
+    // 在行列中记录单元格
+    const { row, col } = this.metaInfo;
+    this.row.getCells()[col] = this;
+    this.col.getCells()[row] = this;
   }
 
   restoreUndoItem(undoItem: UndoItem<CellMeta>) {

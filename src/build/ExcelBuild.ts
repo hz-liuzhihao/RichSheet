@@ -8,13 +8,13 @@ import { ExcelBehavior } from '../controllers/ToolBar';
  */
 export interface ExcelMeta {
   // 默认行高度
-  defaultRowHeight: number;
+  defaultRowHeight?: number;
   // 默认列宽度
-  defaultColWidth: number;
-  defaultRows: number;
-  defaultCols: number;
+  defaultColWidth?: number;
+  defaultRows?: number;
+  defaultCols?: number;
 
-  sheets: SheetMeta[];
+  sheets?: SheetMeta[];
 }
 
 type ExcelMetaKey = keyof ExcelMeta;
@@ -37,12 +37,17 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
 
   private styleBuilds: StyleBuild[];
 
+  public constructor(args: ExcelBuildArgs) {
+    super(args);
+  }
+
   /**
    * 初始化原始数据
    * @param args 
    */
   protected initData(args: ExcelBuildArgs) {
     this.workbench = args.workbench;
+    this.sheets = [];
   }
 
   /**
@@ -50,14 +55,22 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
    * @override
    */
   protected initMeta() {
-    const metaInfo = this.metaInfo;
+    const metaInfo = this.metaInfo || {};
     const sheets = metaInfo.sheets || [];
-    sheets.forEach(sheet => {
+    if (sheets.length == 0) {
+      // 用户第一次使用richsheet,则为用户生成默认表格
       this.sheets.push(new SheetBuild({
-        metaInfo: sheet,
+        metaInfo: {},
         excelBuild: this
       }));
-    });
+    } else {
+      sheets.forEach(sheet => {
+        this.sheets.push(new SheetBuild({
+          metaInfo: sheet,
+          excelBuild: this
+        }));
+      });
+    }
   }
 
   /** @implements */

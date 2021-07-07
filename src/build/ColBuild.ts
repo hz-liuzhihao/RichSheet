@@ -39,6 +39,7 @@ export class ColBuild extends BaseBuild<ColMeta> {
 
   protected initData(args: ColBuildArgs) {
     this.sheet = args.sheet;
+    this.cells = [];
   }
 
   /**
@@ -47,6 +48,21 @@ export class ColBuild extends BaseBuild<ColMeta> {
    */
   protected initMeta() {
 
+  }
+
+  /**
+   * 获取行头
+   */
+   public getIndex() {
+    const title = this.metaInfo.title;
+    if (title) {
+      return title;
+    }
+    return this.cells[0].getProperty('row');
+  }
+
+  public getCells() {
+    return this.cells;
   }
 
   restoreUndoItem(undoItem: UndoItem<ColMeta>) {

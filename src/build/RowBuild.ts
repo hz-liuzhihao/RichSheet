@@ -6,19 +6,15 @@ export interface RowMeta {
   /**
    * 行宽度
    */
-  width: number;
+  width?: number;
   /**
    * 行高度
    */
-  height: number;
+  height?: number;
   /**
    * 行头
    */
-  title: string;
-  /**
-   * 序号
-   */
-  index: number;
+  title?: string;
 }
 
 type RowMetaKey = keyof RowMeta;
@@ -36,6 +32,7 @@ export class RowBuild extends BaseBuild<RowMeta> {
   public constructor(args: RowBuildArgs) {
     super(args);
     this.sheet = args.sheet;
+    this.cells = [];
   }
 
   /**
@@ -50,8 +47,19 @@ export class RowBuild extends BaseBuild<RowMeta> {
    * 转换元数据
    * @override
    */
-   protected initMeta() {
+  protected initMeta() {
 
+  }
+
+  /**
+   * 获取行头
+   */
+  public getIndex() {
+    const title = this.metaInfo.title;
+    if (title) {
+      return title;
+    }
+    return this.cells[0].getProperty('row');
   }
 
   public getCells() {
@@ -60,8 +68,8 @@ export class RowBuild extends BaseBuild<RowMeta> {
 
   restoreUndoItem(undoItem: UndoItem<RowMeta>) {
     const op = undoItem.op;
-    const {sheet} = this;
-    switch(op) {
+    const { sheet } = this;
+    switch (op) {
       case Operate.Add:
 
         break;

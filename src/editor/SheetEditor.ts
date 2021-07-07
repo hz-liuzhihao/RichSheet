@@ -19,6 +19,10 @@ export default class SheetEditor extends BaseEditor {
 
   public constructor(args: SheetEditorArgs) {
     super(args);
+  }
+
+  protected initData(args: SheetEditorArgs) {
+    super.initData(args);
     this.rows = [];
   }
 
@@ -42,9 +46,11 @@ export default class SheetEditor extends BaseEditor {
         colHeadBuild
       }));
     });
+    this.mainDom.appendChild(this.table);
   }
 
   protected render() {
-
+    this.rows.forEach(item => item.requestRender());
+    this.rowHeadEditor.requestRender();
   }
 }

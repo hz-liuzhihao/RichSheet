@@ -20,11 +20,6 @@ export default class ColHeadEditor extends BaseEditor {
   protected render() {
     const { mainDom, build } = this;
     const index = build.getProperty('index');
-    const title = build.getProperty('title');
-    if (index != null) {
-      mainDom.textContent = index;
-    } else {
-      mainDom.textContent = title;
-    }
+    mainDom.textContent = index;
   }
 }

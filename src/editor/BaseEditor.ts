@@ -23,7 +23,6 @@ export default abstract class BaseEditor {
     this.initData(args);
     this.initMainDom(args.type);
     this.initDom();
-    this.build = args.build;
     if (args.domParent) {
       args.domParent.appendChild(this.mainDom);
     }
@@ -33,7 +32,7 @@ export default abstract class BaseEditor {
    * 初始化数据
    */
   protected initData(args: BaseEditorArgs) {
-
+    this.build = args.build;
   }
 
   /**

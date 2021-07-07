@@ -47,7 +47,7 @@ class Workbench implements IWorkBench {
       console.log('richsheet渲染失败');
     });
   }
-  
+
   /**
    * 数据层变化时进行调用传递给UI层
    * @param undoItems 
@@ -69,9 +69,10 @@ class Workbench implements IWorkBench {
    * 初始化数据层
    */
   private initBuild() {
+    const config = this.config;
     this.excelBuild = new ExcelBuild({
       workbench: this,
-      
+      metaInfo: config.excel
     });
   }
 
@@ -89,17 +90,17 @@ class Workbench implements IWorkBench {
 export interface RichSeetConfig {
   dom: string | HTMLElement;
 
-  excel: ExcelMeta;
+  excel?: ExcelMeta;
 
   /**
    * 初始化函数
    */
-  onInit: () => void;
+  onInit?: () => void;
 
   /**
    * 加载钩子函数
    */
-  onLoad: () => void;
+  onLoad?: () => void;
 }
 
 export default class RichSheet {
@@ -110,5 +111,14 @@ export default class RichSheet {
     this.workbench = new Workbench({
       config
     });
+
+    (window as any).workbench = this.workbench;
+  }
+
+  /**
+   * 加载
+   */
+  public laod() {
+    this.workbench.load();
   }
 }

@@ -78,5 +78,6 @@ module.exports = {
     plugins: [htmlWebpackPlugin, miniCssExtractPlugin, new CleanWebpackPlugin()],
     devServer: {
         port: 3005,
+        hot: true
     },
 }

@@ -9,17 +9,19 @@ import { CellMeta, CellBuild } from './CellBuild';
  */
 export interface SheetMeta {
   // 默认行高度
-  defaultRowHeight: number;
+  defaultRowHeight?: number;
   // 默认列宽度
-  defaultColWidth: number;
-  defaultRows: number;
-  defaultCols: number;
+  defaultColWidth?: number;
+  defaultRows?: number;
+  defaultCols?: number;
 
-  cells: CellMeta[];
+  cells?: CellMeta[];
 
-  rows: RowMeta[];
+  rows?: RowMeta[];
 
-  cols: ColMeta[];
+  cols?: ColMeta[];
+
+  title?: string;
 }
 
 type SheetMetaKey = keyof SheetMeta;
@@ -35,9 +37,9 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
 
   private excelBuild: ExcelBuild;
 
-  private rowHeads: RowBuild[];
+  private rows: RowBuild[];
 
-  private colHeads: ColBuild[];
+  private cols: ColBuild[];
 
   public constructor(args: SheetBuildArgs) {
     super(args);
@@ -45,6 +47,8 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
 
   protected initData(args: SheetBuildArgs) {
     this.excelBuild = args.excelBuild;
+    this.rows = [];
+    this.cols = [];
   }
 
   /**
@@ -66,25 +70,31 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
     // 初始化行列
     for (let row = 0; row < rowLines; row++) {
       // 当行未初始化时,进行初始化
-      if (this.rowHeads[row] == null) {
-        this.rowHeads[row] = new RowBuild({
+      if (this.rows[row] == null) {
+        this.rows[row] = new RowBuild({
           metaInfo: rows[row],
           sheet: this
         });
       }
       for (let col = 0; col < colLines; col++) {
         // 当列未初始化时,进行初始化
-        if (this.colHeads[col] == null) {
-          this.colHeads[col] = new ColBuild({
+        if (this.cols[col] == null) {
+          this.cols[col] = new ColBuild({
             metaInfo: cols[col],
             sheet: this
           });
         }
-        const cell = cellMap[`${row}${col}`];
+        let cell = cellMap[`${row}${col}`];
         // 对单元格进行初始化
+        if (!cell) {
+          cell = {
+            row,
+            col
+          }
+        };
         new CellBuild({
-          row: this.rowHeads[cell.row],
-          col: this.colHeads[cell.col],
+          row: this.rows[cell.row],
+          col: this.cols[cell.col],
           metaInfo: cell
         });
       }
@@ -96,7 +106,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
    * @returns 
    */
   public getRows() {
-    return this.rowHeads;
+    return this.rows;
   }
 
   /**
@@ -104,7 +114,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
    * @returns 
    */
   public getCols() {
-    return this.colHeads;
+    return this.cols;
   }
 
   /** @implements */

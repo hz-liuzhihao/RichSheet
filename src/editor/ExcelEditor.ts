@@ -19,10 +19,13 @@ export default class ExcelEditor extends BaseEditor {
 
   public constructor(args: ExcelEditorArgs) {
     super(args);
-    this.workbench = args.workbench;
-    this.build = args.build;
   }
 
+  protected initData(args: ExcelEditorArgs) {
+    super.initData(args);
+    this.workbench = args.workbench;
+    this.sheetEditors = [];
+  }
 
   protected initDom() {
     const { build } = this;
@@ -36,6 +39,6 @@ export default class ExcelEditor extends BaseEditor {
   }
 
   protected render() {
-
+    this.sheetEditors.forEach(item => item.requestRender());
   }
 }

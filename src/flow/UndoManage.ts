@@ -19,7 +19,7 @@ export abstract class BaseBuild<T> {
   protected metaInfo: T;
 
   public constructor(args: BaseBuildArgs) {
-    this.metaInfo = args.metaInfo;
+    this.metaInfo = args.metaInfo || {};
     this.initData(args);
     this.initMeta();
   }

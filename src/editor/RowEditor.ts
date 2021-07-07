@@ -33,6 +33,7 @@ export default class RowEditor extends BaseEditor {
    * @param args 
    */
   protected initData(args: RowEditorArgs) {
+    super.initData(args);
     this.cells = [];
     this.colHeadBuild = args.colHeadBuild;
   }
@@ -65,7 +66,7 @@ export default class RowEditor extends BaseEditor {
    * @override
    */
   protected render() {
-    const build = this.build;
-    const metaInfo = build.toJSON();
+    this.cells.forEach(item => item.requestRender());
+    this.colHeadEditor.requestRender();
   }
 }
