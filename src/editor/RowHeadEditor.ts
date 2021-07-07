@@ -1,7 +1,7 @@
 import { BaseEditorArgs } from './BaseEditor';
 import BaseEditor from './BaseEditor';
-import { RowBuild } from '../build/RowBuild';
 import { getColNameByOrder } from '../utils/common';
+import { SheetBuild } from '../build/SheetBuild';
 export interface RowHeadEditorArgs extends BaseEditorArgs {
 
 }
@@ -10,7 +10,7 @@ export default class RowHeadEditor extends BaseEditor {
 
   private tds: HTMLElement[];
 
-  protected build: RowBuild;
+  protected build: SheetBuild;
 
   public constructor(args: RowHeadEditorArgs) {
     args.type = 'tr';
@@ -24,13 +24,13 @@ export default class RowHeadEditor extends BaseEditor {
 
   protected initDom() {
     const build = this.build;
-    const cells = build.getCells();
+    const cols = build.getCols();
     // 预留列头的位置
     const tdHead = document.createElement('td');
     this.mainDom.appendChild(tdHead);
     // 初始化行头
-    cells.forEach((item, index) => {
-      const colName = getColNameByOrder(index + 1);
+    cols.forEach((item, index) => {
+      const colName = item.getProperty('index');
       const td = document.createElement('td');
       td.textContent = colName;
       this.tds.push(td);

@@ -15,6 +15,10 @@ export interface RowMeta {
    * 行头
    */
   title?: string;
+  /**
+   * 行数
+   */
+  index?: number;
 }
 
 type RowMetaKey = keyof RowMeta;
@@ -59,7 +63,7 @@ export class RowBuild extends BaseBuild<RowMeta> {
     if (title) {
       return title;
     }
-    return this.cells[0].getProperty('row');
+    return this.cells[0].getProperty('row') + 1;
   }
 
   public getCells() {

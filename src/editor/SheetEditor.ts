@@ -33,7 +33,7 @@ export default class SheetEditor extends BaseEditor {
     this.table = document.createElement('table');
     // 初始化行头
     this.rowHeadEditor = new RowHeadEditor({
-      build: rows[0],
+      build,
       domParent: this.table
     });
     // 初始化行

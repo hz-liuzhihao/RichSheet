@@ -1,6 +1,7 @@
 import { BaseBuild, Operate, UndoItem, BaseBuildArgs } from '../flow/UndoManage';
 import { SheetBuild } from './SheetBuild';
 import { CellBuild } from './CellBuild';
+import { getColNameByOrder } from '../utils/common';
 
 export interface ColMeta {
   /**
@@ -58,7 +59,8 @@ export class ColBuild extends BaseBuild<ColMeta> {
     if (title) {
       return title;
     }
-    return this.cells[0].getProperty('row');
+    const col = this.cells[0].getProperty('col');
+    return getColNameByOrder(col + 1);
   }
 
   public getCells() {

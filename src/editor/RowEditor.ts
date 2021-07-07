@@ -19,8 +19,6 @@ export default class RowEditor extends BaseEditor {
 
   protected cells: CellEditor[];
 
-  protected colHeadBuild: ColBuild;
-
   protected colHeadEditor: ColHeadEditor;
 
   public constructor(args: RowEditorArgs) {
@@ -35,7 +33,6 @@ export default class RowEditor extends BaseEditor {
   protected initData(args: RowEditorArgs) {
     super.initData(args);
     this.cells = [];
-    this.colHeadBuild = args.colHeadBuild;
   }
 
   /**
@@ -44,11 +41,10 @@ export default class RowEditor extends BaseEditor {
   protected initDom() {
     const build = this.build;
     const cells = build.getCells();
-    const colBuild = this.colHeadBuild;
 
     // 初始化行头
     this.colHeadEditor = new ColHeadEditor({
-      build: colBuild,
+      build,
       domParent: this.mainDom
     });
 

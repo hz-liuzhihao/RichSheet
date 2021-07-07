@@ -1,13 +1,13 @@
 import BaseEditor from './BaseEditor';
 import { BaseEditorArgs } from './BaseEditor';
-import { ColBuild } from '../build/ColBuild';
+import { RowBuild } from '../build/RowBuild';
 export interface ColHeadEditorArgs extends BaseEditorArgs {
 
 }
 
 export default class ColHeadEditor extends BaseEditor {
 
-  protected build: ColBuild;
+  protected build: RowBuild;
 
   public constructor(args: ColHeadEditorArgs) {
     args.type = 'td';
