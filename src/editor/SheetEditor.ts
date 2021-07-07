@@ -25,16 +25,21 @@ export default class SheetEditor extends BaseEditor {
   protected initDom() {
     const build = this.build;
     const rows = build.getRows();
+    const cols = build.getCols();
     this.table = document.createElement('table');
     // 初始化行头
     this.rowHeadEditor = new RowHeadEditor({
       build: rows[0],
       domParent: this.table
     });
-    rows.forEach(item => {
+    // 初始化行
+    rows.forEach((item, index) => {
+      // 初始化列头
+      const colHeadBuild = cols[index];
       this.rows.push(new RowEditor({
         build: item,
-        domParent: this.table
+        domParent: this.table,
+        colHeadBuild
       }));
     });
   }

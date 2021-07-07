@@ -7,16 +7,24 @@ export interface ColHeadEditorArgs extends BaseEditorArgs {
 
 export default class ColHeadEditor extends BaseEditor {
 
+  protected build: ColBuild;
+
   public constructor(args: ColHeadEditorArgs) {
     args.type = 'td';
     super(args);
   }
 
   protected initDom() {
-    const mainDom = this.mainDom;
   }
 
   protected render() {
-
+    const { mainDom, build } = this;
+    const index = build.getProperty('index');
+    const title = build.getProperty('title');
+    if (index != null) {
+      mainDom.textContent = index;
+    } else {
+      mainDom.textContent = title;
+    }
   }
 }

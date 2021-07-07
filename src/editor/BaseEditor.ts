@@ -20,12 +20,20 @@ export default abstract class BaseEditor {
   protected parentDom: HTMLElement;
 
   public constructor(args: BaseEditorArgs) {
+    this.initData(args);
     this.initMainDom(args.type);
     this.initDom();
     this.build = args.build;
     if (args.domParent) {
       args.domParent.appendChild(this.mainDom);
     }
+  }
+
+  /**
+   * 初始化数据
+   */
+  protected initData(args: BaseEditorArgs) {
+
   }
 
   /**
