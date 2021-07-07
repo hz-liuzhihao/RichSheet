@@ -1,16 +1,18 @@
 import { BaseBuild, Operate, UndoItem, IWorkBench } from '../flow/UndoManage';
-import { SheetBuild } from './SheetBuild';
+import { SheetBuild, SheetMeta } from './SheetBuild';
 import { StyleBuild } from './StyleBuild';
 import { ExcelBehavior } from '../controllers/ToolBar';
 
 /**
  * excel元数据
  */
-interface ExcelMeta {
+export interface ExcelMeta {
   // 默认行高度
   defaultRowHeight: number;
   // 默认列宽度
   defaultColWidth: number;
+
+  sheets: SheetMeta[];
 }
 
 type ExcelMetaKey = keyof ExcelMeta;
@@ -19,6 +21,10 @@ export interface ExcelBuildArgs {
   workbench: IWorkBench;
 }
 
+/**
+ * sheet的全局数据层
+ * 包含sheet的一些共用数据,如样式,
+ */
 export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
 
   private currentIndex: number;
@@ -60,5 +66,21 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
    */
   public addRow(count: number) {
     // TOOD
+  }
+
+  /**
+   * 获取所有的sheet
+   * @returns 
+   */
+  public getSheets() {
+    return this.sheets;
+  }
+
+  /**
+   * 获取当前编辑sheet
+   * @returns 
+   */
+  public getCurrentSheet() {
+    return this.sheets[this.currentIndex];
   }
 }

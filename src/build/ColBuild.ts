@@ -2,7 +2,7 @@ import { BaseBuild, Operate, UndoItem } from '../flow/UndoManage';
 import { SheetBuild } from './SheetBuild';
 import { CellBuild } from './CellBuild';
 
-interface ColMeta {
+export interface ColMeta {
   /**
    * 列头的宽度
    */

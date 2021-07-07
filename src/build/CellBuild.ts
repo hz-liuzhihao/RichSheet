@@ -4,7 +4,7 @@ import { ColBuild } from './ColBuild';
 import { BorderBuild } from './BorderBuild';
 import { StyleBuild } from './StyleBuild';
 
-interface CellMeta {
+export interface CellMeta {
   /**
    * 单元格扩展属性
    */

@@ -1,6 +1,6 @@
 import { BaseBuild, Operate, UndoItem } from '../flow/UndoManage';
 
-interface ExpressionMeta {
+export interface ExpressionMeta {
   /**
    * 单元格值
    * 表达式 表达式为js环境,如=SUM(${cell1}:${cell2}) 编译时应该将${cell1}和${cell2}编译出结果

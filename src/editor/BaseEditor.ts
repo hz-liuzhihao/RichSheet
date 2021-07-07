@@ -87,7 +87,7 @@ export default abstract class BaseEditor {
    * 请求渲染
    * @returns 
    */
-  protected requestRender(): Promise<void> {
+  public requestRender(): Promise<void> {
     return new Promise(resolve => {
       requestAnimationFrame(() => {
         this.render();

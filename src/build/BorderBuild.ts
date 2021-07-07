@@ -3,7 +3,7 @@ import { CellBuild } from './CellBuild';
 import { RowBuild } from './RowBuild';
 import { ColBuild } from './ColBuild';
 
-interface BoderMeta {
+export interface BoderMeta {
   style: BorderStyle;
   color: string;
   width: number;

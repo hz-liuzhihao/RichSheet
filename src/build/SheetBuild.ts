@@ -6,7 +6,7 @@ import { ColBuild } from './ColBuild';
 /**
  * 表格元数据
  */
-interface SheetMeta {
+export interface SheetMeta {
   // 默认行高度
   defaultRowHeight: number;
   // 默认列宽度

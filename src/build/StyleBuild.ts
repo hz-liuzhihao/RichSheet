@@ -1,6 +1,10 @@
 import { BaseBuild, UndoItem, Operate } from '../flow/UndoManage';
 import { CellBuild } from './CellBuild';
 
+export interface StyleMeta {
+  
+}
+
 interface BoderMeta {
   style: BorderStyle;
   color: string;
