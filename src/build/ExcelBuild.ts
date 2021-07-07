@@ -1,4 +1,4 @@
-import { BaseBuild, Operate, UndoItem, IWorkBench } from '../flow/UndoManage';
+import { BaseBuild, Operate, UndoItem, IWorkBench, BaseBuildArgs } from '../flow/UndoManage';
 import { SheetBuild, SheetMeta } from './SheetBuild';
 import { StyleBuild } from './StyleBuild';
 import { ExcelBehavior } from '../controllers/ToolBar';
@@ -11,13 +11,15 @@ export interface ExcelMeta {
   defaultRowHeight: number;
   // 默认列宽度
   defaultColWidth: number;
+  defaultRows: number;
+  defaultCols: number;
 
   sheets: SheetMeta[];
 }
 
 type ExcelMetaKey = keyof ExcelMeta;
 
-export interface ExcelBuildArgs {
+export interface ExcelBuildArgs extends BaseBuildArgs {
   workbench: IWorkBench;
 }
 
@@ -35,9 +37,27 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
 
   private styleBuilds: StyleBuild[];
 
-  public constructor(args: ExcelBuildArgs) {
-    super();
+  /**
+   * 初始化原始数据
+   * @param args 
+   */
+  protected initData(args: ExcelBuildArgs) {
     this.workbench = args.workbench;
+  }
+
+  /**
+   * 转换元数据
+   * @override
+   */
+  protected initMeta() {
+    const metaInfo = this.metaInfo;
+    const sheets = metaInfo.sheets || [];
+    sheets.forEach(sheet => {
+      this.sheets.push(new SheetBuild({
+        metaInfo: sheet,
+        excelBuild: this
+      }));
+    });
   }
 
   /** @implements */

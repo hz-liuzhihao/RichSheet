@@ -70,7 +70,8 @@ class Workbench implements IWorkBench {
    */
   private initBuild() {
     this.excelBuild = new ExcelBuild({
-      workbench: this
+      workbench: this,
+      
     });
   }
 

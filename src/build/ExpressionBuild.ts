@@ -1,4 +1,5 @@
-import { BaseBuild, Operate, UndoItem } from '../flow/UndoManage';
+import { BaseBuild, Operate, UndoItem, BaseBuildArgs } from '../flow/UndoManage';
+import { ExcelBuild } from './ExcelBuild';
 
 export interface ExpressionMeta {
   /**
@@ -10,9 +11,32 @@ export interface ExpressionMeta {
   value: string;
 }
 
+export interface ExpressionBuildArgs extends BaseBuildArgs {
+  excelBuild: ExcelBuild;
+}
+
 type ExpressionMetaKey = keyof ExpressionMeta;
 
 export class ExpressionBuild extends BaseBuild<ExpressionMeta> {
+
+  private excelBuild: ExcelBuild;
+
+  public constructor(args: ExpressionBuildArgs) {
+    super(args);
+  }
+
+  /** @override */
+  protected initData(args: ExpressionBuildArgs) {
+    this.excelBuild = args.excelBuild
+  }
+
+  /**
+   * 转换元数据
+   * @override
+   */
+  protected initMeta() {
+
+  }
 
   restoreUndoItem(undoItem: UndoItem<ExpressionMeta>) {
     const op = undoItem.op;

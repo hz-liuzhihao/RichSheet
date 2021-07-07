@@ -1,4 +1,4 @@
-import { BaseBuild, Operate, UndoItem } from '../flow/UndoManage';
+import { BaseBuild, Operate, UndoItem, BaseBuildArgs } from '../flow/UndoManage';
 import { SheetBuild } from './SheetBuild';
 import { CellBuild } from './CellBuild';
 
@@ -23,11 +23,31 @@ export interface ColMeta {
 
 type ColHeadMetaKey = keyof ColMeta;
 
+export interface ColBuildArgs extends BaseBuildArgs {
+  sheet: SheetBuild;
+}
+
 export class ColBuild extends BaseBuild<ColMeta> {
 
   private cells: CellBuild[];
 
   private sheet: SheetBuild;
+
+  public constructor(args: ColBuildArgs) {
+    super(args);
+  }
+
+  protected initData(args: ColBuildArgs) {
+    this.sheet = args.sheet;
+  }
+
+  /**
+   * 转换元数据
+   * @override
+   */
+  protected initMeta() {
+
+  }
 
   restoreUndoItem(undoItem: UndoItem<ColMeta>) {
     const op = undoItem.op;

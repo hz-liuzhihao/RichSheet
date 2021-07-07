@@ -1,4 +1,4 @@
-import { BaseBuild, UndoItem, Operate } from '../flow/UndoManage';
+import { BaseBuild, UndoItem, Operate, BaseBuildArgs } from '../flow/UndoManage';
 import { RowBuild } from './RowBuild';
 import { ColBuild } from './ColBuild';
 import { BorderBuild } from './BorderBuild';
@@ -9,6 +9,22 @@ export interface CellMeta {
    * 单元格扩展属性
    */
   extend: JSONObject;
+
+  row: number;
+
+  col: number;
+
+  index: number;
+
+  styleIndex: number;
+
+  expressionIndex: number;
+}
+
+export interface CellBuildArgs extends BaseBuildArgs {
+  row: RowBuild;
+
+  col: ColBuild;
 }
 
 type CellMetaKey = keyof CellMeta;
@@ -30,6 +46,26 @@ export class CellBuild extends BaseBuild<CellMeta> {
   private styleBuild: StyleBuild;
 
   private expressionBuild;
+
+  public constructor(args: CellBuildArgs) {
+    super(args);
+  }
+
+  protected initData(args: CellBuildArgs) {
+    this.row = args.row;
+    this.col = args.col;
+  }
+
+  /**
+   * 转换元数据
+   * @override
+   */
+   protected initMeta() {
+     // 在行列中记录单元格
+     const { row, col } = this.metaInfo;
+     this.row[col] = this;
+     this.col[row] = this;
+  }
 
   restoreUndoItem(undoItem: UndoItem<CellMeta>) {
     const op = undoItem.op;

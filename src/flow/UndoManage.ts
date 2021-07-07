@@ -5,12 +5,28 @@ export interface IWorkBench {
 }
 
 /**
+ * 数据层基础参数
+ */
+export interface BaseBuildArgs {
+  metaInfo: any;
+}
+
+/**
  * 数据层基类
  */
 export abstract class BaseBuild<T> {
 
   protected metaInfo: T;
 
+  public constructor(args: BaseBuildArgs) {
+    this.metaInfo = args.metaInfo;
+    this.initData(args);
+    this.initMeta();
+  }
+
+  protected abstract initData(args: BaseBuildArgs): void;
+
+  protected abstract initMeta(): void;
 
 
   /**

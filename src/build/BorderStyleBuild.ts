@@ -1,5 +1,5 @@
-import { BaseBuild, UndoItem, Operate } from '../flow/UndoManage';
-import { CellBuild } from './CellBuild';
+import { BaseBuild, UndoItem, Operate, BaseBuildArgs } from '../flow/UndoManage';
+import { ExcelBuild } from './ExcelBuild';
 
 export interface BoderStyleMeta {
   style: BorderStyle;
@@ -9,9 +9,30 @@ export interface BoderStyleMeta {
 
 type BoderStyleMetaKey = keyof BoderStyleMeta;
 
+export interface BorderStyleBuildArgs extends BaseBuildArgs {
+  excelBuild: ExcelBuild;
+}
+
 export class BorderStyleBuild extends BaseBuild<BoderStyleMeta> {
 
-  private cellBuilds: CellBuild[];
+  private excelBuild: ExcelBuild;
+
+  public constructor(args: BorderStyleBuildArgs) {
+    super(args);
+  }
+
+  /** @override */
+  protected initData(args: BorderStyleBuildArgs) {
+    this.excelBuild = args.excelBuild;
+  }
+
+  /**
+   * 转换元数据
+   * @override
+   */
+  protected initMeta() {
+
+  }
 
   restoreUndoItem(undoItem: UndoItem<BoderStyleMeta>) {
     const op = undoItem.op;

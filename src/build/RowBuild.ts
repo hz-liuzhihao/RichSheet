@@ -1,4 +1,4 @@
-import { BaseBuild, Operate, UndoItem } from '../flow/UndoManage';
+import { BaseBuild, Operate, UndoItem, BaseBuildArgs } from '../flow/UndoManage';
 import { SheetBuild } from './SheetBuild';
 import { CellBuild } from './CellBuild';
 
@@ -23,7 +23,7 @@ export interface RowMeta {
 
 type RowMetaKey = keyof RowMeta;
 
-export interface RowHeadBuildArgs {
+export interface RowBuildArgs extends BaseBuildArgs {
   sheet: SheetBuild;
 }
 
@@ -33,9 +33,25 @@ export class RowBuild extends BaseBuild<RowMeta> {
 
   private cells: CellBuild[];
 
-  public constructor(args: RowHeadBuildArgs) {
-    super();
+  public constructor(args: RowBuildArgs) {
+    super(args);
     this.sheet = args.sheet;
+  }
+
+  /**
+   * 初始化数据
+   * @param args 
+   */
+  protected initData(args: RowBuildArgs) {
+
+  }
+
+  /**
+   * 转换元数据
+   * @override
+   */
+   protected initMeta() {
+
   }
 
   public getCells() {
