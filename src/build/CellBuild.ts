@@ -3,6 +3,7 @@ import { RowBuild } from './RowBuild';
 import { ColBuild } from './ColBuild';
 import { BorderBuild } from './BorderBuild';
 import { StyleBuild } from './StyleBuild';
+import { ExcelBuild } from './ExcelBuild';
 
 export interface CellMeta {
   /**
@@ -25,6 +26,8 @@ export interface CellBuildArgs extends BaseBuildArgs {
   row: RowBuild;
 
   col: ColBuild;
+
+  excelBuild: ExcelBuild;
 }
 
 type CellMetaKey = keyof CellMeta;
@@ -47,6 +50,8 @@ export class CellBuild extends BaseBuild<CellMeta> {
 
   private expressionBuild;
 
+  private excelBuild: ExcelBuild;
+
   public constructor(args: CellBuildArgs) {
     super(args);
   }
@@ -54,6 +59,7 @@ export class CellBuild extends BaseBuild<CellMeta> {
   protected initData(args: CellBuildArgs) {
     this.row = args.row;
     this.col = args.col;
+    this.excelBuild = args.excelBuild;
   }
 
   /**
@@ -65,6 +71,18 @@ export class CellBuild extends BaseBuild<CellMeta> {
     const { row, col } = this.metaInfo;
     this.row.getCells()[col] = this;
     this.col.getCells()[row] = this;
+  }
+
+  public setStyleBuild(styleBuild: StyleBuild) {
+    this.styleBuild = styleBuild;
+  }
+
+  public getStyle() {
+    if (this.styleBuild == null) {
+      return {};
+    }
+    const style = this.styleBuild.toStyle();
+    return style;
   }
 
   restoreUndoItem(undoItem: UndoItem<CellMeta>) {

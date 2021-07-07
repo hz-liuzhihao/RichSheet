@@ -73,7 +73,8 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
       if (this.rows[row] == null) {
         this.rows[row] = new RowBuild({
           metaInfo: rows[row],
-          sheet: this
+          sheet: this,
+          excelBuild: this.excelBuild
         });
       }
       for (let col = 0; col < colLines; col++) {
@@ -81,7 +82,8 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
         if (this.cols[col] == null) {
           this.cols[col] = new ColBuild({
             metaInfo: cols[col],
-            sheet: this
+            sheet: this,
+            excelBuild: this.excelBuild
           });
         }
         let cell = cellMap[`${row}${col}`];
@@ -95,10 +97,15 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
         new CellBuild({
           row: this.rows[cell.row],
           col: this.cols[cell.col],
-          metaInfo: cell
+          metaInfo: cell,
+          excelBuild: this.excelBuild
         });
       }
     }
+  }
+
+  public getTableWidth() {
+    return this.cols.reduce((total, item) => total + item.getProperty('width'), 0);
   }
 
   /**

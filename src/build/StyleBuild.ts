@@ -22,6 +22,8 @@ export class StyleBuild extends BaseBuild<BoderMeta> {
 
   private excelBuild: ExcelBuild;
 
+  private styleIndex: number;
+
   public constructor(args: StyleBuildArgs) {
     super(args);
   }
@@ -40,6 +42,14 @@ export class StyleBuild extends BaseBuild<BoderMeta> {
    */
   protected initMeta() {
 
+  }
+
+  /**
+   * 转换成样式表
+   */
+  public toStyle() {
+    // 转换为内联样式或者样式类
+    return this.metaInfo || {};
   }
 
   restoreUndoItem(undoItem: UndoItem<BoderMeta>) {

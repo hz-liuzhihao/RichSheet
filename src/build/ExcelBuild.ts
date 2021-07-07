@@ -2,6 +2,7 @@ import { BaseBuild, Operate, UndoItem, IWorkBench, BaseBuildArgs } from '../flow
 import { SheetBuild, SheetMeta } from './SheetBuild';
 import { StyleBuild } from './StyleBuild';
 import { ExcelBehavior } from '../controllers/ToolBar';
+import { ITheme, DefaultTheme } from '../controllers/Theme';
 
 /**
  * excel元数据
@@ -13,7 +14,7 @@ export interface ExcelMeta {
   defaultColWidth?: number;
   defaultRows?: number;
   defaultCols?: number;
-
+  theme?: ITheme;
   sheets?: SheetMeta[];
 }
 
@@ -37,6 +38,8 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
 
   private styleBuilds: StyleBuild[];
 
+  private theme: ITheme;
+
   public constructor(args: ExcelBuildArgs) {
     super(args);
   }
@@ -48,6 +51,15 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
   protected initData(args: ExcelBuildArgs) {
     this.workbench = args.workbench;
     this.sheets = [];
+    this.theme = Object.assign({}, DefaultTheme, this.metaInfo.theme || {});
+  }
+
+  /**
+   * 获取主题
+   * @returns 
+   */
+  public getTheme() {
+    return this.theme;
   }
 
   /**

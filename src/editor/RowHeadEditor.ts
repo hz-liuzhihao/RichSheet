@@ -2,6 +2,7 @@ import { BaseEditorArgs } from './BaseEditor';
 import BaseEditor from './BaseEditor';
 import { getColNameByOrder } from '../utils/common';
 import { SheetBuild } from '../build/SheetBuild';
+import './RowHeadEditor.css';
 export interface RowHeadEditorArgs extends BaseEditorArgs {
 
 }
@@ -32,6 +33,7 @@ export default class RowHeadEditor extends BaseEditor {
     cols.forEach((item, index) => {
       const colName = item.getProperty('index');
       const td = document.createElement('td');
+      Object.assign(td.style, item.toStyle());
       td.textContent = colName;
       this.tds.push(td);
       this.mainDom.appendChild(td);

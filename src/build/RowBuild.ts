@@ -1,6 +1,7 @@
 import { BaseBuild, Operate, UndoItem, BaseBuildArgs } from '../flow/UndoManage';
 import { SheetBuild } from './SheetBuild';
 import { CellBuild } from './CellBuild';
+import { ExcelBuild } from './ExcelBuild';
 
 export interface RowMeta {
   /**
@@ -25,6 +26,8 @@ type RowMetaKey = keyof RowMeta;
 
 export interface RowBuildArgs extends BaseBuildArgs {
   sheet: SheetBuild;
+
+  excelBuild: ExcelBuild;
 }
 
 export class RowBuild extends BaseBuild<RowMeta> {
@@ -33,10 +36,13 @@ export class RowBuild extends BaseBuild<RowMeta> {
 
   private cells: CellBuild[];
 
+  private excelBuild: ExcelBuild;
+
   public constructor(args: RowBuildArgs) {
     super(args);
     this.sheet = args.sheet;
     this.cells = [];
+    this.excelBuild = args.excelBuild;
   }
 
   /**
@@ -52,7 +58,19 @@ export class RowBuild extends BaseBuild<RowMeta> {
    * @override
    */
   protected initMeta() {
+  }
 
+  /**
+   * 转换行头样式
+   */
+  public toStyle() {
+    const { excelBuild } = this;
+    const theme = excelBuild.getTheme();
+    const style = {
+      width: `${theme.rowHeadWidth}px`,
+      height: `${theme.rowHeadHeight}px`,
+    };
+    return style;
   }
 
   /**

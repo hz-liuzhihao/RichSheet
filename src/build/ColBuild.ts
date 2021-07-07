@@ -2,6 +2,7 @@ import { BaseBuild, Operate, UndoItem, BaseBuildArgs } from '../flow/UndoManage'
 import { SheetBuild } from './SheetBuild';
 import { CellBuild } from './CellBuild';
 import { getColNameByOrder } from '../utils/common';
+import { ExcelBuild } from './ExcelBuild';
 
 export interface ColMeta {
   /**
@@ -26,6 +27,8 @@ type ColHeadMetaKey = keyof ColMeta;
 
 export interface ColBuildArgs extends BaseBuildArgs {
   sheet: SheetBuild;
+
+  excelBuild: ExcelBuild;
 }
 
 export class ColBuild extends BaseBuild<ColMeta> {
@@ -34,6 +37,8 @@ export class ColBuild extends BaseBuild<ColMeta> {
 
   private sheet: SheetBuild;
 
+  private excelBuild: ExcelBuild;
+
   public constructor(args: ColBuildArgs) {
     super(args);
   }
@@ -41,6 +46,7 @@ export class ColBuild extends BaseBuild<ColMeta> {
   protected initData(args: ColBuildArgs) {
     this.sheet = args.sheet;
     this.cells = [];
+    this.excelBuild = args.excelBuild;
   }
 
   /**
@@ -63,8 +69,31 @@ export class ColBuild extends BaseBuild<ColMeta> {
     return getColNameByOrder(col + 1);
   }
 
+  /**
+   * 获取列宽
+   */
+  public getWidth() {
+    const theme = this.excelBuild.getTheme();
+    const width = this.metaInfo.width || theme.colHeadWidth;
+    return width;
+  }
+
   public getCells() {
     return this.cells;
+  }
+
+  /**
+   * 转换列头样式
+   */
+   public toStyle() {
+    const { excelBuild, metaInfo } = this;
+    const theme = excelBuild.getTheme();
+    const { width, height } = metaInfo;
+    const style = {
+      width: `${width || theme.colHeadWidth}px`,
+      height: `${height || theme.colHeadHeight}px`,
+    };
+    return style;
   }
 
   restoreUndoItem(undoItem: UndoItem<ColMeta>) {

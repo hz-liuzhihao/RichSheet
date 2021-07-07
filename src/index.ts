@@ -1,6 +1,7 @@
 import { UndoManage, IWorkBench, UndoItem } from './flow/UndoManage';
 import { ExcelBuild, ExcelMeta } from './build/ExcelBuild';
 import ExcelEditor from './editor/ExcelEditor';
+import './global.css';
 
 export interface SheetConfig {
   row: number;

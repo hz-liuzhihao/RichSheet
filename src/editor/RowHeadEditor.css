@@ -1,0 +1,14 @@
+.rowheadeditor_main > td {
+  text-align: center;
+  vertical-align: middle;
+  background-color: #fff;
+  position: sticky;
+  top: 0;
+}
+
+.rowheadeditor_main > td:first-child {
+  background-color: #fff;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}

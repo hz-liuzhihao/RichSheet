@@ -30,11 +30,13 @@ export default class SheetEditor extends BaseEditor {
     const build = this.build;
     const rows = build.getRows();
     const cols = build.getCols();
-    this.table = document.createElement('table');
+    const table = this.table = document.createElement('table');
+    const width = build.getTableWidth();
+    table.style.width = `${width}px`;
     // 初始化行头
     this.rowHeadEditor = new RowHeadEditor({
       build,
-      domParent: this.table
+      domParent: table
     });
     // 初始化行
     rows.forEach((item, index) => {
@@ -42,11 +44,11 @@ export default class SheetEditor extends BaseEditor {
       const colHeadBuild = cols[index];
       this.rows.push(new RowEditor({
         build: item,
-        domParent: this.table,
+        domParent: table,
         colHeadBuild
       }));
     });
-    this.mainDom.appendChild(this.table);
+    this.mainDom.appendChild(table);
   }
 
   protected render() {
