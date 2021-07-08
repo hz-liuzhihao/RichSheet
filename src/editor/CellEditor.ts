@@ -26,6 +26,12 @@ export default class CellEditor extends BaseEditor {
    */
   protected render() {
     const build = this.build;
-    const metaInfo = build.toJSON();
+    const mainDom = this.mainDom;
+    const themeClassName = build.getThemeClassName();
+    const styleClassName = build.getClassName();
+    const borderClassName = build.getBorderClassName();
+    themeClassName && mainDom.classList.add(themeClassName);
+    styleClassName && mainDom.classList.add(styleClassName);
+    borderClassName && mainDom.classList.add(borderClassName);
   }
 }

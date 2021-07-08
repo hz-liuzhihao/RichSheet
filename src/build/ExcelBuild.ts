@@ -1,8 +1,9 @@
 import { BaseBuild, Operate, UndoItem, IWorkBench, BaseBuildArgs } from '../flow/UndoManage';
 import { SheetBuild, SheetMeta } from './SheetBuild';
-import { StyleBuild } from './StyleBuild';
+import { StyleBuild, StyleMeta } from './StyleBuild';
 import { ExcelBehavior } from '../controllers/ToolBar';
-import { ITheme, DefaultTheme } from '../controllers/Theme';
+import { ITheme, DefaultTheme, ThemeStyle } from '../controllers/Theme';
+import { BorderStyleMeta, BorderStyleBuild } from './BorderStyleBuild';
 
 /**
  * excel元数据
@@ -16,6 +17,8 @@ export interface ExcelMeta {
   defaultCols?: number;
   theme?: ITheme;
   sheets?: SheetMeta[];
+  styles?: StyleMeta[];
+  borderStyles?: BorderStyleMeta[];
 }
 
 type ExcelMetaKey = keyof ExcelMeta;
@@ -38,7 +41,11 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
 
   private styleBuilds: StyleBuild[];
 
+  private borderStyleBuilds: BorderStyleBuild[];
+
   private theme: ITheme;
+
+  private themeStyle: ThemeStyle;
 
   public constructor(args: ExcelBuildArgs) {
     super(args);
@@ -51,7 +58,12 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
   protected initData(args: ExcelBuildArgs) {
     this.workbench = args.workbench;
     this.sheets = [];
+    this.styleBuilds = [];
+    this.borderStyleBuilds = [];
     this.theme = Object.assign({}, DefaultTheme, this.metaInfo.theme || {});
+    this.themeStyle = new ThemeStyle({
+      theme: this.theme
+    });
   }
 
   /**
@@ -63,12 +75,54 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
   }
 
   /**
+   * 获取主题样式表
+   * @returns 
+   */
+  public getThemeStyle() {
+    return this.themeStyle;
+  }
+
+  /**
+   * 初始化excel样式蓝图
+   */
+  protected initStyles() {
+    const metaInfo = this.metaInfo || {};
+    const styles = metaInfo.styles || [];
+    styles.forEach(item => {
+      this.styleBuilds.push(new StyleBuild({
+        excelBuild: this,
+        metaInfo: item
+      }));
+    });
+  }
+
+  public getStyleBuild(index: number) {
+    return this.styleBuilds[index];
+  }
+
+  /**
+   * 初始化excel边框样式蓝图
+   */
+  protected initBorderStyles() {
+    const metaInfo = this.metaInfo || {};
+    const borderStyles = metaInfo.borderStyles || [];
+    borderStyles.forEach(item => {
+      this.borderStyleBuilds.push(new BorderStyleBuild({
+        excelBuild: this,
+        metaInfo: item
+      }));
+    });
+  }
+
+  /**
    * 转换元数据
    * @override
    */
   protected initMeta() {
     const metaInfo = this.metaInfo || {};
     const sheets = metaInfo.sheets || [];
+    this.initStyles();
+    this.initBorderStyles();
     if (sheets.length == 0) {
       // 用户第一次使用richsheet,则为用户生成默认表格
       this.sheets.push(new SheetBuild({

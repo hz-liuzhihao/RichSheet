@@ -1,15 +1,20 @@
 import { BaseBuild, UndoItem, Operate, BaseBuildArgs } from '../flow/UndoManage';
 import { RowBuild } from './RowBuild';
 import { ColBuild } from './ColBuild';
-import { BorderBuild } from './BorderBuild';
 import { StyleBuild } from './StyleBuild';
 import { ExcelBuild } from './ExcelBuild';
+import { ExpressionBuild } from './ExpressionBuild';
+import { BorderStyleBuild } from './BorderStyleBuild';
 
 export interface CellMeta {
   /**
    * 单元格扩展属性
    */
   extend?: JSONObject;
+
+  colSpan?: number;
+
+  rowSpan?: number;
 
   row: number;
 
@@ -38,17 +43,11 @@ export class CellBuild extends BaseBuild<CellMeta> {
 
   private col: ColBuild;
 
-  private topBorderBuilds: BorderBuild[];
-
-  private bottomBorderBuilds: BorderBuild[];
-
-  private rightBorderBuilds: BorderBuild[];
-
-  private leftBorderBuilds: BorderBuild[];
+  private borderStyleBuild: BorderStyleBuild;
 
   private styleBuild: StyleBuild;
 
-  private expressionBuild;
+  private expressionBuild: ExpressionBuild;
 
   private excelBuild: ExcelBuild;
 
@@ -68,21 +67,74 @@ export class CellBuild extends BaseBuild<CellMeta> {
    */
   protected initMeta() {
     // 在行列中记录单元格
-    const { row, col } = this.metaInfo;
+    const { row, col, styleIndex } = this.metaInfo;
+    this.styleBuild = this.excelBuild.getStyleBuild(styleIndex);
     this.row.getCells()[col] = this;
     this.col.getCells()[row] = this;
   }
 
+  /**
+   * 设置单元格的样式数据层
+   * @param styleBuild 
+   * @returns 
+   */
   public setStyleBuild(styleBuild: StyleBuild) {
+    if (this.styleBuild == styleBuild) {
+      return;
+    }
+    this.styleBuild.removeCell(this);
+    styleBuild.addCell(this);
     this.styleBuild = styleBuild;
   }
 
+  /**
+   * 设置单元格的边框数据层
+   * @param borderStyleBuild 
+   * @returns 
+   */
+  public setBorderStyleBuild(borderStyleBuild: BorderStyleBuild) {
+    if (this.borderStyleBuild == borderStyleBuild) {
+      return;
+    }
+    this.borderStyleBuild.removeCell(this);
+    borderStyleBuild.addCell(this);
+    this.borderStyleBuild = borderStyleBuild;
+  }
+
+  /**
+   * 获取内联样式
+   * @returns 
+   */
   public getStyle() {
     if (this.styleBuild == null) {
       return {};
     }
     const style = this.styleBuild.toStyle();
     return style;
+  }
+
+  /**
+   * 获取主题样式类名
+   */
+  public getThemeClassName() {
+    const themeStyle = this.excelBuild.getThemeStyle();
+    return themeStyle.getCellThemeClass();
+  }
+
+  /**
+   * 获取样式名
+   * @returns 
+   */
+  public getClassName() {
+    if (this.styleBuild != null) {
+      return this.styleBuild.getClassName();
+    }
+  }
+
+  public getBorderClassName() {
+    if (this.borderStyleBuild != null) {
+      return this.borderStyleBuild.getClassName();
+    }
   }
 
   restoreUndoItem(undoItem: UndoItem<CellMeta>) {

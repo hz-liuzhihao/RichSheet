@@ -9,19 +9,13 @@ export interface StyleMeta {
 
 }
 
-interface BoderMeta {
-  style: BorderStyle;
-  color: string;
-  width: number;
-}
-
-type BoderMetaKey = keyof BoderMeta;
+type StyleMetaKey = keyof StyleMeta;
 
 export interface StyleBuildArgs extends BaseBuildArgs {
   excelBuild: ExcelBuild;
 }
 
-export class StyleBuild extends CellPluginBuild<BoderMeta> {
+export class StyleBuild extends CellPluginBuild<StyleMeta> {
 
   private excelBuild: ExcelBuild;
 
@@ -98,7 +92,7 @@ export class StyleBuild extends CellPluginBuild<BoderMeta> {
     });
   }
 
-  restoreUndoItem(undoItem: UndoItem<BoderMeta>) {
+  restoreUndoItem(undoItem: UndoItem<StyleMeta>) {
     const op = undoItem.op;
     switch (op) {
       case Operate.Add:

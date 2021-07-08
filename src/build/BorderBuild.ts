@@ -2,6 +2,7 @@ import { BaseBuild, UndoItem, Operate, BaseBuildArgs } from '../flow/UndoManage'
 import { CellBuild } from './CellBuild';
 import { RowBuild } from './RowBuild';
 import { ColBuild } from './ColBuild';
+import CellPluginBuild from './CellPluginBuild';
 
 export interface BoderMeta {
   style: BorderStyle;
@@ -19,19 +20,17 @@ export interface BorderBuildArgs extends BaseBuildArgs {
   col: ColBuild;
 }
 
-export class BorderBuild extends BaseBuild<BoderMeta> {
-
-  private rowBuild: RowBuild;
-
-  private colBuild: ColBuild;
+/**
+ * 边框数据层,一个边框可能被几个单元格所共享
+ */
+export class BorderBuild extends CellPluginBuild<BoderMeta> {
 
   public constructor(args: BorderBuildArgs) {
     super(args);
   }
 
   protected initData(args: BorderBuildArgs) {
-    this.rowBuild = args.row;
-    this.colBuild = args.col;
+    super.initData(args);
   }
 
   /**
