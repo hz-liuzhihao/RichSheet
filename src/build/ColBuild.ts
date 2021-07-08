@@ -81,6 +81,16 @@ export class ColBuild extends BaseBuild<ColMeta> {
   public getCells() {
     return this.cells;
   }
+  
+  /**
+   * 获取行头样式
+   * @returns 
+   */
+   public getThemeClassName() {
+    const excelBuild = this.excelBuild;
+    const themeStyle = excelBuild.getThemeStyle();
+    return themeStyle.getColHeadThemeClass();
+  }
 
   /**
    * 转换列头样式

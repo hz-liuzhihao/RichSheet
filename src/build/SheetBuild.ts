@@ -104,8 +104,22 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
     }
   }
 
+  /**
+   * 获取表格宽度
+   * @returns 
+   */
   public getTableWidth() {
     return this.cols.reduce((total, item) => total + item.getProperty('width'), 0);
+  }
+
+  /**
+   * 获取左上角样式
+   * @returns 
+   */
+  public getCornerClass() {
+    const excelBuild = this.excelBuild;
+    const themeStyle = excelBuild.getThemeStyle();
+    return themeStyle.getColHeadThemeClass();
   }
 
   /**

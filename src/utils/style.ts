@@ -20,7 +20,7 @@ let globalSheet: CSSStyleSheet;
  * @param index 
  * @returns 
  */
-export function addCssRule(selector: string, rules: JSONObject = {}, type: 'class' | 'id' = 'class') {
+export function addCssRule(selector: string, rules: JSONObject = {}, suffix = '', type: 'class' | 'id' = 'class') {
   if (globalSheet == null) {
     globalSheet = createStyleSheet();
   }
@@ -35,7 +35,7 @@ export function addCssRule(selector: string, rules: JSONObject = {}, type: 'clas
     ruleStr += `${kebabCase(key)}:${rules[key]};`;
   }
   ruleStr += '}';
-  return globalSheet.insertRule(".rs_theme_1{border-left:1 solid #d4d4d4;border-bottom:1 solid #d4d4d4;}");
+  return globalSheet.insertRule(identify + selector + suffix + ruleStr);
 }
 
 /**

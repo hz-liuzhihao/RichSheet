@@ -2,7 +2,7 @@ import { BaseEditorArgs } from './BaseEditor';
 import BaseEditor from './BaseEditor';
 import { SheetBuild } from '../build/SheetBuild';
 import RowEditor from './RowEditor';
-import RowHeadEditor from './RowHeadEditor';
+import ColHeadEditor from './ColHeadEditor';
 export interface SheetEditorArgs extends BaseEditorArgs {
 
 }
@@ -15,7 +15,7 @@ export default class SheetEditor extends BaseEditor {
 
   protected rows: RowEditor[];
 
-  protected rowHeadEditor: RowHeadEditor;
+  protected rowHeadEditor: ColHeadEditor;
 
   public constructor(args: SheetEditorArgs) {
     super(args);
@@ -34,7 +34,7 @@ export default class SheetEditor extends BaseEditor {
     const width = build.getTableWidth();
     table.style.width = `${width}px`;
     // 初始化行头
-    this.rowHeadEditor = new RowHeadEditor({
+    this.rowHeadEditor = new ColHeadEditor({
       build,
       domParent: table
     });

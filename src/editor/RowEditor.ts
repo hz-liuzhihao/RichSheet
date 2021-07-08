@@ -2,7 +2,7 @@ import BaseEditor, { BaseEditorArgs } from './BaseEditor';
 import { RowBuild } from '../build/RowBuild';
 import CellEditor from './CellEditor';
 import { ColBuild } from '../build/ColBuild';
-import ColHeadEditor from './ColHeadEditor';
+import RowHeadEditor from './RowHeadEditor';
 
 export interface RowEditorArgs extends BaseEditorArgs {
   build: RowBuild;
@@ -19,7 +19,7 @@ export default class RowEditor extends BaseEditor {
 
   protected cells: CellEditor[];
 
-  protected colHeadEditor: ColHeadEditor;
+  protected colHeadEditor: RowHeadEditor;
 
   public constructor(args: RowEditorArgs) {
     args.type = 'tr';
@@ -43,7 +43,7 @@ export default class RowEditor extends BaseEditor {
     const cells = build.getCells();
 
     // 初始化行头
-    this.colHeadEditor = new ColHeadEditor({
+    this.colHeadEditor = new RowHeadEditor({
       build,
       domParent: this.mainDom
     });

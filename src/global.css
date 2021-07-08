@@ -5,4 +5,9 @@ body {
 table {
   border-spacing: 0;
   border-collapse: collapse;
+  position: relative;
+}
+
+* {
+  box-sizing: border-box;
 }

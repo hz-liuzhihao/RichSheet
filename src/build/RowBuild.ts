@@ -74,6 +74,16 @@ export class RowBuild extends BaseBuild<RowMeta> {
   }
 
   /**
+   * 获取行头样式
+   * @returns 
+   */
+  public getThemeClassName() {
+    const excelBuild = this.excelBuild;
+    const themeStyle = excelBuild.getThemeStyle();
+    return themeStyle.getRowHeadThemeClass();
+  }
+
+  /**
    * 获取行头
    */
   public getIndex() {

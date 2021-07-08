@@ -1,7 +1,24 @@
-.colheadeditor_main {
+.colheadeditor_main > td {
   text-align: center;
   vertical-align: middle;
+  background-color: #fff;
+  position: sticky;
+  top: 0;
+}
+
+.colheadeditor_main > td:first-child {
+  background-color: #fff;
   position: sticky;
   left: 0;
-  background-color: #fff;
+  z-index: 1;
+}
+
+.colheadeditor_main > td::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
 }

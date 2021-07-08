@@ -1,27 +1,50 @@
-import BaseEditor from './BaseEditor';
 import { BaseEditorArgs } from './BaseEditor';
-import { RowBuild } from '../build/RowBuild';
-import './ColHeadEditor.css';
+import BaseEditor from './BaseEditor';
+import { getColNameByOrder } from '../utils/common';
+import { SheetBuild } from '../build/SheetBuild';
+import './RowHeadEditor.css';
 export interface ColHeadEditorArgs extends BaseEditorArgs {
 
 }
 
 export default class ColHeadEditor extends BaseEditor {
 
-  protected build: RowBuild;
+  private tds: HTMLElement[];
+
+  protected build: SheetBuild;
 
   public constructor(args: ColHeadEditorArgs) {
-    args.type = 'td';
+    args.type = 'tr';
     super(args);
   }
 
-  protected initDom() {
+  protected initData(args: ColHeadEditorArgs) {
+    super.initData(args);
+    this.tds = [];
   }
 
-  protected render() {
-    const { mainDom, build } = this;
-    const index = build.getProperty('index');
-    Object.assign(mainDom.style, build.toStyle());
-    mainDom.textContent = index;
+  protected initDom() {
+    const build = this.build;
+    const cols = build.getCols();
+    // 预留列头的位置
+    const tdHead = document.createElement('td');
+    const cornerClass = build.getCornerClass();
+    cornerClass && tdHead.classList.add(cornerClass);
+    this.mainDom.appendChild(tdHead);
+    // 初始化行头
+    cols.forEach((item, index) => {
+      const colName = item.getProperty('index');
+      const td = document.createElement('td');
+      const colHeadClassName = item.getThemeClassName();
+      colHeadClassName && td.classList.add(colHeadClassName);
+      Object.assign(td.style, item.toStyle());
+      td.textContent = colName;
+      this.tds.push(td);
+      this.mainDom.appendChild(td);
+    });
+  }
+
+  public render() {
+
   }
 }

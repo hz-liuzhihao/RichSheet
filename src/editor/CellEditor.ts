@@ -1,5 +1,6 @@
 import BaseEditor, { BaseEditorArgs } from './BaseEditor';
 import { CellBuild } from '../build/CellBuild';
+import './CellEditor.css';
 
 export interface CellEditorArgs extends BaseEditorArgs {
   build: CellBuild;

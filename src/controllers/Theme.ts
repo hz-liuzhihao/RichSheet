@@ -64,12 +64,12 @@ export class ThemeStyle {
     }
     const theme = this.theme;
     const cellTheme = this.cellTheme = uniqueId(AppConst.classNamePrefix + 'theme_');
-    const borderString = `${theme.borderWidth} ${theme.borderStyle} ${theme.borderColor}`;
+    const borderString = `${theme.borderWidth}px ${theme.borderStyle} ${theme.borderColor}`;
     const style = {
-      borderLeft: borderString,
+      borderRight: borderString,
       borderBottom: borderString
     };
-    addCssRule(cellTheme, style as CSSStyleDeclaration);
+    addCssRule(cellTheme, style as CSSStyleDeclaration, ':after');
     return cellTheme;
   }
 
@@ -77,13 +77,35 @@ export class ThemeStyle {
    * 获取行头主题样式名
    */
   public getRowHeadThemeClass() {
-
+    if (this.rowHeadTheme) {
+      return this.rowHeadTheme;
+    }
+    const theme = this.theme;
+    const rowHeadTheme = this.rowHeadTheme = uniqueId(AppConst.classNamePrefix + 'theme_');
+    const borderString = `${theme.borderWidth}px ${theme.borderStyle} ${theme.borderColor}`;
+    const style = {
+      borderRight: borderString,
+      borderBottom: borderString
+    };
+    addCssRule(rowHeadTheme, style as CSSStyleDeclaration, ':after');
+    return rowHeadTheme;
   }
 
   /**
    * 获取列头主题样式名
    */
   public getColHeadThemeClass() {
-
+    if (this.colHeadTheme) {
+      return this.colHeadTheme;
+    }
+    const theme = this.theme;
+    const colHeadTheme = this.colHeadTheme = uniqueId(AppConst.classNamePrefix + 'theme_');
+    const borderString = `${theme.borderWidth}px ${theme.borderStyle} ${theme.borderColor}`;
+    const style = {
+      borderRight: borderString,
+      borderBottom: borderString
+    };
+    addCssRule(colHeadTheme, style as CSSStyleDeclaration, ':after');
+    return colHeadTheme;
   }
 }
