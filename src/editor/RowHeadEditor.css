@@ -4,6 +4,8 @@
   position: sticky;
   left: 0;
   background-color: #fff;
+  z-index: 1;
+  user-select: none;
 }
 
 .rowheadeditor_main::after {
