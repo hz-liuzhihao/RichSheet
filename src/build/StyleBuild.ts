@@ -1,6 +1,9 @@
-import { BaseBuild, UndoItem, Operate, BaseBuildArgs } from '../flow/UndoManage';
-import { CellBuild } from './CellBuild';
+import { UndoItem, Operate, BaseBuildArgs } from '../flow/UndoManage';
 import { ExcelBuild } from './ExcelBuild';
+import { uniqueId } from 'lodash';
+import { addCssRule, deleteCssRule } from '../utils/style';
+import { AppConst } from '../config/constant';
+import CellPluginBuild from './CellPluginBuild';
 
 export interface StyleMeta {
 
@@ -18,11 +21,14 @@ export interface StyleBuildArgs extends BaseBuildArgs {
   excelBuild: ExcelBuild;
 }
 
-export class StyleBuild extends BaseBuild<BoderMeta> {
+export class StyleBuild extends CellPluginBuild<BoderMeta> {
 
   private excelBuild: ExcelBuild;
 
+  // cssRule索引
   private styleIndex: number;
+  // 样式类名
+  private className: string;
 
   public constructor(args: StyleBuildArgs) {
     super(args);
@@ -50,6 +56,46 @@ export class StyleBuild extends BaseBuild<BoderMeta> {
   public toStyle() {
     // 转换为内联样式或者样式类
     return this.metaInfo || {};
+  }
+
+  /**
+   * 获取样式类名
+   */
+  public getClassName() {
+    if (this.className) {
+      return this.className;
+    }
+    const style = this.toStyle();
+    const className = this.className = uniqueId(AppConst.classNamePrefix);
+    this.styleIndex = addCssRule(className, style as CSSStyleDeclaration);
+    return className;
+  }
+
+  /**
+   * 刷新最新样式类
+   * 当样式只关联一个单元格或者选中的单元格是此样式的所有单元格才可以刷新,否则需要复制一个新的样式层来赋给新的单元格
+   */
+  public refreshClassName() {
+    if (this.className == null) {
+      this.className = uniqueId(AppConst.classNamePrefix);
+    }
+    // 如果样式索引不为空,删除样式表中的规则
+    if (this.styleIndex != null) {
+      deleteCssRule(this.styleIndex);
+    }
+    const style = this.toStyle();
+    this.styleIndex = addCssRule(this.className, style as CSSStyleDeclaration);
+  }
+
+  /**
+   * 复制一个一模一样的样式数据层
+   * @returns 
+   */
+  public copy() {
+    return new StyleBuild({
+      excelBuild: this.excelBuild,
+      metaInfo: this.metaInfo
+    });
   }
 
   restoreUndoItem(undoItem: UndoItem<BoderMeta>) {

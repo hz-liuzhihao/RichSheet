@@ -23,7 +23,7 @@ export interface ITheme {
 export const DefaultTheme: ITheme = {
   primaryColor: '#1890ff',
   accentColor: '#fff',
-  borderColor: '#dedede',
+  borderColor: '#d4d4d4',
   borderWidth: 1,
   rowHeadHeight: 30,
   rowHeadWidth: 50,

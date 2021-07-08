@@ -1,5 +1,6 @@
-import { BaseBuild, Operate, UndoItem, BaseBuildArgs } from '../flow/UndoManage';
+import { Operate, UndoItem, BaseBuildArgs } from '../flow/UndoManage';
 import { ExcelBuild } from './ExcelBuild';
+import CellPluginBuild from './CellPluginBuild';
 
 export interface ExpressionMeta {
   /**
@@ -17,7 +18,7 @@ export interface ExpressionBuildArgs extends BaseBuildArgs {
 
 type ExpressionMetaKey = keyof ExpressionMeta;
 
-export class ExpressionBuild extends BaseBuild<ExpressionMeta> {
+export class ExpressionBuild extends CellPluginBuild<ExpressionMeta> {
 
   private excelBuild: ExcelBuild;
 
