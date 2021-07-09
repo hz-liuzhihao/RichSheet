@@ -116,7 +116,12 @@ export enum Operate {
   /**
    * 修改
    */
-  Modify = 2
+  Modify = 2,
+
+  /**
+   * 一次查询操作,对数据不产生影响,不记录undo信息只产生临时的undoItem
+   */
+  Query = 4,
 }
 
 /**
@@ -166,6 +171,9 @@ export class UndoManage {
 
   private curUndoItems: UndoItem<any>[] = [];
 
+  // 查询undoItem集合
+  private qurUndoItems: UndoItem<any>[] = [];
+
   private workbench: IWorkBench;
 
   public constructor(args: UndoManageArgs) {
@@ -207,7 +215,10 @@ export class UndoManage {
     this.count--;
     if (this.count == 0) {
       this.undoItems.push(this.curUndoItems);
+      // 在进行数据驱动渲染时,需要将查询操作一起合并
+      this.workbench.doChange([...this.qurUndoItems, ...this.curUndoItems]);
       this.curUndoItems = [];
+      this.qurUndoItems = [];
       this.redoItems.length = 0;
     }
   }
@@ -220,8 +231,14 @@ export class UndoManage {
     if (this.isRedo || this.isUndo) {
       return;
     }
+    // 只有在进行beginUpdate指令后才进行操作
     if (this.count > 0) {
-      this.curUndoItems.push(undoItem);
+      // 凡是查询操作不记录undo信息
+      if (undoItem.op == Operate.Query) {
+        this.qurUndoItems.push(undoItem);
+      } else {
+        this.curUndoItems.push(undoItem);
+      }
     }
   }
 

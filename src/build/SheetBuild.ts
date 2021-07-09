@@ -30,6 +30,17 @@ export interface SheetBuildArgs extends BaseBuildArgs {
   excelBuild: ExcelBuild;
 }
 
+interface Selector {
+  // 选中的开始行
+  rowStart: number;
+  // 选中的结束行
+  rowEnd: number;
+  // 选中的开始列
+  colStart: number;
+  // 选中的结束列
+  colEnd: number;
+}
+
 /**
  * 表格数据层
  */
@@ -41,6 +52,8 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
 
   private cols: ColBuild[];
 
+  private selector: Selector[];
+
   public constructor(args: SheetBuildArgs) {
     super(args);
   }
@@ -49,6 +62,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
     this.excelBuild = args.excelBuild;
     this.rows = [];
     this.cols = [];
+    this.selector = [];
   }
 
   /**
@@ -136,6 +150,13 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
    */
   public getCols() {
     return this.cols;
+  }
+
+  /**
+   * 选中单元格
+   */
+  public doSelect() {
+
   }
 
   /** @implements */

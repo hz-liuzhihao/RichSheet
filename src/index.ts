@@ -2,6 +2,8 @@ import { UndoManage, IWorkBench, UndoItem } from './flow/UndoManage';
 import { ExcelBuild, ExcelMeta } from './build/ExcelBuild';
 import ExcelEditor from './editor/ExcelEditor';
 import './global.css';
+import BehaviorListener from './controllers/BehaviorListener';
+import { EmitBehavior } from './controllers/BehaviorListener';
 
 export interface SheetConfig {
   row: number;
@@ -10,6 +12,8 @@ export interface SheetConfig {
 
 interface WorkbenchArgs {
   config: RichSeetConfig;
+
+  emitBehavior?: EmitBehavior
 }
 class Workbench implements IWorkBench {
 
@@ -19,10 +23,15 @@ class Workbench implements IWorkBench {
 
   private excelEditor: ExcelEditor;
 
+  private behaviorListener: BehaviorListener;
+
+  private emitBehavior: EmitBehavior;
+
   private config: RichSeetConfig;
 
   public constructor(args: WorkbenchArgs) {
     const config = this.config = args.config;
+    this.emitBehavior = args.emitBehavior;
     config.onInit && config.onInit();
     // 初始化数据管理器
     this.initManage();
@@ -42,8 +51,10 @@ class Workbench implements IWorkBench {
       domParent = document.getElementById(dom);
     }
     this.excelEditor.requestRender().then(() => {
+      (domParent as HTMLElement).innerHTML = '';
       this.excelEditor.setParent(domParent as HTMLElement);
       onLoad && onLoad();
+      this.initListener(domParent as HTMLElement)
     }).catch(() => {
       console.log('richsheet渲染失败');
     });
@@ -84,6 +95,18 @@ class Workbench implements IWorkBench {
     this.excelEditor = new ExcelEditor({
       workbench: this,
       build: this.excelBuild
+    });
+  }
+
+  /**
+   * 初始化监听器
+   */
+  private initListener(dom: HTMLElement) {
+    const emitBehavior = this.emitBehavior;
+    this.behaviorListener = new BehaviorListener({
+      listenDom: dom,
+      emitBehavior,
+      excelBuld: this.excelBuild
     });
   }
 }
