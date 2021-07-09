@@ -38,6 +38,15 @@ export default class ExcelEditor extends BaseEditor {
     });
   }
 
+  /**
+   * 渲染每个undo信息
+   */
+  protected renderUndoItem() {
+    this.needRenderUndoItems.forEach(item => {
+
+    });
+  }
+
   protected render() {
     this.sheetEditors.forEach(item => item.requestRender());
   }

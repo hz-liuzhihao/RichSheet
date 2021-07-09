@@ -51,6 +51,10 @@ export class ThemeStyle {
 
   private colHeadTheme: string;
 
+  private selectTheme: string;
+
+  private selectDotTheme: string;
+
   public constructor(args: ThemeStyleArgs) {
     this.theme = args.theme;
   }
@@ -107,5 +111,40 @@ export class ThemeStyle {
     };
     addCssRule(colHeadTheme, style as CSSStyleDeclaration, ':after');
     return colHeadTheme;
+  }
+
+  /**
+   * 获取选中框边框颜色
+   * @returns 
+   */
+  public getSelectThemeClass() {
+    if (this.selectTheme) {
+      return this.selectTheme;
+    }
+    const theme = this.theme;
+    const selectTheme = this.selectTheme = uniqueId(AppConst.classNamePrefix + 'theme_');
+    const style = {
+      borderColor: theme.primaryColor
+    };
+    addCssRule(selectTheme, style as CSSStyleDeclaration);
+    return selectTheme;
+  }
+
+  /**
+   * 获取选中点状
+   * @returns 
+   */
+  public getSelectDotClass() {
+    if (this.selectDotTheme) {
+      return this.selectDotTheme;
+    }
+    const theme = this.theme;
+    const selectDotTheme = this.selectDotTheme = uniqueId(AppConst.classNamePrefix + 'theme_');
+    const style = {
+      backgroundColor: theme.primaryColor,
+      borderColor: theme.accentColor
+    };
+    addCssRule(selectDotTheme, style as CSSStyleDeclaration);
+    return selectDotTheme;
   }
 }

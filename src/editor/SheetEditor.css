@@ -1,0 +1,20 @@
+.selector {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-width: 1px;
+  border-style: solid;
+  position: absolute;
+  width: 0;
+  height: 0;
+  left: 0;
+  top: 0;
+  box-sizing: content-box;
+  z-index: 3;
+}
+
+.selector_focus_cell {
+  background-color: #fff;
+}
+
+.selector_dot {
+  border: 1px solid #fff;
+}

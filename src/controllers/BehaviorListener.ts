@@ -8,7 +8,7 @@ export interface EmitBehavior {
   /**
    * 右键菜单
    */
-  rightClick(event: MouseEvent): void;
+  rightClick?: (event: MouseEvent) => void;
 }
 
 interface BehaviorListenerArgs {
@@ -26,7 +26,7 @@ export default class BehaviorListener {
 
   private excelBuild: ExcelBuild;
 
-  private emitBehavior: EmitBehavior;
+  private emitBehavior: EmitBehavior = {};
 
   private isDragging: boolean;
 

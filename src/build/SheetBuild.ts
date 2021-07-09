@@ -41,6 +41,12 @@ interface Selector {
   colEnd: number;
 }
 
+interface Selectors {
+  focusCell?: CellBuild;
+
+  selectors?: Selector[];
+}
+
 /**
  * 表格数据层
  */
@@ -52,7 +58,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
 
   private cols: ColBuild[];
 
-  private selector: Selector[];
+  private selector: Selectors;
 
   public constructor(args: SheetBuildArgs) {
     super(args);
@@ -62,7 +68,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
     this.excelBuild = args.excelBuild;
     this.rows = [];
     this.cols = [];
-    this.selector = [];
+    this.selector = {};
   }
 
   /**
@@ -161,28 +167,48 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
     const rowEnd = endCell.getProperty('row');
     const colEnd = endCell.getProperty('col');
     const undoManage = this.excelBuild.getUndoManage();
+    const selector = {...this.selector}
     const info: Selector = {
       rowStart,
       colStart,
       rowEnd,
       colEnd
     };
+    if (this.selector.selectors) {
+      selector.selectors = [...this.selector.selectors];
+    }
     undoManage.beginUpdate();
     try {
       undoManage.storeUndoItem({
         c: this,
         op: Operate.Query,
         p: 'select',
-        v: [...this.selector]
+        v: this.selector
       })
       if (isCtrl) {
-        this.selector.push(info);
+        selector.selectors.push(info);
       } else {
-        this.selector = [info];
+        selector.selectors = [info];
       }
     } finally {
       undoManage.endUpdate();
     }
+  }
+
+  /**
+   * 获取选择数据
+   * @returns 
+   */
+  public getSelector() {
+    return this.selector;
+  }
+
+  /**
+   * 返回主题
+   * @returns 
+   */
+  public getTheme() {
+    return this.excelBuild.getThemeStyle();
   }
 
   /** @implements */

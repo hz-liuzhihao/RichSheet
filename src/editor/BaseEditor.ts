@@ -1,4 +1,4 @@
-import { BaseBuild } from '../flow/UndoManage';
+import { BaseBuild, UndoItem } from '../flow/UndoManage';
 
 export interface BaseEditorArgs {
   build: BaseBuild<any>;
@@ -19,6 +19,12 @@ export default abstract class BaseEditor {
 
   protected parentDom: HTMLElement;
 
+  protected renderPromise: Promise<void>;
+
+  protected renderUndoPromise: Promise<void>;
+
+  protected needRenderUndoItems: UndoItem[];
+
   public constructor(args: BaseEditorArgs) {
     this.initData(args);
     this.initMainDom(args.type);
@@ -33,6 +39,7 @@ export default abstract class BaseEditor {
    */
   protected initData(args: BaseEditorArgs) {
     this.build = args.build;
+    this.needRenderUndoItems = [];
   }
 
   /**
@@ -83,16 +90,43 @@ export default abstract class BaseEditor {
    */
   protected abstract render(): void;
 
+  protected abstract renderUndoItem();
+
   /**
-   * 请求渲染
+   * 请求全量渲染
    * @returns 
    */
   public requestRender(): Promise<void> {
-    return new Promise(resolve => {
+    if (this.renderPromise) {
+      return this.renderPromise;
+    }
+    return this.renderPromise = new Promise(resolve => {
       requestAnimationFrame(() => {
         this.render();
+        this.renderPromise = null;
         resolve();
       });
     });
   }
+
+  /**
+   * 请求渲染undoItem
+   * @param undoItem 
+   * @returns 
+   */
+  public requestRenderUndoItem(undoItem: UndoItem) {
+    this.needRenderUndoItems.push(undoItem);
+    if (this.renderPromise) {
+      return this.renderPromise;
+    }
+    return this.renderUndoPromise = new Promise(resolve => {
+      requestAnimationFrame(() => {
+        this.renderUndoItem();
+        this.renderUndoPromise = null;
+        this.needRenderUndoItems = [];
+        resolve();
+      });
+    });
+  }
+
 }

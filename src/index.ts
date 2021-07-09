@@ -65,7 +65,9 @@ class Workbench implements IWorkBench {
    * @param undoItems 
    */
   doChange = (undoItems: UndoItem[]) => {
-
+    undoItems.forEach(item => {
+      this.excelEditor.requestRenderUndoItem(item);
+    });
   }
 
   /**

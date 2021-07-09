@@ -44,7 +44,16 @@ export default class ColHeadEditor extends BaseEditor {
     });
   }
 
-  public render() {
+  /**
+   * 渲染每个undo信息
+   */
+  protected renderUndoItem() {
+    this.needRenderUndoItems.forEach(item => {
+
+    });
+  }
+
+  protected render() {
 
   }
 }

@@ -171,7 +171,7 @@ export class UndoManage {
 
   public isRedo: boolean = false;
 
-  private count: number;
+  private count: number = 0;
 
   private undoItems: UndoItem[][] = [];
 
@@ -222,7 +222,9 @@ export class UndoManage {
   public endUpdate(): void {
     this.count--;
     if (this.count == 0) {
-      this.undoItems.push(this.curUndoItems);
+      if (this.curUndoItems.length) {
+        this.undoItems.push(this.curUndoItems);
+      }
       // 在进行数据驱动渲染时,需要将查询操作一起合并
       this.workbench.doChange([...this.qurUndoItems, ...this.curUndoItems]);
       this.curUndoItems = [];

@@ -3,6 +3,7 @@ import BaseEditor from './BaseEditor';
 import { SheetBuild } from '../build/SheetBuild';
 import RowEditor from './RowEditor';
 import ColHeadEditor from './ColHeadEditor';
+import './SheetEditor.css';
 export interface SheetEditorArgs extends BaseEditorArgs {
 
 }
@@ -17,6 +18,10 @@ export default class SheetEditor extends BaseEditor {
 
   protected rowHeadEditor: ColHeadEditor;
 
+  protected selectDom: HTMLElement;
+
+  protected focusCellDom: HTMLElement;
+
   public constructor(args: SheetEditorArgs) {
     super(args);
   }
@@ -24,6 +29,21 @@ export default class SheetEditor extends BaseEditor {
   protected initData(args: SheetEditorArgs) {
     super.initData(args);
     this.rows = [];
+  }
+
+  protected initSelector() {
+    const theme = this.build.getTheme();
+    const selectDom = this.selectDom = document.createElement('div');
+    selectDom.classList.add('selector');
+    selectDom.classList.add(theme.getSelectThemeClass());
+    const focusCellDom = this.focusCellDom = document.createElement('div');
+    focusCellDom.classList.add('selector_focus_cell');
+    const dotDom = document.createElement('div');
+    dotDom.classList.add('selector_dot');
+    dotDom.classList.add(theme.getSelectDotClass());
+    selectDom.appendChild(dotDom)
+    selectDom.appendChild(focusCellDom);
+    this.mainDom.appendChild(selectDom);
   }
 
   protected initDom() {
@@ -49,8 +69,21 @@ export default class SheetEditor extends BaseEditor {
       }));
     });
     this.mainDom.appendChild(table);
+    this.initSelector();
   }
 
+  /**
+   * 渲染每个undo信息
+   */
+   protected renderUndoItem() {
+    this.needRenderUndoItems.forEach(item => {
+
+    });
+  }
+
+  /**
+   * 全量渲染
+   */
   protected render() {
     this.rows.forEach(item => item.requestRender());
     this.rowHeadEditor.requestRender();

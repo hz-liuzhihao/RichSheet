@@ -18,6 +18,15 @@ export default class RowHeadEditor extends BaseEditor {
   protected initDom() {
   }
 
+  /**
+   * 渲染每个undo信息
+   */
+   protected renderUndoItem() {
+    this.needRenderUndoItems.forEach(item => {
+
+    });
+  }
+
   protected render() {
     const { mainDom, build } = this;
     const index = build.getProperty('index');

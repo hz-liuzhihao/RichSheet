@@ -58,6 +58,15 @@ export default class RowEditor extends BaseEditor {
   }
 
   /**
+   * 渲染每个undo信息
+   */
+   protected renderUndoItem() {
+    this.needRenderUndoItems.forEach(item => {
+
+    });
+  }
+
+  /**
    * 渲染
    * @override
    */
