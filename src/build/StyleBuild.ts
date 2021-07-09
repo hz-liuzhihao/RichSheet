@@ -6,7 +6,7 @@ import { AppConst } from '../config/constant';
 import CellPluginBuild from './CellPluginBuild';
 
 export interface StyleMeta {
-
+  value: string;
 }
 
 type StyleMetaKey = keyof StyleMeta;
@@ -92,7 +92,7 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
     });
   }
 
-  restoreUndoItem(undoItem: UndoItem<StyleMeta>) {
+  restoreUndoItem(undoItem: UndoItem) {
     const op = undoItem.op;
     switch (op) {
       case Operate.Add:
@@ -105,7 +105,7 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
         if ((key as string).indexOf('.') > -1) {
           this.setDeepProperty(key, value);
         } else {
-          this.setProperty(key, value);
+          this.setProperty(key as any, value);
         }
         break;
     }

@@ -1,4 +1,5 @@
 import { ExcelBuild } from '../build/ExcelBuild';
+import { CellBuild } from '../build/CellBuild';
 /**
  * 通知用户行为接口
  */
@@ -60,7 +61,15 @@ export default class BehaviorListener {
    * @param event 
    */
   private doMouseDown = (event: MouseEvent) => {
-    console.log('鼠标按下成功监听');
+    const srcElement = event.target as HTMLElement;
+    const isCtrl = event.ctrlKey;
+    // 当按下的是单元格
+    if (srcElement.closest('.celleditor_main')) {
+      const cell: HTMLElement = srcElement.closest('.celleditor_main');
+      const cellBuild: CellBuild = cell.__build__;
+      const sheetBuild = cellBuild.getSheetBuild();
+      sheetBuild.doSelect(cellBuild, cellBuild, isCtrl);
+    }
   }
 
   /**

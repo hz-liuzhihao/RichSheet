@@ -64,7 +64,7 @@ class Workbench implements IWorkBench {
    * 数据层变化时进行调用传递给UI层
    * @param undoItems 
    */
-  doChange = (undoItems: UndoItem<any>[]) => {
+  doChange = (undoItems: UndoItem[]) => {
 
   }
 
@@ -108,6 +108,11 @@ class Workbench implements IWorkBench {
       emitBehavior,
       excelBuld: this.excelBuild
     });
+  }
+
+  /** @override */
+  public getUndoManage() {
+    return this.undoManage;
   }
 }
 

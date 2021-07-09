@@ -140,7 +140,7 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
   }
 
   /** @implements */
-  restoreUndoItem(undoItem: UndoItem<ExcelMeta>) {
+  restoreUndoItem(undoItem: UndoItem) {
     const op = undoItem.op;
     switch (op) {
       case Operate.Add:
@@ -153,7 +153,7 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
         if ((key as string).indexOf('.') > -1) {
           this.setDeepProperty(key, value);
         } else {
-          this.setProperty(key, value);
+          this.setProperty(key as any, value);
         }
         break;
     }
@@ -181,5 +181,9 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
    */
   public getCurrentSheet() {
     return this.sheets[this.currentIndex];
+  }
+
+  public getUndoManage() {
+    return this.workbench.getUndoManage();
   }
 }

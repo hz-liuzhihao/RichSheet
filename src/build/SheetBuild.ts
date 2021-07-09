@@ -155,12 +155,38 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
   /**
    * 选中单元格
    */
-  public doSelect() {
-
+  public doSelect(startCell: CellBuild, endCell: CellBuild, isCtrl = false) {
+    const rowStart = startCell.getProperty('row');
+    const colStart = startCell.getProperty('col');
+    const rowEnd = endCell.getProperty('row');
+    const colEnd = endCell.getProperty('col');
+    const undoManage = this.excelBuild.getUndoManage();
+    const info: Selector = {
+      rowStart,
+      colStart,
+      rowEnd,
+      colEnd
+    };
+    undoManage.beginUpdate();
+    try {
+      undoManage.storeUndoItem({
+        c: this,
+        op: Operate.Query,
+        p: 'select',
+        v: [...this.selector]
+      })
+      if (isCtrl) {
+        this.selector.push(info);
+      } else {
+        this.selector = [info];
+      }
+    } finally {
+      undoManage.endUpdate();
+    }
   }
 
   /** @implements */
-  public restoreUndoItem(undoItem: UndoItem<SheetMeta>) {
+  public restoreUndoItem(undoItem: UndoItem) {
     const op = undoItem.op;
     switch (op) {
       case Operate.Add:
@@ -175,7 +201,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
         if ((key as string).indexOf('.') > -1) {
           this.setDeepProperty(key, value);
         } else {
-          this.setProperty(key, value);
+          this.setProperty(key as any, value);
         }
         break;
     }

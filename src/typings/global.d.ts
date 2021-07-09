@@ -53,3 +53,7 @@ interface StyleMeta {
    */
   font: FontMeta;
 }
+
+interface HTMLElement {
+  __build__: any;
+}

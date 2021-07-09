@@ -1,7 +1,15 @@
 import { capitalize } from 'lodash';
 
 export interface IWorkBench {
-  doChange: (undoItems: UndoItem<any>[]) => void;
+  /**
+   * undo改变后触发
+   */
+  doChange: (undoItems: UndoItem[]) => void;
+
+  /**
+   * 获取undo
+   */
+  getUndoManage: () => UndoManage;
 }
 
 /**
@@ -32,7 +40,7 @@ export abstract class BaseBuild<T> {
   /**
    * 恢复或者重做用户操作
    */
-  public abstract restoreUndoItem(undoItem: UndoItem<T>): void;
+  public abstract restoreUndoItem(undoItem: UndoItem): void;
 
   /**
    * 深度设置元数据值,如a.b.c.d
@@ -127,8 +135,8 @@ export enum Operate {
 /**
  * 用户行为集合
  */
-export interface UndoItem<T> {
-  c: BaseBuild<T>,
+export interface UndoItem {
+  c: BaseBuild<any>,
   /**
    * 操作的行为
    */
@@ -136,7 +144,7 @@ export interface UndoItem<T> {
   /**
    * 操作的属性
    */
-  p: keyof T;
+  p?: string;
   /**
    * 操作的值
    */
@@ -144,7 +152,7 @@ export interface UndoItem<T> {
   /**
    * 添加或者删除后的索引
    */
-  i: number;
+  i?: number;
 }
 
 /**
@@ -165,14 +173,14 @@ export class UndoManage {
 
   private count: number;
 
-  private undoItems: UndoItem<any>[][] = [];
+  private undoItems: UndoItem[][] = [];
 
-  private redoItems: UndoItem<any>[][] = [];
+  private redoItems: UndoItem[][] = [];
 
-  private curUndoItems: UndoItem<any>[] = [];
+  private curUndoItems: UndoItem[] = [];
 
   // 查询undoItem集合
-  private qurUndoItems: UndoItem<any>[] = [];
+  private qurUndoItems: UndoItem[] = [];
 
   private workbench: IWorkBench;
 
@@ -227,7 +235,7 @@ export class UndoManage {
    * 存储新的undoItem
    * @param undoItem 
    */
-  public storeUndoItem(undoItem: UndoItem<any>) {
+  public storeUndoItem(undoItem: UndoItem) {
     if (this.isRedo || this.isUndo) {
       return;
     }

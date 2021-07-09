@@ -72,6 +72,7 @@ export default abstract class BaseEditor {
    */
   protected initMainDom(type = 'div'): void {
     const mainDom = this.mainDom = document.createElement(type);
+    (mainDom as any).__build__ = this.build;
     mainDom.classList.add(`${this.constructor.name.toLowerCase()}_main`);
   }
 

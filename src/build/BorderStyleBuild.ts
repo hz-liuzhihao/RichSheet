@@ -91,7 +91,7 @@ export class BorderStyleBuild extends CellPluginBuild<BorderStyleMeta> {
     });
   }
 
-  restoreUndoItem(undoItem: UndoItem<BorderStyleMeta>) {
+  restoreUndoItem(undoItem: UndoItem) {
     const op = undoItem.op;
     switch (op) {
       case Operate.Add:
@@ -104,7 +104,7 @@ export class BorderStyleBuild extends CellPluginBuild<BorderStyleMeta> {
         if ((key as string).indexOf('.') > -1) {
           this.setDeepProperty(key, value);
         } else {
-          this.setProperty(key, value);
+          this.setProperty(key as any, value);
         }
         break;
     }

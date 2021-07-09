@@ -37,11 +37,11 @@ export class BorderBuild extends CellPluginBuild<BoderMeta> {
    * 转换元数据
    * @override
    */
-   protected initMeta() {
+  protected initMeta() {
 
   }
 
-  restoreUndoItem(undoItem: UndoItem<BoderMeta>) {
+  restoreUndoItem(undoItem: UndoItem) {
     const op = undoItem.op;
     switch (op) {
       case Operate.Add:
@@ -54,7 +54,7 @@ export class BorderBuild extends CellPluginBuild<BoderMeta> {
         if ((key as string).indexOf('.') > -1) {
           this.setDeepProperty(key, value);
         } else {
-          this.setProperty(key, value);
+          this.setProperty(key as any, value);
         }
         break;
     }

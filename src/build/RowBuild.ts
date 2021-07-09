@@ -98,7 +98,15 @@ export class RowBuild extends BaseBuild<RowMeta> {
     return this.cells;
   }
 
-  restoreUndoItem(undoItem: UndoItem<RowMeta>) {
+  /**
+   * 获取表格
+   * @returns 
+   */
+  public getSheetBuild() {
+    return this.sheet;
+  }
+
+  restoreUndoItem(undoItem: UndoItem) {
     const op = undoItem.op;
     const { sheet } = this;
     switch (op) {
@@ -113,7 +121,7 @@ export class RowBuild extends BaseBuild<RowMeta> {
         if ((key as string).indexOf('.') > -1) {
           this.setDeepProperty(key, value);
         } else {
-          this.setProperty(key, value);
+          this.setProperty(key as any, value);
         }
         break;
     }

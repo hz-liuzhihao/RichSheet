@@ -106,7 +106,15 @@ export class ColBuild extends BaseBuild<ColMeta> {
     return style;
   }
 
-  restoreUndoItem(undoItem: UndoItem<ColMeta>) {
+  /**
+   * 获取表格
+   * @returns 
+   */
+   public getSheetBuild() {
+    return this.sheet;
+  }
+
+  restoreUndoItem(undoItem: UndoItem) {
     const op = undoItem.op;
     switch (op) {
       case Operate.Add:
@@ -119,7 +127,7 @@ export class ColBuild extends BaseBuild<ColMeta> {
         if ((key as string).indexOf('.') > -1) {
           this.setDeepProperty(key, value);
         } else {
-          this.setProperty(key, value);
+          this.setProperty(key as any, value);
         }
         break;
     }

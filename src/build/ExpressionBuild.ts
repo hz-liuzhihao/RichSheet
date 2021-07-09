@@ -39,7 +39,7 @@ export class ExpressionBuild extends CellPluginBuild<ExpressionMeta> {
 
   }
 
-  restoreUndoItem(undoItem: UndoItem<ExpressionMeta>) {
+  restoreUndoItem(undoItem: UndoItem) {
     const op = undoItem.op;
     switch (op) {
       case Operate.Add:
@@ -52,7 +52,7 @@ export class ExpressionBuild extends CellPluginBuild<ExpressionMeta> {
         if ((key as string).indexOf('.') > -1) {
           this.setDeepProperty(key, value);
         } else {
-          this.setProperty(key, value);
+          this.setProperty(key as any, value);
         }
         break;
     }
