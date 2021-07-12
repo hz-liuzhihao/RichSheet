@@ -123,11 +123,6 @@ export default class BehaviorListener {
           const currentCell: HTMLElement = currentSrcelement.closest('.celleditor_main');
           const currentCellBuild: CellBuild = currentCell.__build__;
           const sheetBuild = currentCellBuild.getSheetBuild();
-          // if (currentCellBuild.getRow() < cellBuild.getRow() || currentCellBuild.getCol() < cellBuild.getCol()) {
-          //   sheetBuild.doSelect(currentCellBuild, cellBuild, isCtrl);
-          // } else {
-          //   sheetBuild.doSelect(cellBuild, currentCellBuild, isCtrl);
-          // }
           sheetBuild.doSelect(cellBuild, currentCellBuild, isCtrl);
         }
       }
