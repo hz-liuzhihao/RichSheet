@@ -37,6 +37,8 @@ export default class ColHeadEditor extends BaseEditor {
       const td = document.createElement('td');
       const colHeadClassName = item.getThemeClassName();
       colHeadClassName && td.classList.add(colHeadClassName);
+      td.classList.add('colhead_item');
+      td.__build__ = item;
       Object.assign(td.style, item.toStyle());
       td.textContent = colName;
       this.tds.push(td);

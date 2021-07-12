@@ -1,5 +1,7 @@
 import { ExcelBuild } from '../build/ExcelBuild';
 import { CellBuild } from '../build/CellBuild';
+import { ColBuild } from '../build/ColBuild';
+import { RowBuild } from '../build/RowBuild';
 /**
  * 通知用户行为接口
  */
@@ -69,6 +71,22 @@ export default class BehaviorListener {
       const cellBuild: CellBuild = cell.__build__;
       const sheetBuild = cellBuild.getSheetBuild();
       sheetBuild.doSelect(cellBuild, cellBuild, isCtrl);
+    }
+    // 当按下的是列头
+    if (srcElement.closest('.colhead_item')) {
+      const colHead: HTMLElement = srcElement.closest('.colhead_item');
+      const colHeadBuild: ColBuild = colHead.__build__;
+      const sheetBuild = colHeadBuild.getSheetBuild();
+      const cells = colHeadBuild.getCells();
+      sheetBuild.doSelect(cells[0], cells[cells.length - 1], isCtrl);
+    }
+    // 当选中的是行头
+    if (srcElement.closest('.rowheadeditor_main')) {
+      const rowHead: HTMLElement = srcElement.closest('.rowheadeditor_main');
+      const rowHeadBuild: RowBuild = rowHead.__build__;
+      const sheetBuild = rowHeadBuild.getSheetBuild();
+      const cells = rowHeadBuild.getCells();
+      sheetBuild.doSelect(cells[0], cells[cells.length - 1], isCtrl);
     }
   }
 
