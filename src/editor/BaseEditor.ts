@@ -115,6 +115,11 @@ export default abstract class BaseEditor {
    * @returns 
    */
   public requestRenderUndoItem(undoItem: UndoItem) {
+    this.requestRenderChildrenUndoItem(undoItem);
+    // 只渲染当前数据层有修改的
+    if (undoItem.c !== this.build) {
+      return;
+    }
     this.needRenderUndoItems.push(undoItem);
     if (this.renderPromise) {
       return this.renderPromise;
@@ -127,6 +132,13 @@ export default abstract class BaseEditor {
         resolve();
       });
     });
+  }
+
+  /**
+   * 请求渲染子编辑器
+   * 如果编辑器包含了子编辑器需要向下传递则调用此方法
+   */
+  protected requestRenderChildrenUndoItem(undoItem: UndoItem) {
   }
 
 }

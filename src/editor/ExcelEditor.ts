@@ -1,5 +1,5 @@
 import BaseEditor from './BaseEditor';
-import { IWorkBench } from '../flow/UndoManage';
+import { IWorkBench, UndoItem } from '../flow/UndoManage';
 import { ExcelBuild } from '../build/ExcelBuild';
 import SheetEditor from './SheetEditor';
 
@@ -44,6 +44,13 @@ export default class ExcelEditor extends BaseEditor {
   protected renderUndoItem() {
     this.needRenderUndoItems.forEach(item => {
 
+    });
+  }
+
+  /** @override */
+  protected requestRenderChildrenUndoItem(undoItem: UndoItem) {
+    this.sheetEditors.forEach(item => {
+      item.requestRenderUndoItem(undoItem);
     });
   }
 

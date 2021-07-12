@@ -68,7 +68,10 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
     this.excelBuild = args.excelBuild;
     this.rows = [];
     this.cols = [];
-    this.selector = {};
+    this.selector = {
+      focusCell: null,
+      selectors: []
+    };
   }
 
   /**
@@ -184,12 +187,14 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
         op: Operate.Query,
         p: 'select',
         v: this.selector
-      })
+      });
       if (isCtrl) {
         selector.selectors.push(info);
       } else {
         selector.selectors = [info];
       }
+      selector.focusCell = startCell;
+      this.selector = selector;
     } finally {
       undoManage.endUpdate();
     }

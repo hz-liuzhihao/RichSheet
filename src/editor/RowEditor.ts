@@ -3,6 +3,7 @@ import { RowBuild } from '../build/RowBuild';
 import CellEditor from './CellEditor';
 import { ColBuild } from '../build/ColBuild';
 import RowHeadEditor from './RowHeadEditor';
+import { UndoItem } from '../flow/UndoManage';
 
 export interface RowEditorArgs extends BaseEditorArgs {
   build: RowBuild;
@@ -57,10 +58,16 @@ export default class RowEditor extends BaseEditor {
     });
   }
 
+  /** @override */
+  protected requestRenderChildrenUndoItem(undoItem: UndoItem) {
+    this.cells.forEach(item => item.requestRenderUndoItem(undoItem));
+    this.colHeadEditor.requestRenderUndoItem(undoItem);
+  }
+
   /**
    * 渲染每个undo信息
    */
-   protected renderUndoItem() {
+  protected renderUndoItem() {
     this.needRenderUndoItems.forEach(item => {
 
     });

@@ -4,6 +4,7 @@ import { SheetBuild } from '../build/SheetBuild';
 import RowEditor from './RowEditor';
 import ColHeadEditor from './ColHeadEditor';
 import './SheetEditor.css';
+import { UndoItem } from '../flow/UndoManage';
 export interface SheetEditorArgs extends BaseEditorArgs {
 
 }
@@ -72,12 +73,18 @@ export default class SheetEditor extends BaseEditor {
     this.initSelector();
   }
 
+  /** @override */
+  protected requestRenderChildrenUndoItem(undoItme: UndoItem) {
+    this.rows.forEach(item => item.requestRenderUndoItem(undoItme));
+    this.rowHeadEditor.requestRenderUndoItem(undoItme);
+  }
+
   /**
    * 渲染每个undo信息
    */
-   protected renderUndoItem() {
+  protected renderUndoItem() {
     this.needRenderUndoItems.forEach(item => {
-
+      
     });
   }
 
