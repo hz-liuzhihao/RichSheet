@@ -113,15 +113,40 @@ export default class SheetEditor extends BaseEditor {
       const endEditor = this.getCellEditor(rowEnd, colEnd);
       const startPosition = startEditor.getPosRelaTable();
       const endPosition = endEditor.getPosRelaTable();
-      const { top, left } = startPosition;
-      const right = endPosition.left + endPosition.width;
-      const bottom = endPosition.top + endPosition.height;
+      const { top, left, width, height } = startPosition;
+      const { top: endTop, left: endLeft, width: endWidth, height: endHeight } = endPosition;
+      let realTop;
+      let maxTop;
+      let realLeft;
+      let maxLeft;
+      let lastWidth;
+      let lastHeight;
+      if (top < endTop) {
+        realTop = top;
+        maxTop = endTop;
+        lastHeight = endHeight;
+      } else {
+        realTop = endTop;
+        maxTop = top;
+        lastHeight = height;
+      }
+      if (left < endLeft) {
+        realLeft = left;
+        maxLeft = endLeft;
+        lastWidth = endWidth;
+      } else {
+        realLeft = endLeft;
+        maxLeft = left;
+        lastWidth = width;
+      }
+      const right = maxLeft + lastWidth;
+      const bottom = maxTop + lastHeight;
       // 由于选中边框原因全部缩小1
       setDomStyle(selectDom, {
-        left: left - 1.5,
-        top: top - 1.5,
-        width: right - left - 1.5,
-        height: bottom - top - 1.5,
+        left: realLeft - 1.5,
+        top: realTop - 1.5,
+        width: right - realLeft - 1.5,
+        height: bottom - realTop - 1.5,
       });
     }
   }

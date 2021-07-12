@@ -145,6 +145,22 @@ export class CellBuild extends BaseBuild<CellMeta> {
     return this.row.getSheetBuild();
   }
 
+  /**
+   * 获取行
+   * @returns 
+   */
+  public getRow() {
+    return this.metaInfo.row;
+  }
+
+  /**
+   * 获取列
+   * @returns 
+   */
+  public getCol() {
+    return this.metaInfo.col;
+  }
+
   restoreUndoItem(undoItem: UndoItem) {
     const op = undoItem.op;
     switch (op) {

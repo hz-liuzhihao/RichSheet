@@ -32,6 +32,8 @@ export default class BehaviorListener {
 
   private isDragging: boolean;
 
+  private lastEvent: MouseEvent;
+
   public constructor(args: BehaviorListenerArgs) {
     this.excelBuild = args.excelBuld;
     this.emitBehavior = args.emitBehavior;
@@ -65,6 +67,7 @@ export default class BehaviorListener {
   private doMouseDown = (event: MouseEvent) => {
     const srcElement = event.target as HTMLElement;
     const isCtrl = event.ctrlKey;
+    this.lastEvent = event;
     // 当按下的是单元格
     if (srcElement.closest('.celleditor_main')) {
       const cell: HTMLElement = srcElement.closest('.celleditor_main');
@@ -95,7 +98,27 @@ export default class BehaviorListener {
    * @param event 
    */
   private doMouseMove = (event: MouseEvent) => {
-    console.log('鼠标移动成功监听');
+    if (this.lastEvent) {
+      const isCtrl = event.ctrlKey;
+      const lastEvent = this.lastEvent;
+      const currentSrcelement = event.target as HTMLElement;
+      const lastSrcelement = lastEvent.target as HTMLElement;
+      if (lastSrcelement.closest('.celleditor_main')) {
+        const cell: HTMLElement = lastSrcelement.closest('.celleditor_main');
+        const cellBuild: CellBuild = cell.__build__;
+        if (currentSrcelement.closest('.celleditor_main')) {
+          const currentCell: HTMLElement = currentSrcelement.closest('.celleditor_main');
+          const currentCellBuild: CellBuild = currentCell.__build__;
+          const sheetBuild = currentCellBuild.getSheetBuild();
+          // if (currentCellBuild.getRow() < cellBuild.getRow() || currentCellBuild.getCol() < cellBuild.getCol()) {
+          //   sheetBuild.doSelect(currentCellBuild, cellBuild, isCtrl);
+          // } else {
+          //   sheetBuild.doSelect(cellBuild, currentCellBuild, isCtrl);
+          // }
+          sheetBuild.doSelect(cellBuild, currentCellBuild, isCtrl);
+        }
+      }
+    }
   }
 
   /**
@@ -103,6 +126,6 @@ export default class BehaviorListener {
    * @param event 
    */
   private doMouseUp = (event: MouseEvent) => {
-    console.log('鼠标抬起成功监听');
+    this.lastEvent = null;
   }
 }
