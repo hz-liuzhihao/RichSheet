@@ -9,6 +9,7 @@
   top: 0;
   box-sizing: content-box;
   z-index: 3;
+  pointer-events: none;
 }
 
 .selector_focus_cell {
