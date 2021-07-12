@@ -163,14 +163,34 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
 
   /**
    * 选中单元格
+   * startCell一定是focusCell
    */
   public doSelect(startCell: CellBuild, endCell: CellBuild, isCtrl = false) {
-    const rowStart = startCell.getProperty('row');
-    const colStart = startCell.getProperty('col');
-    const rowEnd = endCell.getProperty('row');
-    const colEnd = endCell.getProperty('col');
+    const startRow = startCell.getProperty('row');
+    const startCol = startCell.getProperty('col');
+    const endRow = endCell.getProperty('row');
+    const endCol = endCell.getProperty('col');
+    let rowStart;
+    let rowEnd;
+    let colStart;
+    let colEnd;
+    // 将选中的cell重新排行列
+    if (startRow > endRow) {
+      rowStart = endRow;
+      rowEnd = startRow;
+    } else {
+      rowStart = startRow;
+      rowEnd = endRow;
+    }
+    if (startCol > endCol) {
+      colStart = endCol;
+      colEnd = startCol;
+    } else {
+      colStart = startCol;
+      colEnd = endCol;
+    }
     const undoManage = this.excelBuild.getUndoManage();
-    const selector = {...this.selector}
+    const selector = { ...this.selector }
     const info: Selector = {
       rowStart,
       colStart,
@@ -198,6 +218,22 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
     } finally {
       undoManage.endUpdate();
     }
+  }
+
+  /**
+   * 是否已经选中
+   * @param cell 
+   */
+  public isSelect(cell: CellBuild) {
+    const selectors = this.selector.selectors;
+    const cellRow = cell.getRow();
+    const cellCol = cell.getCol();
+    return selectors.some(item => {
+      const {rowStart, rowEnd, colStart, colEnd} = item;
+      if (cellRow >= rowStart && cellRow <= rowEnd && cellCol >= colStart && cellCol <= colEnd) {
+        return true;
+      }
+    });
   }
 
   /**

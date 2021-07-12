@@ -36,7 +36,7 @@ export default class BehaviorListener {
 
   public constructor(args: BehaviorListenerArgs) {
     this.excelBuild = args.excelBuld;
-    this.emitBehavior = args.emitBehavior;
+    this.emitBehavior = args.emitBehavior || {};
     this.isDragging = false;
     this.initListen(args.listenDom);
   }
@@ -49,7 +49,7 @@ export default class BehaviorListener {
     dom.addEventListener('contextmenu', this.doContextMenu);
     dom.addEventListener('mousedown', this.doMouseDown);
     dom.addEventListener('mousemove', this.doMouseMove);
-    dom.addEventListener('mouseup', this.doMouseUp);
+    document.addEventListener('mouseup', this.doMouseUp);
   }
 
   /**
@@ -67,6 +67,19 @@ export default class BehaviorListener {
   private doMouseDown = (event: MouseEvent) => {
     const srcElement = event.target as HTMLElement;
     const isCtrl = event.ctrlKey;
+    if (event.button == 2) {
+      // 当鼠标按下的是右键时
+      if (srcElement.closest('.celleditor_main')) {
+        const cell: HTMLElement = srcElement.closest('.celleditor_main');
+        const cellBuild: CellBuild = cell.__build__;
+        const sheetBuild = cellBuild.getSheetBuild();
+        if (sheetBuild.isSelect(cellBuild)) {
+          return;
+        }
+        sheetBuild.doSelect(cellBuild, cellBuild, isCtrl);
+      }
+      return;
+    }
     this.lastEvent = event;
     // 当按下的是单元格
     if (srcElement.closest('.celleditor_main')) {
