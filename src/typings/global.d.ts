@@ -15,6 +15,15 @@ declare const enum Position {
   left = 3
 }
 
+interface PositionInfo {
+  left: number;
+  top: number;
+  width?: number;
+  height?: number;
+  right?: number;
+  bottom?: number;
+}
+
 interface BackgroundMeta {
   color: string;
   img: string;

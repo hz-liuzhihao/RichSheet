@@ -1,6 +1,6 @@
 .selector {
-  background-color: rgba(0, 0, 0, 0.3);
-  border-width: 1px;
+  background-color: transparent;
+  border-width: 1.5px;
   border-style: solid;
   position: absolute;
   width: 0;
@@ -16,5 +16,11 @@
 }
 
 .selector_dot {
-  border: 1px solid #fff;
+  border: 0.5px solid #fff;
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  right: -3px;
+  bottom: -3px;
+  cursor: move;
 }

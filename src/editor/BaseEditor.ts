@@ -90,7 +90,7 @@ export default abstract class BaseEditor {
    */
   protected abstract render(): void;
 
-  protected abstract renderUndoItem();
+  protected abstract renderUndoItem(): void;
 
   /**
    * 请求全量渲染

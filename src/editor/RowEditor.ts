@@ -28,6 +28,23 @@ export default class RowEditor extends BaseEditor {
   }
 
   /**
+   * 获取单元格
+   * @returns 
+   */
+  public getCells() {
+    return this.cells;
+  }
+
+  /**
+   * 获取指定列的单元格
+   * @param col 
+   * @returns 
+   */
+  public getCell(col: number) {
+    return this.cells[col];
+  }
+
+  /**
    * @override
    * @param args 
    */

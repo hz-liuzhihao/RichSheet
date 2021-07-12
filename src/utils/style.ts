@@ -49,3 +49,19 @@ export function deleteCssRule(index: number) {
   }
   return globalSheet.deleteRule(index);
 }
+
+/**
+ * 设置dom样式
+ * @param dom 
+ * @param value 
+ * @param unit 
+ */
+export function setDomStyle(dom: HTMLElement, style: JSONObject, unit: string = 'px') {
+  for (const key of Object.keys(style)) {
+    if (typeof style[key] == 'number') {
+      dom.style[key as any] = `${style[key]}${unit}`;
+    } else {
+      dom.style[key as any] = style[key];
+    }
+  }
+}

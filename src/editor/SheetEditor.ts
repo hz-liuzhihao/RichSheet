@@ -5,6 +5,8 @@ import RowEditor from './RowEditor';
 import ColHeadEditor from './ColHeadEditor';
 import './SheetEditor.css';
 import { UndoItem } from '../flow/UndoManage';
+import { capitalize } from 'lodash';
+import { setDomStyle } from '../utils/style';
 export interface SheetEditorArgs extends BaseEditorArgs {
 
 }
@@ -43,9 +45,12 @@ export default class SheetEditor extends BaseEditor {
     dotDom.classList.add('selector_dot');
     dotDom.classList.add(theme.getSelectDotClass());
     selectDom.appendChild(dotDom)
-    selectDom.appendChild(focusCellDom);
+    // 聚焦单元格先不做
+    // selectDom.appendChild(focusCellDom);
     this.mainDom.appendChild(selectDom);
   }
+
+
 
   protected initDom() {
     const build = this.build;
@@ -80,11 +85,57 @@ export default class SheetEditor extends BaseEditor {
   }
 
   /**
+   * 获取指定行列的单元格编辑器
+   * @param row 
+   * @param col 
+   */
+  public getCellEditor(row: number, col: number) {
+    const rowEditor = this.rows[row];
+    return rowEditor.getCell(col);
+  }
+
+  /**
+   * 渲染选中信息
+   * @param undoItem 
+   */
+  protected renderSelect(undoItem: UndoItem) {
+    const c = undoItem.c as SheetBuild;
+    const selector = c.getSelector();
+    const focuCell = selector.focusCell;
+    const selectInfos = selector.selectors;
+    const { selectDom } = this;
+    if (selectInfos.length > 1) {
+
+    } else {
+      const selectInfo = selectInfos[0];
+      const { rowStart, colStart, rowEnd, colEnd } = selectInfo;
+      const startEditor = this.getCellEditor(rowStart, colStart);
+      const endEditor = this.getCellEditor(rowEnd, colEnd);
+      const startPosition = startEditor.getPosRelaTable();
+      const endPosition = endEditor.getPosRelaTable();
+      const { top, left } = startPosition;
+      const right = endPosition.left + endPosition.width;
+      const bottom = endPosition.top + endPosition.height;
+      // 由于选中边框原因全部缩小1
+      setDomStyle(selectDom, {
+        left: left - 1.5,
+        top: top - 1.5,
+        width: right - left - 1.5,
+        height: bottom - top - 1.5,
+      });
+    }
+  }
+
+  /**
    * 渲染每个undo信息
    */
   protected renderUndoItem() {
     this.needRenderUndoItems.forEach(item => {
-      
+      const { p } = item;
+      const methond = `render${capitalize(p)}`;
+      if (typeof this[methond] == 'function') {
+        return this[methond](item);
+      }
     });
   }
 
