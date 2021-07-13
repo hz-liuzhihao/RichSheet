@@ -63,6 +63,21 @@ interface StyleMeta {
   font: FontMeta;
 }
 
+/**
+ * 坐标
+ */
+interface Coordinate {
+  /**
+   * 横向坐标
+   */
+  x: number;
+
+  /**
+   * 纵向坐标
+   */
+  y: number;
+}
+
 interface HTMLElement {
   __build__: any;
 }

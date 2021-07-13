@@ -74,6 +74,47 @@ export class RowBuild extends BaseBuild<RowMeta> {
   }
 
   /**
+   * 获取列宽
+   */
+   public getHeight() {
+    const theme = this.excelBuild.getTheme();
+    const height = this.metaInfo.height || theme.rowHeadHeight;
+    return height;
+  }
+
+  /**
+   * 设置属性值
+   * @param key 
+   * @param value 
+   */
+  public setProperty(key: RowMetaKey, value: any) {
+    const isPreview = this.excelBuild.getIsPreview();
+    const undoManage = this.excelBuild.getUndoManage();
+    undoManage.beginUpdate();
+    try {
+      if (isPreview) {
+        undoManage.storeUndoItem({
+          c: this,
+          p: key,
+          op: Operate.Preview,
+          v: value
+        });
+      } else {
+        const oldValue = this.metaInfo[key];
+        undoManage.storeUndoItem({
+          c: this,
+          p: key,
+          op: Operate.Modify,
+          v: oldValue
+        });
+        super.setProperty(key, value);
+      }
+    } finally {
+      undoManage.endUpdate();
+    }
+  }
+
+  /**
    * 获取行头样式
    * @returns 
    */

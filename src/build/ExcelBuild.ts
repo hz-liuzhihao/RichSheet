@@ -47,6 +47,11 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
 
   private themeStyle: ThemeStyle;
 
+  /**
+   * 是否处于预览操作
+   */
+  private isPreview: boolean;
+
   public constructor(args: ExcelBuildArgs) {
     super(args);
   }
@@ -80,6 +85,28 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
    */
   public getThemeStyle() {
     return this.themeStyle;
+  }
+
+  /**
+   * 开始预览
+   */
+  public beginPreview() {
+    this.isPreview = true;
+  }
+
+  /**
+   * 结束预览
+   */
+  public endPreview() {
+    this.isPreview = false;
+  }
+
+  /**
+   * 获取预览状态
+   * @returns 
+   */
+  public getIsPreview() {
+    return this.isPreview;
   }
 
   /**

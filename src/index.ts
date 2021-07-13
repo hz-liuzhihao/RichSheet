@@ -5,6 +5,7 @@ import './global.css';
 import BehaviorListener from './controllers/BehaviorListener';
 import { EmitBehavior } from './controllers/BehaviorListener';
 import SelectListener from './controllers/SelectListener';
+import RowColSizeListener from './controllers/RowColSizeListener';
 
 export interface SheetConfig {
   row: number;
@@ -113,6 +114,10 @@ class Workbench implements IWorkBench {
     });
     // 初始化选中监听器
     this.behaviorListener.addListener(new SelectListener());
+    // 初始化行列大小监听器
+    this.behaviorListener.addListener(new RowColSizeListener({
+      excelBuild: this.excelBuild
+    }));
   }
 
   /** @override */

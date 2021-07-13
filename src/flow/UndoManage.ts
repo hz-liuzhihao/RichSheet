@@ -130,6 +130,11 @@ export enum Operate {
    * 一次查询操作,对数据不产生影响,不记录undo信息只产生临时的undoItem
    */
   Query = 4,
+
+  /**
+   * 预览操作的undoItem,对于持续性操作才会有,value存储改变的值
+   */
+  Preview = 5,
 }
 
 /**
@@ -244,7 +249,7 @@ export class UndoManage {
     // 只有在进行beginUpdate指令后才进行操作
     if (this.count > 0) {
       // 凡是查询操作不记录undo信息
-      if (undoItem.op == Operate.Query) {
+      if (undoItem.op == Operate.Query || undoItem.op == Operate.Preview) {
         this.qurUndoItems.push(undoItem);
       } else {
         this.curUndoItems.push(undoItem);

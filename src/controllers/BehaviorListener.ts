@@ -166,10 +166,14 @@ export default class BehaviorListener {
    * @param event 
    */
   private doMouseUp = (event: MouseEvent) => {
-    this.downEvent = null;
-    this.listeners.forEach(item => {
-      if (typeof item.dealMouseUp == 'function') { }
-      item.dealMouseUp(event);
-    });
+    if (this.timeout) {
+      setTimeout(() => {
+        this.downEvent = null;
+        this.listeners.forEach(item => {
+          if (typeof item.dealMouseUp == 'function') { }
+          item.dealMouseUp(event);
+        });
+      }, 200);
+    }
   }
 }

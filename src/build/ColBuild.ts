@@ -23,7 +23,7 @@ export interface ColMeta {
   index: number;
 }
 
-type ColHeadMetaKey = keyof ColMeta;
+type ColMetaKey = keyof ColMeta;
 
 export interface ColBuildArgs extends BaseBuildArgs {
   sheet: SheetBuild;
@@ -60,7 +60,7 @@ export class ColBuild extends BaseBuild<ColMeta> {
   /**
    * 获取行头
    */
-   public getIndex() {
+  public getIndex() {
     const title = this.metaInfo.title;
     if (title) {
       return title;
@@ -78,15 +78,47 @@ export class ColBuild extends BaseBuild<ColMeta> {
     return width;
   }
 
+  /**
+   * 设置属性值
+   * @param key 
+   * @param value 
+   */
+  public setProperty(key: ColMetaKey, value: any) {
+    const isPreview = this.excelBuild.getIsPreview();
+    const undoManage = this.excelBuild.getUndoManage();
+    undoManage.beginUpdate();
+    try {
+      if (isPreview) {
+        undoManage.storeUndoItem({
+          c: this,
+          p: key,
+          op: Operate.Preview,
+          v: value
+        });
+      } else {
+        const oldValue = this.metaInfo[key];
+        undoManage.storeUndoItem({
+          c: this,
+          p: key,
+          op: Operate.Modify,
+          v: oldValue
+        });
+        super.setProperty(key, value);
+      }
+    } finally {
+      undoManage.endUpdate();
+    }
+  }
+
   public getCells() {
     return this.cells;
   }
-  
+
   /**
    * 获取行头样式
    * @returns 
    */
-   public getThemeClassName() {
+  public getThemeClassName() {
     const excelBuild = this.excelBuild;
     const themeStyle = excelBuild.getThemeStyle();
     return themeStyle.getColHeadThemeClass();
@@ -95,7 +127,7 @@ export class ColBuild extends BaseBuild<ColMeta> {
   /**
    * 转换列头样式
    */
-   public toStyle() {
+  public toStyle() {
     const { excelBuild, metaInfo } = this;
     const theme = excelBuild.getTheme();
     const { width, height } = metaInfo;
@@ -110,7 +142,7 @@ export class ColBuild extends BaseBuild<ColMeta> {
    * 获取表格
    * @returns 
    */
-   public getSheetBuild() {
+  public getSheetBuild() {
     return this.sheet;
   }
 
