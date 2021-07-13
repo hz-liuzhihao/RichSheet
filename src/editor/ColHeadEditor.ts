@@ -35,12 +35,17 @@ export default class ColHeadEditor extends BaseEditor {
     cols.forEach((item, index) => {
       const colName = item.getProperty('index');
       const td = document.createElement('td');
+      const textDom = document.createElement('span');
+      td.appendChild(textDom);
+      const dragDom = document.createElement('div');
+      dragDom.classList.add('col_head_drag');
+      td.appendChild(dragDom);
       const colHeadClassName = item.getThemeClassName();
       colHeadClassName && td.classList.add(colHeadClassName);
       td.classList.add('colhead_item');
       td.__build__ = item;
       Object.assign(td.style, item.toStyle());
-      td.textContent = colName;
+      textDom.textContent = colName;
       this.tds.push(td);
       this.mainDom.appendChild(td);
     });

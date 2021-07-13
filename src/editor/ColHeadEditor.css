@@ -8,6 +8,10 @@
   user-select: none;
 }
 
+.colheadeditor_main > td > span {
+  user-select: none;
+}
+
 .colheadeditor_main > td:first-child {
   background-color: #fff;
   position: sticky;
@@ -17,11 +21,12 @@
 }
 
 .colheadeditor_main > td::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
+  user-select: none;
 }

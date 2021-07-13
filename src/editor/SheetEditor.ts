@@ -105,7 +105,7 @@ export default class SheetEditor extends BaseEditor {
     const selectInfos = selector.selectors;
     const { selectDom } = this;
     if (selectInfos.length > 1) {
-
+      // TODO 渲染有多个选区时
     } else {
       const selectInfo = selectInfos[0];
       const { rowStart, colStart, rowEnd, colEnd } = selectInfo;

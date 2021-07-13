@@ -10,12 +10,20 @@ export default class RowHeadEditor extends BaseEditor {
 
   protected build: RowBuild;
 
+  protected textDom: HTMLElement;
+
   public constructor(args: RowHeadEditorArgs) {
     args.type = 'td';
     super(args);
   }
 
+  /** @override */
   protected initDom() {
+    const dragDom = document.createElement('div');
+    const textDom = this.textDom = document.createElement('span');
+    this.mainDom.appendChild(textDom);
+    dragDom.classList.add('row_head_drag');
+    this.mainDom.appendChild(dragDom);
   }
 
   /**
@@ -31,7 +39,7 @@ export default class RowHeadEditor extends BaseEditor {
     const { mainDom, build } = this;
     const index = build.getProperty('index');
     Object.assign(mainDom.style, build.toStyle());
-    mainDom.textContent = index;
+    this.textDom.textContent = index;
     const rowHeadClass = build.getThemeClassName();
     rowHeadClass && mainDom.classList.add(rowHeadClass);
   }
