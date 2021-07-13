@@ -49,12 +49,7 @@ export default class BehaviorListener {
     dom.addEventListener('contextmenu', this.doContextMenu);
     dom.addEventListener('mousedown', this.doMouseDown);
     dom.addEventListener('mousemove', this.doMouseMove);
-    dom.addEventListener('drag', this.doDrag);
     document.addEventListener('mouseup', this.doMouseUp);
-  }
-
-  private doDrag(event: DragEvent) {
-    console.log(event);
   }
 
   /**
@@ -109,7 +104,6 @@ export default class BehaviorListener {
       const cells = rowHeadBuild.getCells();
       sheetBuild.doSelect(cells[0], cells[cells.length - 1], isCtrl);
     }
-    console.log('ceshi', event);
   }
 
   /**
@@ -118,7 +112,6 @@ export default class BehaviorListener {
    */
   private doMouseMove = (event: MouseEvent) => {
     if (this.lastEvent) {
-      console.log('ceshi', event);
       const isCtrl = event.ctrlKey;
       const lastEvent = this.lastEvent;
       const currentSrcelement = event.target as HTMLElement;
@@ -142,6 +135,5 @@ export default class BehaviorListener {
    */
   private doMouseUp = (event: MouseEvent) => {
     this.lastEvent = null;
-    console.log('ceshi', event);
   }
 }
