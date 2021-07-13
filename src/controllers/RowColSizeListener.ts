@@ -44,6 +44,9 @@ export default class RowColSizeListener implements IListener {
   }
 
   public dealMouseMove(event: MouseEvent) {
+    if (!this.build) {
+      return;
+    }
     const { x, y } = event;
     const build = this.build;
     const lastPosition = this.lastPostion;
@@ -59,7 +62,23 @@ export default class RowColSizeListener implements IListener {
   }
 
   public dealMouseUp(event: MouseEvent) {
+    if (!this.build) {
+      return;
+    }
     this.excelBuild.endPreview();
+    const { x, y } = event;
+    const build = this.build;
+    const lastPosition = this.lastPostion;
+    if (build instanceof RowBuild) {
+      const oldHeight = build.getHeight();
+      build.setProperty('height', oldHeight + y - lastPosition.y);
+    }
+
+    if (build instanceof ColBuild) {
+      const oldWidth = build.getWidth();
+      build.setProperty('width', oldWidth + x - lastPosition.x);
+    }
+    this.build = null;
     this.lastPostion = null;
   }
 }

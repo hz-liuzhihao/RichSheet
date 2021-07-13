@@ -151,13 +151,19 @@ export default class BehaviorListener {
     this.mouseEvent = event;
     if (this.downEvent && !this.timeout) {
       // 没100ms执行一次移动操作
-      this.timeout = setTimeout(() => {
-        this.listeners.forEach(item => {
-          if (typeof item.dealMouseMove == 'function') { }
+      // this.timeout = setTimeout(() => {
+      //   this.listeners.forEach(item => {
+      //     if (typeof item.dealMouseMove == 'function') {
+      //       item.dealMouseMove(this.mouseEvent);
+      //     }
+      //   });
+      //   this.timeout = null;
+      // }, 100);
+      this.listeners.forEach(item => {
+        if (typeof item.dealMouseMove == 'function') {
           item.dealMouseMove(this.mouseEvent);
-        });
-        this.timeout = null;
-      }, 100);
+        }
+      });
     }
   }
 
@@ -167,13 +173,10 @@ export default class BehaviorListener {
    */
   private doMouseUp = (event: MouseEvent) => {
     this.downEvent = null;
-    if (this.timeout) {
-      setTimeout(() => {
-        this.listeners.forEach(item => {
-          if (typeof item.dealMouseUp == 'function') { }
-          item.dealMouseUp(event);
-        });
-      }, 200);
-    }
+    this.listeners.forEach(item => {
+      if (typeof item.dealMouseUp == 'function') {
+        item.dealMouseUp(event);
+      }
+    });
   }
 }
