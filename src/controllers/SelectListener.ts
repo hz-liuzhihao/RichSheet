@@ -78,9 +78,9 @@ export default class SelectListener implements IListener {
   }
 
   public dealMouseMove(event: MouseEvent) {
+    const srcElement = event.target as HTMLElement;
     // 存在按下的单元格数据层才算拖拽行为
-    if (this.downBuild && this.downBuild instanceof CellBuild) {
-      const srcElement = event.target as HTMLElement;
+    if (this.downBuild && this.downBuild instanceof CellBuild && srcElement.closest('.celleditor_main')) {
       const isCtrl = event.ctrlKey;
       const currentCell: HTMLElement = srcElement.closest('.celleditor_main');
       const currentCellBuild: CellBuild = currentCell.__build__;

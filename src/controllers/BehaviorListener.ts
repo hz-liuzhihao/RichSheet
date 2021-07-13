@@ -1,8 +1,4 @@
 import { ExcelBuild } from '../build/ExcelBuild';
-import { CellBuild } from '../build/CellBuild';
-import { ColBuild } from '../build/ColBuild';
-import { RowBuild } from '../build/RowBuild';
-import { BaseBuild } from '../flow/UndoManage';
 
 export interface IListener {
 
@@ -68,6 +64,10 @@ export default class BehaviorListener {
   private listeners: IListener[];
 
   private downEvent: MouseEvent;
+
+  private mouseEvent: MouseEvent;
+
+  private timeout: any;
 
   public constructor(args: BehaviorListenerArgs) {
     this.excelBuild = args.excelBuld;
@@ -148,11 +148,16 @@ export default class BehaviorListener {
    * @param event 
    */
   private doMouseMove = (event: MouseEvent) => {
-    if (this.downEvent) {
-      this.listeners.forEach(item => {
-        if (typeof item.dealMouseMove == 'function') { }
-        item.dealMouseMove(event);
-      });
+    this.mouseEvent = event;
+    if (this.downEvent && !this.timeout) {
+      // 没100ms执行一次移动操作
+      this.timeout = setTimeout(() => {
+        this.listeners.forEach(item => {
+          if (typeof item.dealMouseMove == 'function') { }
+          item.dealMouseMove(this.mouseEvent);
+        });
+        this.timeout = null;
+      }, 100);
     }
   }
 
