@@ -4,6 +4,7 @@ import ExcelEditor from './editor/ExcelEditor';
 import './global.css';
 import BehaviorListener from './controllers/BehaviorListener';
 import { EmitBehavior } from './controllers/BehaviorListener';
+import SelectListener from './controllers/SelectListener';
 
 export interface SheetConfig {
   row: number;
@@ -110,6 +111,8 @@ class Workbench implements IWorkBench {
       emitBehavior,
       excelBuld: this.excelBuild
     });
+    // 初始化选中监听器
+    this.behaviorListener.addListener(new SelectListener());
   }
 
   /** @override */

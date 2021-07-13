@@ -26,3 +26,14 @@
   box-sizing: border-box;
   user-select: none;
 }
+
+.col_head_drag {
+  height: 100%;
+  background-color: transparent;
+  width: 5px;
+  right: 0px;
+  top: 0px;
+  position: absolute;
+  cursor: ew-resize;
+  z-index: 4;
+}

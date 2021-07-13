@@ -9,7 +9,7 @@
 }
 
 .rowheadeditor_main::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -21,8 +21,10 @@
 .row_head_drag {
   width: 100%;
   background-color: transparent;
-  height: 10px;
+  height: 5px;
   left: 0;
-  bottom: -5px;
+  bottom: 0px;
   position: absolute;
+  z-index: 4;
+  cursor: ns-resize;
 }

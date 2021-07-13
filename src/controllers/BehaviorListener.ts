@@ -3,6 +3,40 @@ import { CellBuild } from '../build/CellBuild';
 import { ColBuild } from '../build/ColBuild';
 import { RowBuild } from '../build/RowBuild';
 import { BaseBuild } from '../flow/UndoManage';
+
+export interface IListener {
+
+  /**
+   * 处理鼠标按下左键
+   * @param event 
+   */
+  dealMouseDownLeft?(event: MouseEvent): void;
+
+  /**
+   * 处理鼠标按下右键
+   * @param event 
+   */
+  dealMouseDownRight?(event: MouseEvent): void;
+
+  /**
+   * 处理鼠标移动
+   * @param event 
+   */
+  dealMouseMove?(event: MouseEvent): void;
+
+  /**
+   * 处理鼠标抬起
+   * @param event 
+   */
+  dealMouseUp?(event: MouseEvent): void;
+
+  /**
+   * 处理鼠标双击
+   * @param event 
+   */
+  dealDbClick?(event: MouseEvent): void;
+}
+
 /**
  * 通知用户行为接口
  */
@@ -31,19 +65,41 @@ export default class BehaviorListener {
 
   private emitBehavior: EmitBehavior = {};
 
-  private isDragging: boolean;
+  private listeners: IListener[];
 
   private downEvent: MouseEvent;
-
-  private downBuild: BaseBuild<any>;
-
-  private moveBuild: BaseBuild<any>;
 
   public constructor(args: BehaviorListenerArgs) {
     this.excelBuild = args.excelBuld;
     this.emitBehavior = args.emitBehavior || {};
-    this.isDragging = false;
+    this.listeners = [];
     this.initListen(args.listenDom);
+  }
+
+  /**
+   * 添加监听器
+   * @param listener 
+   */
+  public addListener(listener: IListener) {
+    const index = this.listeners.indexOf(listener);
+    if (index < 0) {
+      this.listeners.push(listener);
+      return this.listeners.length - 1;
+    }
+    return index;
+  }
+
+  /**
+   * 移除监听器
+   * @param listener 
+   * @returns 
+   */
+  public removeListener(listener: IListener | number) {
+    if (typeof listener == 'number') {
+      return this.listeners.splice(listener, 1)[0];
+    }
+    const index = this.listeners.indexOf(listener);
+    return this.listeners.splice(index, 1)[0];
   }
 
   /**
@@ -66,106 +122,25 @@ export default class BehaviorListener {
   }
 
   /**
-   * 获取鼠标按下的数据层
-   * @param event 
-   * @param className 
-   * @returns 
-   */
-  private getMouseDownBuild = <T extends BaseBuild<any>>(event: MouseEvent, className: string) => {
-    const srcElement = event.target as HTMLElement;
-    if (srcElement.closest(`.${className}`)) {
-      const buildDom: HTMLElement = srcElement.closest(`.${className}`);
-      const build: T = buildDom.__build__;
-      if (this.downBuild == build) {
-        return;
-      }
-      this.downBuild = build;
-      return build;
-    }
-  }
-
-  /**
-   * 获取鼠标移动的数据层
-   * @param event 
-   * @param className 
-   * @returns 
-   */
-  private getMouseMoveBuild = <T extends BaseBuild<any>>(event: MouseEvent, className: string) => {
-    const srcElement = event.target as HTMLElement;
-    if (srcElement.closest(`.${className}`)) {
-      const buildDom: HTMLElement = srcElement.closest(`.${className}`);
-      const build: T = buildDom.__build__;
-      if (this.moveBuild == build) {
-        return;
-      }
-      this.moveBuild = build;
-      return build;
-    }
-  }
-
-  /**
    * 鼠标按下
    * @param event 
    */
   private doMouseDown = (event: MouseEvent) => {
-    const srcElement = event.target as HTMLElement;
-    const isCtrl = event.ctrlKey;
     if (event.button == 2) {
-      // 当鼠标按下的是右键时
-      if (srcElement.closest('.celleditor_main')) {
-        const cell: HTMLElement = srcElement.closest('.celleditor_main');
-        const cellBuild: CellBuild = cell.__build__;
-        if (this.downBuild == cellBuild) {
-          return;
+      // 右键点击触发事件
+      this.listeners.forEach(item => {
+        if (typeof item.dealMouseDownRight == 'function') {
+          item.dealMouseDownRight(event);
         }
-        this.downBuild = cellBuild;
-        const sheetBuild = cellBuild.getSheetBuild();
-        if (sheetBuild.isSelect(cellBuild)) {
-          return;
-        }
-        sheetBuild.doSelect(cellBuild, cellBuild, isCtrl);
-      }
+      });
       return;
     }
     this.downEvent = event;
-    // 当按下的是单元格
-    if (srcElement.closest('.celleditor_main')) {
-      const cell: HTMLElement = srcElement.closest('.celleditor_main');
-      const cellBuild: CellBuild = cell.__build__;
-      if (this.downBuild == cellBuild) {
-        return;
+    this.listeners.forEach(item => {
+      if (typeof item.dealMouseDownLeft == 'function') {
+        item.dealMouseDownLeft(event);
       }
-      this.downBuild = cellBuild;
-      const sheetBuild = cellBuild.getSheetBuild();
-      sheetBuild.doSelect(cellBuild, cellBuild, isCtrl);
-      return;
-    }
-    // 当按下的是列头
-    if (srcElement.closest('.colhead_item')) {
-      const colHead: HTMLElement = srcElement.closest('.colhead_item');
-      const colHeadBuild: ColBuild = colHead.__build__;
-      if (this.downBuild == colHeadBuild) {
-        return;
-      }
-      this.downBuild = colHeadBuild;
-      const sheetBuild = colHeadBuild.getSheetBuild();
-      const cells = colHeadBuild.getCells();
-      sheetBuild.doSelect(cells[0], cells[cells.length - 1], isCtrl);
-      return;
-    }
-    // 当选中的是行头
-    if (srcElement.closest('.rowheadeditor_main')) {
-      const rowHead: HTMLElement = srcElement.closest('.rowheadeditor_main');
-      const rowHeadBuild: RowBuild = rowHead.__build__;
-      if (this.downBuild == rowHeadBuild) {
-        return;
-      }
-      this.downBuild = rowHeadBuild;
-      const sheetBuild = rowHeadBuild.getSheetBuild();
-      const cells = rowHeadBuild.getCells();
-      sheetBuild.doSelect(cells[0], cells[cells.length - 1], isCtrl);
-      return;
-    }
+    });
   }
 
   /**
@@ -174,24 +149,10 @@ export default class BehaviorListener {
    */
   private doMouseMove = (event: MouseEvent) => {
     if (this.downEvent) {
-      const isCtrl = event.ctrlKey;
-      const downEvent = this.downEvent;
-      const currentSrcelement = event.target as HTMLElement;
-      const lastSrcelement = downEvent.target as HTMLElement;
-      if (lastSrcelement.closest('.celleditor_main')) {
-        const cell: HTMLElement = lastSrcelement.closest('.celleditor_main');
-        const cellBuild: CellBuild = cell.__build__;
-        if (currentSrcelement.closest('.celleditor_main')) {
-          const currentCell: HTMLElement = currentSrcelement.closest('.celleditor_main');
-          const currentCellBuild: CellBuild = currentCell.__build__;
-          if (this.moveBuild == currentCellBuild) {
-            return;
-          }
-          this.moveBuild = currentCellBuild;
-          const sheetBuild = currentCellBuild.getSheetBuild();
-          sheetBuild.doSelect(cellBuild, currentCellBuild, isCtrl);
-        }
-      }
+      this.listeners.forEach(item => {
+        if (typeof item.dealMouseMove == 'function') { }
+        item.dealMouseMove(event);
+      });
     }
   }
 
@@ -201,6 +162,9 @@ export default class BehaviorListener {
    */
   private doMouseUp = (event: MouseEvent) => {
     this.downEvent = null;
-    this.moveBuild = null;
+    this.listeners.forEach(item => {
+      if (typeof item.dealMouseUp == 'function') { }
+      item.dealMouseUp(event);
+    });
   }
 }
