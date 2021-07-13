@@ -10,4 +10,5 @@
 
 .celleditor_main {
   position: relative;
+  user-select: none;
 }

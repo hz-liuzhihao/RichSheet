@@ -8,10 +8,6 @@
   user-select: none;
 }
 
-.colheadeditor_main > td > span {
-  user-select: none;
-}
-
 .colheadeditor_main > td:first-child {
   background-color: #fff;
   position: sticky;

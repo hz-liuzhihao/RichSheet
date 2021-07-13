@@ -8,10 +8,6 @@
   user-select: none;
 }
 
-.rowheadeditor_main > span {
-  user-select: none;
-}
-
 .rowheadeditor_main::after {
   content: '';
   position: absolute;
