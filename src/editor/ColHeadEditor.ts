@@ -1,8 +1,10 @@
 import { BaseEditorArgs } from './BaseEditor';
 import BaseEditor from './BaseEditor';
-import { getColNameByOrder } from '../utils/common';
 import { SheetBuild } from '../build/SheetBuild';
+import { capitalize } from 'lodash';
 import './RowHeadEditor.css';
+import { Operate, UndoItem } from '../flow/UndoManage';
+import { ColBuild } from '../build/ColBuild';
 export interface ColHeadEditorArgs extends BaseEditorArgs {
 
 }
@@ -51,12 +53,41 @@ export default class ColHeadEditor extends BaseEditor {
     });
   }
 
+  protected renderWidth(item: UndoItem) {
+    const { v, isPreview } = item;
+    const build = item.c as ColBuild;
+    if (isPreview) {
+      const index = build.getColNumber();
+      const colDom = this.tds[index];
+      colDom.style.width = `${v}px`;
+    } else {
+
+    }
+  }
+
+  /** @override */
+  protected renderBuild(undoItem: UndoItem) {
+    const { c } = undoItem;
+    if (c == this.build) {
+      this.needRenderUndoItems.push(undoItem);
+    }
+    if (c instanceof ColBuild) {
+      this.needRenderUndoItems.push(undoItem);
+    }
+  }
+
   /**
    * 渲染每个undo信息
    */
   protected renderUndoItem() {
     this.needRenderUndoItems.forEach(item => {
-
+      const { p, op } = item;
+      if (op == Operate.Modify) {
+        const method = `render${capitalize(p)}`;
+        if (typeof this[method] == 'function') {
+          return this[method](item);
+        }
+      }
     });
   }
 

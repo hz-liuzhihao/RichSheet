@@ -2,6 +2,8 @@ import BaseEditor from './BaseEditor';
 import { BaseEditorArgs } from './BaseEditor';
 import { RowBuild } from '../build/RowBuild';
 import './ColHeadEditor.css';
+import { Operate, UndoItem } from '../flow/UndoManage';
+import { capitalize } from 'lodash';
 export interface RowHeadEditorArgs extends BaseEditorArgs {
 
 }
@@ -27,11 +29,30 @@ export default class RowHeadEditor extends BaseEditor {
   }
 
   /**
+   * 渲染行高
+   * @param item 
+   */
+  protected renderHeight(item: UndoItem) {
+    const { v, isPreview } = item;
+    if (isPreview) {
+      this.mainDom.style.height = `${v}px`;
+    } else {
+
+    }
+  }
+
+  /**
    * 渲染每个undo信息
    */
-   protected renderUndoItem() {
+  protected renderUndoItem() {
     this.needRenderUndoItems.forEach(item => {
-
+      const { p, op } = item;
+      if (op == Operate.Modify) {
+        const method = `render${capitalize(p)}`;
+        if (typeof this[method] == 'function') {
+          return this[method](item);
+        }
+      }
     });
   }
 

@@ -117,10 +117,14 @@ export default abstract class BaseEditor {
   public requestRenderUndoItem(undoItem: UndoItem) {
     this.requestRenderChildrenUndoItem(undoItem);
     // 只渲染当前数据层有修改的
-    if (undoItem.c !== this.build) {
-      return;
+    if (typeof this.renderBuild == 'function') {
+      this.renderBuild(undoItem);
+    } else {
+      if (undoItem.c !== this.build) {
+        return;
+      }
+      this.needRenderUndoItems.push(undoItem);
     }
-    this.needRenderUndoItems.push(undoItem);
     if (this.renderPromise) {
       return this.renderPromise;
     }
@@ -133,6 +137,12 @@ export default abstract class BaseEditor {
       });
     });
   }
+
+  /**
+   * 渲染数据层
+   * @param undoItem 
+   */
+  protected renderBuild?(undoItem: UndoItem): void;
 
   /**
    * 请求渲染子编辑器

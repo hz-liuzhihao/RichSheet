@@ -74,12 +74,22 @@ export class RowBuild extends BaseBuild<RowMeta> {
   }
 
   /**
-   * 获取列宽
+   * 获取行高
    */
    public getHeight() {
     const theme = this.excelBuild.getTheme();
     const height = this.metaInfo.height || theme.rowHeadHeight;
     return height;
+  }
+
+  /**
+   * 获取列宽
+   * @returns 
+   */
+  public getWidth() {
+    const theme = this.excelBuild.getTheme();
+    const width = this.metaInfo.width || theme.rowHeadWidth;
+    return width;
   }
 
   /**
@@ -96,8 +106,9 @@ export class RowBuild extends BaseBuild<RowMeta> {
         undoManage.storeUndoItem({
           c: this,
           p: key,
-          op: Operate.Preview,
-          v: value
+          op: Operate.Modify,
+          v: value,
+          isPreview
         });
       } else {
         const oldValue = this.metaInfo[key];
@@ -122,6 +133,13 @@ export class RowBuild extends BaseBuild<RowMeta> {
     const excelBuild = this.excelBuild;
     const themeStyle = excelBuild.getThemeStyle();
     return themeStyle.getRowHeadThemeClass();
+  }
+
+  /**
+   * 获取行头样式
+   */
+  public getClassName() {
+
   }
 
   /**

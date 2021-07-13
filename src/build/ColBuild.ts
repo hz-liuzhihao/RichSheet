@@ -70,11 +70,19 @@ export class ColBuild extends BaseBuild<ColMeta> {
   }
 
   /**
+   * 获取列号
+   * @returns 
+   */
+  public getColNumber() {
+    return this.cells[0].getProperty('col');
+  }
+
+  /**
    * 获取列宽
    */
   public getWidth() {
     const theme = this.excelBuild.getTheme();
-    const width = this.metaInfo.width || theme.colHeadWidth;
+    const width = this.metaInfo.width || theme.colHeadWidth || 0;
     return width;
   }
 
@@ -92,8 +100,9 @@ export class ColBuild extends BaseBuild<ColMeta> {
         undoManage.storeUndoItem({
           c: this,
           p: key,
-          op: Operate.Preview,
-          v: value
+          op: Operate.Modify,
+          v: value,
+          isPreview
         });
       } else {
         const oldValue = this.metaInfo[key];

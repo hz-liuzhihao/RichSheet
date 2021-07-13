@@ -132,7 +132,9 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
    * @returns 
    */
   public getTableWidth() {
-    return this.cols.reduce((total, item) => total + item.getProperty('width'), 0);
+    const tableWidth = this.cols.reduce((total, item) => total + item.getProperty('width'), 0);
+    const rowWidth = this.rows[0].getWidth() || 0;
+    return tableWidth + rowWidth;
   }
 
   /**

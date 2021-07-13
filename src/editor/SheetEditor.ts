@@ -7,6 +7,7 @@ import './SheetEditor.css';
 import { UndoItem } from '../flow/UndoManage';
 import { capitalize } from 'lodash';
 import { setDomStyle } from '../utils/style';
+import { ColBuild } from '../build/ColBuild';
 export interface SheetEditorArgs extends BaseEditorArgs {
 
 }
@@ -50,8 +51,6 @@ export default class SheetEditor extends BaseEditor {
     this.mainDom.appendChild(selectDom);
   }
 
-
-
   protected initDom() {
     const build = this.build;
     const rows = build.getRows();
@@ -76,6 +75,21 @@ export default class SheetEditor extends BaseEditor {
     });
     this.mainDom.appendChild(table);
     this.initSelector();
+  }
+
+  /**
+   * 渲染table宽度
+   * @param undoItem 
+   */
+  protected renderTableWidth(undoItem: UndoItem) {
+    const { v, isPreview } = undoItem;
+    const tableWidth = this.build.getTableWidth();
+    if (isPreview) {
+      const build = undoItem.c as ColBuild;
+      this.table.style.width = `${tableWidth + v - build.getWidth()}px`;
+    } else {
+      this.table.style.width = `${tableWidth}px`;
+    }
   }
 
   /** @override */
@@ -156,12 +170,25 @@ export default class SheetEditor extends BaseEditor {
    */
   protected renderUndoItem() {
     this.needRenderUndoItems.forEach(item => {
-      const { p } = item;
+      const { p, c } = item;
       const methond = `render${capitalize(p)}`;
       if (typeof this[methond] == 'function') {
         return this[methond](item);
       }
+      if (c instanceof ColBuild) {
+        this.renderTableWidth(item);
+      }
     });
+  }
+
+  protected renderBuild(undoItem: UndoItem) {
+    const { c, p } = undoItem;
+    if (c == this.build) {
+      this.needRenderUndoItems.push(undoItem);
+    }
+    if (c instanceof ColBuild && p == 'width') {
+      this.needRenderUndoItems.push(undoItem);
+    }
   }
 
   /**
