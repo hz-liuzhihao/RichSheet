@@ -1,4 +1,6 @@
 import { ExcelBuild } from '../build/ExcelBuild';
+import './listener.css';
+import { setDomStyle } from '../utils/style';
 
 export interface IListener {
 
@@ -31,6 +33,28 @@ export interface IListener {
    * @param event 
    */
   dealDbClick?(event: MouseEvent): void;
+
+  /**
+   * 处理快捷键
+   * @param event 
+   */
+  dealKeyDown?(event: KeyboardEvent): void;
+}
+
+export abstract class AbsListener {
+
+  protected excelBuild: ExcelBuild;
+
+  public constructor(excelBuild: ExcelBuild) {
+    this.excelBuild = excelBuild;
+  }
+}
+
+interface InputArgs {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
 }
 
 /**
@@ -69,11 +93,40 @@ export default class BehaviorListener {
 
   private timeout: any;
 
+  private listenDom: HTMLElement;
+
+  private inputDom: HTMLDivElement;
+
   public constructor(args: BehaviorListenerArgs) {
     this.excelBuild = args.excelBuld;
     this.emitBehavior = args.emitBehavior || {};
     this.listeners = [];
+    this.listenDom = args.listenDom;
+    this.initDom();
     this.initListen(args.listenDom);
+  }
+
+  /**
+   * 初始化监听器需要的dom结构
+   */
+  protected initDom() {
+    const inputDom = this.inputDom = document.createElement('div');
+    inputDom.classList.add('behavior_input');
+    inputDom.contentEditable = 'true';
+    this.listenDom.appendChild(inputDom);
+  }
+
+  /**
+   * 渲染输入框位置
+   */
+  renderInput(inputArgs: InputArgs) {
+    const inputDom = this.inputDom;
+    setDomStyle(inputDom, {
+      top: inputArgs.top,
+      left: inputArgs.left,
+      width: inputArgs.width,
+      height: inputArgs.height
+    });
   }
 
   /**
@@ -111,6 +164,19 @@ export default class BehaviorListener {
     dom.addEventListener('mousedown', this.doMouseDown);
     dom.addEventListener('mousemove', this.doMouseMove);
     document.addEventListener('mouseup', this.doMouseUp);
+    this.inputDom.addEventListener('keydown', this.doKeyDown)
+  }
+
+  /**
+   * 处理快捷键
+   * @param event 
+   */
+  private doKeyDown = (event: KeyboardEvent) => {
+    this.listeners.forEach(item => {
+      if (typeof item.dealKeyDown == 'function') {
+        item.dealKeyDown(event);
+      }
+    });
   }
 
   /**
@@ -173,6 +239,7 @@ export default class BehaviorListener {
    */
   private doMouseUp = (event: MouseEvent) => {
     this.downEvent = null;
+    this.inputDom.focus();
     this.listeners.forEach(item => {
       if (typeof item.dealMouseUp == 'function') {
         item.dealMouseUp(event);

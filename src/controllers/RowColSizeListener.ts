@@ -1,4 +1,4 @@
-import { IListener } from './BehaviorListener';
+import { IListener, AbsListener } from './BehaviorListener';
 import { ExcelBuild } from '../build/ExcelBuild';
 import { RowBuild } from '../build/RowBuild';
 import { ColBuild } from '../build/ColBuild';
@@ -10,17 +10,11 @@ export interface RowColSizeListenerArgs {
 /**
  * 行列大小修改
  */
-export default class RowColSizeListener implements IListener {
+export default class RowColSizeListener extends AbsListener implements IListener {
 
   private lastPostion: Coordinate;
 
-  private excelBuild: ExcelBuild;
-
   private build: RowBuild | ColBuild;
-
-  public constructor(args: RowColSizeListenerArgs) {
-    this.excelBuild = args.excelBuild;
-  }
 
   public dealMouseDownLeft(event: MouseEvent) {
     const { x, y } = event;

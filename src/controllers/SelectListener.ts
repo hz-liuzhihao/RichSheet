@@ -1,4 +1,4 @@
-import { IListener } from './BehaviorListener';
+import { IListener, AbsListener } from './BehaviorListener';
 import { BaseBuild } from '../flow/UndoManage';
 import { CellBuild } from '../build/CellBuild';
 import { ColBuild } from '../build/ColBuild';
@@ -6,7 +6,7 @@ import { RowBuild } from '../build/RowBuild';
 /**
  * 选中监听器
  */
-export default class SelectListener implements IListener {
+export default class SelectListener extends AbsListener implements IListener {
 
   private downBuild: BaseBuild<any>;
 
