@@ -178,6 +178,10 @@ export default class BehaviorListener {
    * @param event 
    */
   private doKeyDown = (event: KeyboardEvent) => {
+    // 当触发tab健时阻止默认行为
+    if (event.keyCode == 9 || event.key == 'Tab') {
+      event.preventDefault();
+    }
     this.listeners.forEach(item => {
       if (typeof item.dealKeyDown == 'function') {
         item.dealKeyDown(event);
