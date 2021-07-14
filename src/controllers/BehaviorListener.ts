@@ -183,6 +183,7 @@ export default class BehaviorListener {
    * 处理右键菜单
    */
   private doContextMenu = (event: MouseEvent) => {
+    event.preventDefault();
     const emitBehavior = this.emitBehavior;
     emitBehavior.rightClick && emitBehavior.rightClick(event);
   }
