@@ -6,6 +6,10 @@
 
 .behavior_shortcut {
   position: absolute;
-  background-color: #fff;
-  z-index: 1000;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }

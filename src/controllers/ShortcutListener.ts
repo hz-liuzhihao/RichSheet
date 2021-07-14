@@ -11,7 +11,7 @@ export default class ShortcutListener extends AbsListener implements IListener {
     const keyCode = event.keyCode || event.key;
     const isMeta = event.metaKey;
     const isAlt = event.altKey;
-    console.log(keyCode);
+    console.log(event.key + ': ' + event.keyCode);
   }
 
   /**

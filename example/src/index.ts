@@ -4,6 +4,5 @@ import RichSheet from '../../src/index';
   const richSheet = new RichSheet({
     dom: root
   });
-  console.log('asdf');
   richSheet.laod();
 })();
