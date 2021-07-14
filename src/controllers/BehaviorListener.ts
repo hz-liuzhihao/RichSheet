@@ -95,6 +95,8 @@ export default class BehaviorListener {
 
   private listenDom: HTMLElement;
 
+  private shortCutDom: HTMLDivElement;
+
   private inputDom: HTMLDivElement;
 
   public constructor(args: BehaviorListenerArgs) {
@@ -110,6 +112,10 @@ export default class BehaviorListener {
    * 初始化监听器需要的dom结构
    */
   protected initDom() {
+    const shortCutDom = this.shortCutDom = document.createElement('div');
+    shortCutDom.classList.add('behavior_shortcut');
+    shortCutDom.contentEditable = 'true';
+    this.listenDom.appendChild(shortCutDom);
     const inputDom = this.inputDom = document.createElement('div');
     inputDom.classList.add('behavior_input');
     inputDom.contentEditable = 'true';
@@ -164,7 +170,7 @@ export default class BehaviorListener {
     dom.addEventListener('mousedown', this.doMouseDown);
     dom.addEventListener('mousemove', this.doMouseMove);
     document.addEventListener('mouseup', this.doMouseUp);
-    this.inputDom.addEventListener('keydown', this.doKeyDown)
+    this.shortCutDom.addEventListener('keydown', this.doKeyDown);
   }
 
   /**
@@ -240,7 +246,7 @@ export default class BehaviorListener {
    */
   private doMouseUp = (event: MouseEvent) => {
     this.downEvent = null;
-    this.inputDom.focus();
+    this.shortCutDom.focus();
     this.listeners.forEach(item => {
       if (typeof item.dealMouseUp == 'function') {
         item.dealMouseUp(event);
