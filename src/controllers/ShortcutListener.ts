@@ -17,6 +17,12 @@ export default class ShortcutListener extends AbsListener implements IListener {
       if (keyCode == 77) {
         event.preventDefault();
         this.ctrlM();
+      } else if (keyCode == 89) {
+        event.preventDefault();
+        this.ctrlY();
+      } else if (keyCode == 90) {
+        event.preventDefault();
+        this.ctrlZ();
       }
     } else if (!isCtrl && isShift) {
       // 按住shift键未按ctrl键
