@@ -116,7 +116,8 @@ export class RowBuild extends BaseBuild<RowMeta> {
           c: this,
           p: key,
           op: Operate.Modify,
-          v: oldValue
+          v: value,
+          ov: oldValue
         });
         super.setProperty(key, value);
       }

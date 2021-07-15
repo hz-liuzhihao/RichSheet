@@ -110,7 +110,8 @@ export class ColBuild extends BaseBuild<ColMeta> {
           c: this,
           p: key,
           op: Operate.Modify,
-          v: oldValue
+          v: value,
+          ov: oldValue
         });
         super.setProperty(key, value);
       }
@@ -164,7 +165,7 @@ export class ColBuild extends BaseBuild<ColMeta> {
         break;
       case Operate.Modify:
         const key = undoItem.p;
-        const value = undoItem.v;
+        const value = this.excelBuild.getUndoRedoValue(undoItem);
         if ((key as string).indexOf('.') > -1) {
           super.setDeepProperty(key, value);
         } else {
