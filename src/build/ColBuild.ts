@@ -139,6 +139,7 @@ export class ColBuild extends BaseBuild<ColMeta> {
         c: this,
         op: Operate.Modify,
         v: cell,
+        i: row,
         ov: this.cells[row]
       });
       this.cells[row] = cell;
@@ -194,8 +195,8 @@ export class ColBuild extends BaseBuild<ColMeta> {
         const key = undoItem.p;
         const value = this.excelBuild.getUndoRedoValue(undoItem);
         if (value instanceof CellBuild) {
-          const row = value.getRow();
-          this.replaceCell(row, value);
+          const i = undoItem.i;
+          this.replaceCell(i, value);
         } else {
           if ((key as string).indexOf('.') > -1) {
             super.setDeepProperty(key, value);
