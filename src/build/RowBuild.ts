@@ -162,6 +162,14 @@ export class RowBuild extends BaseBuild<RowMeta> {
   }
 
   /**
+   * 获取指定列的单元格
+   * @param col 
+   */
+  public getCell(col: number) {
+    return this.cells[col];
+  }
+
+  /**
    * 获取表格
    * @returns 
    */

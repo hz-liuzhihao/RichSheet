@@ -231,11 +231,43 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
     const cellRow = cell.getRow();
     const cellCol = cell.getCol();
     return selectors.some(item => {
-      const {rowStart, rowEnd, colStart, colEnd} = item;
+      const { rowStart, rowEnd, colStart, colEnd } = item;
       if (cellRow >= rowStart && cellRow <= rowEnd && cellCol >= colStart && cellCol <= colEnd) {
         return true;
       }
     });
+  }
+
+  /**
+   * 获取指定行列的单元格数据层
+   * @param row 
+   * @param col 
+   */
+  public getCell(row: number, col: number) {
+    const rowBuild = this.rows[row];
+    return rowBuild.getCells()[col];
+  }
+
+  /**
+   * 合并单元格
+   */
+  public mergeCell() {
+    const selector = this.selector;
+    const selectors = selector.selectors;
+    let isSplit = false;
+    selectors.forEach(item => {
+      const { rowStart, colStart, rowEnd, colEnd } = item;
+      // 当只有一个单元格时没有合并单元格的概念
+      if (rowStart == rowEnd && colStart == colEnd) {
+        return;
+      }
+      for (let i = rowStart; i <= rowEnd; i++) {
+        for (let j = colStart; j <= colEnd; j++) {
+          const cellBuild = this.getCell(i, j);
+          isSplit = true;
+        }
+      }
+    })
   }
 
   /**
