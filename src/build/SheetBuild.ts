@@ -123,8 +123,8 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
           metaInfo: cell,
           excelBuild: this.excelBuild
         });
-        this.rows[cell.row].replaceCell(cell.col, cellBuild);
-        this.cols[cell.col].replaceCell(cell.row, cellBuild);
+        this.rows[cell.row].getCells()[cell.col] = cellBuild;
+        this.cols[cell.col].getCells()[cell.row] = cellBuild;
       }
     }
   }
