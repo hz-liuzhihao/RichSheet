@@ -117,12 +117,14 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
             col
           }
         };
-        new CellBuild({
+        const cellBuild = new CellBuild({
           row: this.rows[cell.row],
           col: this.cols[cell.col],
           metaInfo: cell,
           excelBuild: this.excelBuild
         });
+        this.rows[cell.row].replaceCell(cell.col, cellBuild);
+        this.cols[cell.col].replaceCell(cell.row, cellBuild);
       }
     }
   }
@@ -259,21 +261,20 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
     const colSpan = cell.getColSpan();
     for (let i = row; i < row + rowSpan; i++) {
       for (let j = col; j < col + colSpan; j++) {
-        if (i == row && j == col) {
-          break;
+        if (i != row || j != col) {
+          const rowBuild = this.rows[i];
+          const colBuild = this.cols[j];
+          const newCell = new CellBuild({
+            row: rowBuild,
+            col: colBuild,
+            excelBuild: this.excelBuild,
+            metaInfo: {
+              row: i,
+              col: j
+            }
+          });
+          this.replaceCell(i, j, newCell);
         }
-        const rowBuild = this.rows[i];
-        const colBuild = this.cols[j];
-        const newCell = new CellBuild({
-          row: rowBuild,
-          col: colBuild,
-          excelBuild: this.excelBuild,
-          metaInfo: {
-            row: i,
-            col: j
-          }
-        });
-        this.replaceCell(i, j, newCell);
       }
     }
   }

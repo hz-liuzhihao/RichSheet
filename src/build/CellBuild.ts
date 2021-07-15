@@ -69,8 +69,6 @@ export class CellBuild extends BaseBuild<CellMeta> {
     // 在行列中记录单元格
     const { row, col, styleIndex } = this.metaInfo;
     this.styleBuild = this.excelBuild.getStyleBuild(styleIndex);
-    this.row.getCells()[col] = this;
-    this.col.getCells()[row] = this;
   }
 
   /**
