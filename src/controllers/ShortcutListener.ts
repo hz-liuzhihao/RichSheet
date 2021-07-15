@@ -30,7 +30,6 @@ export default class ShortcutListener extends AbsListener implements IListener {
     } else {
       // 其他辅助键都没按住
     }
-    console.log(event.key + ': ' + event.keyCode);
   }
 
   /**
