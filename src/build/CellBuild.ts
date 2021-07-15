@@ -102,6 +102,43 @@ export class CellBuild extends BaseBuild<CellMeta> {
   }
 
   /**
+   * 设置属性值
+   * @param key 
+   * @param value 
+   */
+   public setProperty(key: CellMetaKey, value: any) {
+    const isPreview = this.excelBuild.getIsPreview();
+    const undoManage = this.excelBuild.getUndoManage();
+    const oldValue = this.metaInfo[key];
+    if (oldValue == value) {
+      return;
+    }
+    undoManage.beginUpdate();
+    try {
+      if (isPreview) {
+        undoManage.storeUndoItem({
+          c: this,
+          p: key,
+          op: Operate.Modify,
+          v: value,
+          isPreview
+        });
+      } else {
+        undoManage.storeUndoItem({
+          c: this,
+          p: key,
+          op: Operate.Modify,
+          v: value,
+          ov: oldValue
+        });
+        super.setProperty(key, value);
+      }
+    } finally {
+      undoManage.endUpdate();
+    }
+  }
+
+  /**
    * 获取内联样式
    * @returns 
    */
@@ -159,6 +196,22 @@ export class CellBuild extends BaseBuild<CellMeta> {
    */
   public getCol() {
     return this.metaInfo.col;
+  }
+
+  /**
+   * 获取跨行
+   * @returns 
+   */
+  public getRowSpan() {
+    return this.metaInfo.rowSpan || 1;
+  }
+
+  /**
+   * 获取跨列
+   * @returns 
+   */
+  public getColSpan() {
+    return this.metaInfo.colSpan || 1;
   }
 
   restoreUndoItem(undoItem: UndoItem) {

@@ -170,6 +170,15 @@ export class RowBuild extends BaseBuild<RowMeta> {
   }
 
   /**
+   * 添加单元格
+   * @param col 
+   */
+  public addCell(col: number) {
+    const undoManage = this.excelBuild.getUndoManage();
+    undoManage.beginUpdate();
+  }
+
+  /**
    * 获取表格
    * @returns 
    */
