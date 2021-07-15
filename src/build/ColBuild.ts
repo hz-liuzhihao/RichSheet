@@ -129,6 +129,9 @@ export class ColBuild extends BaseBuild<ColMeta> {
    * @param row 
    */
   public replaceCell(row: number, cell: CellBuild) {
+    if (this.cells[row] == cell) {
+      return;
+    }
     const undoManage = this.excelBuild.getUndoManage();
     undoManage.beginUpdate();
     try {

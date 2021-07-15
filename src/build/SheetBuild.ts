@@ -273,10 +273,21 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
             col: j
           }
         });
-        rowBuild.replaceCell(j, newCell);
-        colBuild.replaceCell(i, newCell);
+        this.replaceCell(i, j, newCell);
       }
     }
+  }
+
+
+  /**
+   * 合并拆分单元格会用到
+   * @param cell 
+   */
+  public replaceCell(row: number, col: number, cell: CellBuild) {
+    const rowBuild = this.rows[row];
+    const colBuild = this.cols[col];
+    rowBuild.replaceCell(col, cell);
+    colBuild.replaceCell(row, cell);
   }
 
   /**
@@ -284,17 +295,21 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
    */
   public mergeCell() {
     const selector = this.selector;
+    if (!selector.focusCell || !selector.selectors || !selector.selectors.length) {
+      return;
+    }
     const selectors = selector.selectors;
-    let isSplit = false;
+    let focusCell = selector.focusCell;
     const undoManage = this.excelBuild.getUndoManage();
     undoManage.beginUpdate();
     try {
-      selectors.forEach(item => {
+      selectors.forEach((item, index) => {
         const { rowStart, colStart, rowEnd, colEnd } = item;
         // 当只有一个单元格时没有合并单元格的概念
         if (rowStart == rowEnd && colStart == colEnd) {
           return;
         }
+        let isSplit = false;
         for (let i = rowStart; i <= rowEnd; i++) {
           for (let j = colStart; j <= colEnd; j++) {
             const cellBuild = this.getCell(i, j);
@@ -308,7 +323,31 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
             }
           }
         }
-      })
+        // 如果前面没有做过拆分操作,那么就意味着可以合并
+        if (!isSplit) {
+          if (index !== selectors.length - 1) {
+            focusCell = this.getCell(rowStart, colStart);
+          }
+          focusCell.setProperty('row', rowStart);
+          focusCell.setProperty('col', colStart);
+          focusCell.setProperty('rowSpan', rowEnd - rowStart + 1);
+          focusCell.setProperty('colSpan', colEnd - colStart + 1);
+          for (let i = rowStart; i <= rowEnd; i++) {
+            for (let j = colStart; j <= colEnd; j++) {
+
+              const cellBuild = this.getCell(i, j);
+              const rowSpan = cellBuild.getRowSpan();
+              const colSpan = cellBuild.getColSpan();
+              if (rowSpan > 1 || colSpan > 1) {
+                isSplit = true;
+                this.splitCell(cellBuild);
+                cellBuild.setProperty('rowSpan', 1);
+                cellBuild.setProperty('colSpan', 1);
+              }
+            }
+          }
+        }
+      });
     } finally {
       undoManage.endUpdate();
     }

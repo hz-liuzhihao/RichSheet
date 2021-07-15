@@ -176,6 +176,9 @@ export class RowBuild extends BaseBuild<RowMeta> {
    * @param col 
    */
   public replaceCell(col: number, cell: CellBuild) {
+    if (this.cells[col] == cell) {
+      return;
+    }
     const undoManage = this.excelBuild.getUndoManage();
     undoManage.beginUpdate();
     try {
