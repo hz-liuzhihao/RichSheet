@@ -150,6 +150,10 @@ export interface UndoItem {
    */
   v: any;
   /**
+   * 旧值
+   */
+  ov?: any;
+  /**
    * 添加或者删除后的索引
    */
   i?: number;
