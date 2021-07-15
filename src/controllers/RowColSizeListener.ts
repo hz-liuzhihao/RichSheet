@@ -46,12 +46,20 @@ export default class RowColSizeListener extends AbsListener implements IListener
     const lastPosition = this.lastPostion;
     if (build instanceof RowBuild) {
       const oldHeight = build.getHeight();
-      build.setProperty('height', oldHeight + y - lastPosition.y);
+      let value = oldHeight + y - lastPosition.y;
+      if (value < 20) {
+        value = 20;
+      }
+      build.setProperty('height', value);
     }
 
     if (build instanceof ColBuild) {
       const oldWidth = build.getWidth();
-      build.setProperty('width', oldWidth + x - lastPosition.x);
+      let value = oldWidth + x - lastPosition.x;
+      if (value < 30) {
+        value = 30;
+      }
+      build.setProperty('width', value);
     }
   }
 
