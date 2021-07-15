@@ -177,7 +177,7 @@ export class RowBuild extends BaseBuild<RowMeta> {
         break;
       case Operate.Modify:
         const key = undoItem.p;
-        const value = undoItem.v;
+        const value = this.excelBuild.getUndoRedoValue(undoItem);
         if ((key as string).indexOf('.') > -1) {
           super.setDeepProperty(key, value);
         } else {

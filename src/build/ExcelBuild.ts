@@ -191,7 +191,7 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
         break;
       case Operate.Modify:
         const key = undoItem.p;
-        const value = undoItem.v;
+        const value = this.getUndoRedoValue(undoItem);
         if ((key as string).indexOf('.') > -1) {
           this.setDeepProperty(key, value);
         } else {
