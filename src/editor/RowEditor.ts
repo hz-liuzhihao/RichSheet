@@ -86,7 +86,7 @@ export default class RowEditor extends BaseEditor {
    */
   protected renderUndoItem() {
     this.needRenderUndoItems.forEach(item => {
-
+      console.log('渲染');
     });
   }
 

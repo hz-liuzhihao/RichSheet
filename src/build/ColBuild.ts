@@ -137,6 +137,7 @@ export class ColBuild extends BaseBuild<ColMeta> {
     try {
       undoManage.storeUndoItem({
         c: this,
+        p: 'cell',
         op: Operate.Modify,
         v: cell,
         i: row,

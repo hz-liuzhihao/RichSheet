@@ -25,6 +25,8 @@ export default abstract class BaseEditor {
 
   protected needRenderUndoItems: UndoItem[];
 
+  protected acceptDom: any[];
+
   public constructor(args: BaseEditorArgs) {
     this.initData(args);
     this.initMainDom(args.type);
@@ -40,6 +42,7 @@ export default abstract class BaseEditor {
   protected initData(args: BaseEditorArgs) {
     this.build = args.build;
     this.needRenderUndoItems = [];
+    this.acceptDom = [];
   }
 
   /**
