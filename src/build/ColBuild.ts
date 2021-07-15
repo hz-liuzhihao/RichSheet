@@ -193,10 +193,15 @@ export class ColBuild extends BaseBuild<ColMeta> {
       case Operate.Modify:
         const key = undoItem.p;
         const value = this.excelBuild.getUndoRedoValue(undoItem);
-        if ((key as string).indexOf('.') > -1) {
-          super.setDeepProperty(key, value);
+        if (value instanceof CellBuild) {
+          const row = value.getRow();
+          this.replaceCell(row, value);
         } else {
-          super.setProperty(key as any, value);
+          if ((key as string).indexOf('.') > -1) {
+            super.setDeepProperty(key, value);
+          } else {
+            super.setProperty(key as any, value);
+          }
         }
         break;
     }
