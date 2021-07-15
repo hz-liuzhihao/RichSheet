@@ -246,9 +246,11 @@ export class UndoManage {
       }
       // 在进行数据驱动渲染时,需要将查询操作一起合并
       this.workbench.doChange([...this.qurUndoItems, ...this.curUndoItems]);
+      if (this.curUndoItems.length > 0) {
+        this.redoItems.length = 0;
+      }
       this.curUndoItems = [];
       this.qurUndoItems = [];
-      this.redoItems.length = 0;
     }
   }
 
