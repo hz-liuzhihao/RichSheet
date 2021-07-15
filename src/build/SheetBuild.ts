@@ -278,7 +278,6 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
     }
   }
 
-
   /**
    * 合并拆分单元格会用到
    * @param cell 
@@ -334,16 +333,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
           focusCell.setProperty('colSpan', colEnd - colStart + 1);
           for (let i = rowStart; i <= rowEnd; i++) {
             for (let j = colStart; j <= colEnd; j++) {
-
-              const cellBuild = this.getCell(i, j);
-              const rowSpan = cellBuild.getRowSpan();
-              const colSpan = cellBuild.getColSpan();
-              if (rowSpan > 1 || colSpan > 1) {
-                isSplit = true;
-                this.splitCell(cellBuild);
-                cellBuild.setProperty('rowSpan', 1);
-                cellBuild.setProperty('colSpan', 1);
-              }
+              this.replaceCell(i, j, focusCell);
             }
           }
         }

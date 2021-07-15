@@ -86,7 +86,7 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
    */
   public getUndoRedoValue(undoItem: UndoItem) {
     const undoManage = this.getUndoManage();
-    const {v, ov} = undoItem;
+    const { v, ov } = undoItem;
     if (undoManage.isRedo) {
       return v;
     } else {
@@ -209,6 +209,11 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
     // TOOD
   }
 
+  /** @override */
+  public merge() {
+    this.getCurrentSheet().mergeCell();
+  }
+
   /**
    * 获取所有的sheet
    * @returns 
@@ -222,7 +227,7 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
    * @returns 
    */
   public getCurrentSheet() {
-    return this.sheets[this.currentIndex];
+    return this.sheets[this.currentIndex || 0];
   }
 
   public getUndoManage() {

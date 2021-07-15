@@ -36,7 +36,8 @@ export default class ShortcutListener extends AbsListener implements IListener {
    * ctrlM合并单元格
    */
   protected ctrlM() {
-
+    const excelBuild = this.excelBuild;
+    excelBuild.merge();
   }
 
   /**

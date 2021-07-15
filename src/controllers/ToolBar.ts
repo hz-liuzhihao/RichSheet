@@ -3,6 +3,9 @@
  */
 export interface ExcelBehavior {
   addRow: (count: number) => void;
+
+  /** 合并单元格 */
+  merge: () => void;
 }
 
 export interface AbsToolbarArgs {
