@@ -250,11 +250,33 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
 
   /**
    * 添加单元格
-   * @param row 
-   * @param col 
+   * @param cell
    */
-  public addCell(row: number, col: number) {
-
+  public splitCell(cell: CellBuild) {
+    const row = cell.getRow();
+    const col = cell.getCol();
+    const rowSpan = cell.getRowSpan();
+    const colSpan = cell.getColSpan();
+    for (let i = row; i < row + rowSpan; i++) {
+      for (let j = col; j < col + colSpan; j++) {
+        if (i == row && j == col) {
+          break;
+        }
+        const rowBuild = this.rows[i];
+        const colBuild = this.cols[j];
+        const newCell = new CellBuild({
+          row: rowBuild,
+          col: colBuild,
+          excelBuild: this.excelBuild,
+          metaInfo: {
+            row: i,
+            col: j
+          }
+        });
+        rowBuild.replaceCell(j, newCell);
+        colBuild.replaceCell(i, newCell);
+      }
+    }
   }
 
   /**
@@ -280,11 +302,9 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
             const colSpan = cellBuild.getColSpan();
             if (rowSpan > 1 || colSpan > 1) {
               isSplit = true;
-              const row = cellBuild.getRow();
-              const col = cellBuild.getCol();
+              this.splitCell(cellBuild);
               cellBuild.setProperty('rowSpan', 1);
               cellBuild.setProperty('colSpan', 1);
-
             }
           }
         }

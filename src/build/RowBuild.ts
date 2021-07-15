@@ -148,6 +148,7 @@ export class RowBuild extends BaseBuild<RowMeta> {
 
   /**
    * 获取行头
+   * row索引从0开始
    */
   public getIndex() {
     const title = this.metaInfo.title;
@@ -170,12 +171,24 @@ export class RowBuild extends BaseBuild<RowMeta> {
   }
 
   /**
-   * 添加单元格
+   * 替换单元格
+   * 合并操作和拆分操作会用到
    * @param col 
    */
-  public addCell(col: number) {
+  public replaceCell(col: number, cell: CellBuild) {
     const undoManage = this.excelBuild.getUndoManage();
     undoManage.beginUpdate();
+    try {
+      undoManage.storeUndoItem({
+        c: this,
+        op: Operate.Modify,
+        v: cell,
+        ov: this.cells[col]
+      });
+      this.cells[col] = cell;
+    } finally {
+      undoManage.endUpdate();
+    }
   }
 
   /**

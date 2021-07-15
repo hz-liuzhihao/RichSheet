@@ -123,6 +123,27 @@ export class ColBuild extends BaseBuild<ColMeta> {
     }
   }
 
+  /**
+   * 替换单元格
+   * 合并操作和拆分操作会用到
+   * @param row 
+   */
+  public replaceCell(row: number, cell: CellBuild) {
+    const undoManage = this.excelBuild.getUndoManage();
+    undoManage.beginUpdate();
+    try {
+      undoManage.storeUndoItem({
+        c: this,
+        op: Operate.Modify,
+        v: cell,
+        ov: this.cells[row]
+      });
+      this.cells[row] = cell;
+    } finally {
+      undoManage.endUpdate();
+    }
+  }
+
   public getCells() {
     return this.cells;
   }
