@@ -7,10 +7,9 @@ import { KeyMap } from '../utils/enums';
 export default class ShortcutListener extends AbsListener implements IListener {
 
   public dealKeyDown(event: KeyboardEvent) {
-    const isCtrl = event.ctrlKey;
+    const isCtrl = event.ctrlKey || event.metaKey;
     const isShift = event.shiftKey;
     const keyCode = event.keyCode || KeyMap[event.key];
-    const isMeta = event.metaKey;
     const isAlt = event.altKey;
     if (isCtrl && !isShift) {
       // 按住ctrl键未按shift键
