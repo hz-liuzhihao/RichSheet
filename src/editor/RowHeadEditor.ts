@@ -3,7 +3,7 @@ import { BaseEditorArgs } from './BaseEditor';
 import { RowBuild } from '../build/RowBuild';
 import './ColHeadEditor.css';
 import { Operate, UndoItem } from '../flow/UndoManage';
-import { capitalize } from 'lodash';
+import { upperFirst } from 'lodash';
 export interface RowHeadEditorArgs extends BaseEditorArgs {
 
 }
@@ -50,7 +50,7 @@ export default class RowHeadEditor extends BaseEditor {
     this.needRenderUndoItems.forEach(item => {
       const { p, op } = item;
       if (op == Operate.Modify) {
-        const method = `render${capitalize(p)}`;
+        const method = `render${upperFirst(p)}`;
         if (typeof this[method] == 'function') {
           return this[method](item);
         }

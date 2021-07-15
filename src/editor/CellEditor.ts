@@ -1,6 +1,10 @@
 import BaseEditor, { BaseEditorArgs } from './BaseEditor';
 import { CellBuild } from '../build/CellBuild';
 import './CellEditor.css';
+import { Operate, UndoItem } from '../flow/UndoManage';
+import { upperFirst } from 'lodash';
+
+const styleProperty = ['']
 
 export interface CellEditorArgs extends BaseEditorArgs {
   build: CellBuild;
@@ -51,12 +55,40 @@ export default class CellEditor extends BaseEditor {
     };
   }
 
+  private renderStyle() {
+
+  }
+
+  protected renderRowSpan(item: UndoItem) {
+    const build = this.build;
+    const rowSpan = build.getRowSpan();
+    const mainDom = this.mainDom as HTMLTableCellElement;
+    mainDom.rowSpan = rowSpan;
+  }
+
+  protected renderColSpan(item: UndoItem) {
+    const build = this.build;
+    const colSpan = build.getColSpan();
+    const mainDom = this.mainDom as HTMLTableCellElement;
+    mainDom.colSpan = colSpan;
+  }
+
   /**
    * 渲染每个undo信息
    */
   protected renderUndoItem() {
     this.needRenderUndoItems.forEach(item => {
-
+      const { p, op } = item;
+      if (op == Operate.Modify) {
+        if (styleProperty.indexOf(p) > -1) {
+          this.renderStyle();
+        } else {
+          const method = `render${upperFirst(p)}`;
+          if (typeof this[method] == 'function') {
+            return this[method](item);
+          }
+        }
+      }
     });
   }
 

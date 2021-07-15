@@ -1,4 +1,4 @@
-import { capitalize } from 'lodash';
+import { upperFirst } from 'lodash';
 
 export interface IWorkBench {
   /**
@@ -52,7 +52,7 @@ export abstract class BaseBuild<T> {
    */
   public setDeepProperty(key: string, value: any) {
     const keys = key.split('.') as (keyof T)[]
-    const method = keys.map((item) => capitalize(item as string)).join('');
+    const method = keys.map((item) => upperFirst(item as string)).join('');
     if (typeof this[method] == 'function') {
       return this[method]();
     }
@@ -75,7 +75,7 @@ export abstract class BaseBuild<T> {
    * @returns 
    */
   public setProperty(key: keyof T, value: any) {
-    const method = `set${capitalize(key as string)}`;
+    const method = `set${upperFirst(key as string)}`;
     if (typeof this[method] == 'function') {
       return this[method]();
     }
@@ -88,7 +88,7 @@ export abstract class BaseBuild<T> {
    * @returns 
    */
   public getProperty(key: keyof T) {
-    const method = `get${capitalize(key as string)}`;
+    const method = `get${upperFirst(key as string)}`;
     if (typeof this[method] == 'function') {
       return this[method]();
     }

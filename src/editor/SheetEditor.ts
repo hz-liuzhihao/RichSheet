@@ -5,7 +5,7 @@ import RowEditor from './RowEditor';
 import ColHeadEditor from './ColHeadEditor';
 import './SheetEditor.css';
 import { UndoItem } from '../flow/UndoManage';
-import { capitalize } from 'lodash';
+import { upperFirst } from 'lodash';
 import { setDomStyle } from '../utils/style';
 import { ColBuild } from '../build/ColBuild';
 export interface SheetEditorArgs extends BaseEditorArgs {
@@ -171,7 +171,7 @@ export default class SheetEditor extends BaseEditor {
   protected renderUndoItem() {
     this.needRenderUndoItems.forEach(item => {
       const { p, c } = item;
-      const methond = `render${capitalize(p)}`;
+      const methond = `render${upperFirst(p)}`;
       if (typeof this[methond] == 'function') {
         return this[methond](item);
       }
