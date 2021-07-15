@@ -8,15 +8,15 @@ export interface ColMeta {
   /**
    * 列头的宽度
    */
-  width: number;
+  width?: number;
   /**
    * 列头的高度
    */
-  height: number;
+  height?: number;
   /**
    * 列头文本
    */
-  title: string;
+  title?: string;
   /**
    * 序号
    */
@@ -65,7 +65,7 @@ export class ColBuild extends BaseBuild<ColMeta> {
     if (title) {
       return title;
     }
-    const col = this.cells[0].getProperty('col');
+    const col = this.metaInfo.index;
     return getColNameByOrder(col + 1);
   }
 
@@ -74,7 +74,7 @@ export class ColBuild extends BaseBuild<ColMeta> {
    * @returns 
    */
   public getColNumber() {
-    return this.cells[0].getProperty('col');
+    return this.metaInfo.index;
   }
 
   /**

@@ -155,7 +155,7 @@ export class RowBuild extends BaseBuild<RowMeta> {
     if (title) {
       return title;
     }
-    return this.cells[0].getProperty('row') + 1;
+    return this.metaInfo.index + 1;
   }
 
   public getCells() {

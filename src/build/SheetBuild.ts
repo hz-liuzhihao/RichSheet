@@ -94,6 +94,11 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
     for (let row = 0; row < rowLines; row++) {
       // 当行未初始化时,进行初始化
       if (this.rows[row] == null) {
+        if (rows[row] == null) {
+          rows[row] = {
+            index: row
+          };
+        }
         this.rows[row] = new RowBuild({
           metaInfo: rows[row],
           sheet: this,
@@ -103,6 +108,11 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
       for (let col = 0; col < colLines; col++) {
         // 当列未初始化时,进行初始化
         if (this.cols[col] == null) {
+          if (cols[col] == null) {
+            cols[col] = {
+              index: col
+            };
+          }
           this.cols[col] = new ColBuild({
             metaInfo: cols[col],
             sheet: this,
