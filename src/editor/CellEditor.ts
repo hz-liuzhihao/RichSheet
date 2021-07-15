@@ -4,7 +4,7 @@ import './CellEditor.css';
 import { Operate, UndoItem } from '../flow/UndoManage';
 import { upperFirst } from 'lodash';
 
-const styleProperty = ['']
+const styleProperty = [''];
 
 export interface CellEditorArgs extends BaseEditorArgs {
   build: CellBuild;

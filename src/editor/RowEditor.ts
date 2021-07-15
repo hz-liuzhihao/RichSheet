@@ -3,7 +3,11 @@ import { RowBuild } from '../build/RowBuild';
 import CellEditor from './CellEditor';
 import { ColBuild } from '../build/ColBuild';
 import RowHeadEditor from './RowHeadEditor';
-import { UndoItem } from '../flow/UndoManage';
+import { UndoItem, Operate } from '../flow/UndoManage';
+import { upperFirst } from 'lodash';
+import { CellBuild } from '../build/CellBuild';
+
+const styleProperty = [''];
 
 export interface RowEditorArgs extends BaseEditorArgs {
   build: RowBuild;
@@ -81,12 +85,35 @@ export default class RowEditor extends BaseEditor {
     this.colHeadEditor.requestRenderUndoItem(undoItem);
   }
 
+  private renderStyle() {
+
+  }
+
+  /**
+   * 渲染合并单元格
+   */
+  protected renderMerge(item: UndoItem) {
+    const v = item.v as CellBuild;
+    const ov = item.ov as CellBuild;
+    
+  }
+
   /**
    * 渲染每个undo信息
    */
   protected renderUndoItem() {
     this.needRenderUndoItems.forEach(item => {
-      console.log('渲染');
+      const { p, op } = item;
+      if (op == Operate.Modify) {
+        if (styleProperty.indexOf(p) > -1) {
+          this.renderStyle();
+        } else {
+          const method = `render${upperFirst(p)}`;
+          if (typeof this[method] == 'function') {
+            return this[method](item);
+          }
+        }
+      }
     });
   }
 
