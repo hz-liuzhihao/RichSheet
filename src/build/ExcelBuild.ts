@@ -80,6 +80,21 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
   }
 
   /**
+   * 获取undo/redo的value,针对操作为modify
+   * @param undoItem 
+   * @returns 
+   */
+  public getUndoRedoValue(undoItem: UndoItem) {
+    const undoManage = this.getUndoManage();
+    const {v, ov} = undoItem;
+    if (undoManage.isRedo) {
+      return v;
+    } else {
+      return ov;
+    }
+  }
+
+  /**
    * 获取主题样式表
    * @returns 
    */
