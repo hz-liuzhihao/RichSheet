@@ -178,9 +178,9 @@ export class RowBuild extends BaseBuild<RowMeta> {
         const key = undoItem.p;
         const value = undoItem.v;
         if ((key as string).indexOf('.') > -1) {
-          this.setDeepProperty(key, value);
+          super.setDeepProperty(key, value);
         } else {
-          this.setProperty(key as any, value);
+          super.setProperty(key as any, value);
         }
         break;
     }

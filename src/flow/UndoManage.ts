@@ -205,6 +205,7 @@ export class UndoManage {
       const c = item.c;
       c.restoreUndoItem(item);
     });
+    this.workbench.doChange([...curUndoItems]);
     this.isRedo = false;
     this.undoItems.push(curUndoItems);
   }
@@ -222,6 +223,7 @@ export class UndoManage {
       const c = item.c;
       c.restoreUndoItem(item);
     });
+    this.workbench.doChange([...curUndoItems]);
     this.isUndo = false;
     this.redoItems.push(curUndoItems);
   }

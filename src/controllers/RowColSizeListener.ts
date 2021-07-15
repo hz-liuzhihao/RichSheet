@@ -56,10 +56,10 @@ export default class RowColSizeListener extends AbsListener implements IListener
   }
 
   public dealMouseUp(event: MouseEvent) {
+    this.excelBuild.endPreview();
     if (!this.build) {
       return;
     }
-    this.excelBuild.endPreview();
     const { x, y } = event;
     const build = this.build;
     const lastPosition = this.lastPostion;
