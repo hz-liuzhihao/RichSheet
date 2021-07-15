@@ -37,7 +37,9 @@ export default class RowHeadEditor extends BaseEditor {
     if (isPreview) {
       this.mainDom.style.height = `${v}px`;
     } else {
-
+      const c = item.c as RowBuild;
+      const height = c.getHeight();
+      this.mainDom.style.height = `${height}px`;
     }
   }
 

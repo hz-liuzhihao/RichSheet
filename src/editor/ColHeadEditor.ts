@@ -56,12 +56,13 @@ export default class ColHeadEditor extends BaseEditor {
   protected renderWidth(item: UndoItem) {
     const { v, isPreview } = item;
     const build = item.c as ColBuild;
+    const index = build.getColNumber();
+    const colDom = this.tds[index];
     if (isPreview) {
-      const index = build.getColNumber();
-      const colDom = this.tds[index];
       colDom.style.width = `${v}px`;
     } else {
-
+      const width = build.getWidth();
+      colDom.style.width = `${width}px`;
     }
   }
 
