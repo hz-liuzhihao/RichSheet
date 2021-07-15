@@ -72,6 +72,9 @@ export default class RowColSizeListener extends AbsListener implements IListener
     const build = this.build;
     const lastPosition = this.lastPostion;
     if (build instanceof RowBuild) {
+      if (Math.floor(Math.abs(y - lastPosition.y)) == 0) {
+        return;
+      }
       // 优化行高逻辑
       const oldHeight = build.getHeight();
       let value = oldHeight + y - lastPosition.y;
@@ -82,6 +85,9 @@ export default class RowColSizeListener extends AbsListener implements IListener
     }
 
     if (build instanceof ColBuild) {
+      if (Math.floor(Math.abs(x - lastPosition.x)) == 0) {
+        return;
+      }
       // 优化列宽逻辑
       const oldWidth = build.getWidth();
       let value = oldWidth + x - lastPosition.x;
