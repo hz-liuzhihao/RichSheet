@@ -196,13 +196,26 @@ export class UndoManage {
    * 处理redo操作
    */
   public redo(): void {
-    this.isUndo = true;
+    if (!this.canRedo()) {
+      return;
+    }
+    this.isRedo = true;
+    const curUndoItems = this.redoItems.pop();
+    curUndoItems.forEach(item => {
+      const c = item.c;
+      c.restoreUndoItem(item);
+    });
+    this.isRedo = false;
+    this.undoItems.push(curUndoItems);
   }
 
   /**
    * 处理undo操作
    */
   public undo(): void {
+    if (!this.canUndo()) {
+      return;
+    }
     this.isUndo = true;
     const curUndoItems = this.undoItems.pop();
     curUndoItems.forEach(item => {
