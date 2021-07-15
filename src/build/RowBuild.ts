@@ -76,7 +76,7 @@ export class RowBuild extends BaseBuild<RowMeta> {
   /**
    * 获取行高
    */
-   public getHeight() {
+  public getHeight() {
     const theme = this.excelBuild.getTheme();
     const height = this.metaInfo.height || theme.rowHeadHeight;
     return height;
@@ -100,6 +100,10 @@ export class RowBuild extends BaseBuild<RowMeta> {
   public setProperty(key: RowMetaKey, value: any) {
     const isPreview = this.excelBuild.getIsPreview();
     const undoManage = this.excelBuild.getUndoManage();
+    const oldValue = this.metaInfo[key];
+    if (oldValue == value) {
+      return;
+    }
     undoManage.beginUpdate();
     try {
       if (isPreview) {
@@ -111,7 +115,6 @@ export class RowBuild extends BaseBuild<RowMeta> {
           isPreview
         });
       } else {
-        const oldValue = this.metaInfo[key];
         undoManage.storeUndoItem({
           c: this,
           p: key,

@@ -94,6 +94,10 @@ export class ColBuild extends BaseBuild<ColMeta> {
   public setProperty(key: ColMetaKey, value: any) {
     const isPreview = this.excelBuild.getIsPreview();
     const undoManage = this.excelBuild.getUndoManage();
+    const oldValue = this.metaInfo[key];
+    if (oldValue == value) {
+      return;
+    }
     undoManage.beginUpdate();
     try {
       if (isPreview) {
@@ -105,7 +109,6 @@ export class ColBuild extends BaseBuild<ColMeta> {
           isPreview
         });
       } else {
-        const oldValue = this.metaInfo[key];
         undoManage.storeUndoItem({
           c: this,
           p: key,
