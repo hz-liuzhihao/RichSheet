@@ -144,9 +144,53 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
    * @returns 
    */
   public getTableWidth() {
-    const tableWidth = this.cols.reduce((total, item) => total + item.getProperty('width'), 0);
+    const tableWidth = this.cols.reduce((total, item) => total + item.getWidth(), 0);
     const rowWidth = this.rows[0].getWidth() || 0;
     return tableWidth + rowWidth;
+  }
+
+  /**
+   * 获取开始和接口的列宽
+   * @param start 
+   * @param end 
+   */
+  public getSelectWidth(start: number, end: number) {
+    const cols = this.cols.slice(start, end + 1);
+    const selectWidth = cols.reduce((total, item) => total + item.getWidth(), 0);
+    return selectWidth;
+  }
+
+  /**
+   * 获取开始和结束的行高
+   * @param start 
+   * @param end 
+   * @returns 
+   */
+  public getSelectHeight(start: number, end: number) {
+    const rows = this.rows.slice(start, end + 1);
+    const selectHeight = rows.reduce((total, item) => total + item.getHeight(), 0);
+    return selectHeight;
+  }
+
+  /**
+   * 获取选中框左偏移
+   */
+  public getSelectLeft(start: number) {
+    const cols = this.cols.slice(0, start);
+    const left = cols.reduce((total, item) => total + item.getWidth(), 0);
+    const rowHeadWidth = this.rows[0].getWidth();
+    return left + rowHeadWidth;
+  }
+
+  /**
+   * 获取选中框上偏移
+   * @param start 
+   */
+  public getSelectTop(start: number) {
+    const rows = this.rows.slice(0, start);
+    const top = rows.reduce((total, item) => total + item.getHeight(), 0);
+    const colHeadHeight = this.cols[0].getHeight();
+    return top + colHeadHeight;
   }
 
   /**

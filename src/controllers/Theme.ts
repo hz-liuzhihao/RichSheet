@@ -31,9 +31,9 @@ export const DefaultTheme: ITheme = {
   borderColor: '#d4d4d4',
   borderWidth: 1,
   borderStyle: 'solid',
-  rowHeadHeight: 20,
+  rowHeadHeight: 25,
   rowHeadWidth: 45,
-  colHeadHeight: 20,
+  colHeadHeight: 25,
   colHeadWidth: 75
 }
 

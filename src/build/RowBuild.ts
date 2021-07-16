@@ -78,17 +78,17 @@ export class RowBuild extends BaseBuild<RowMeta> {
    */
   public getHeight() {
     const theme = this.excelBuild.getTheme();
-    const height = this.metaInfo.height || theme.rowHeadHeight;
+    const height = this.metaInfo.height || theme.rowHeadHeight || 0;
     return height;
   }
 
   /**
-   * 获取列宽
+   * 获取行头列宽
    * @returns 
    */
   public getWidth() {
     const theme = this.excelBuild.getTheme();
-    const width = this.metaInfo.width || theme.rowHeadWidth;
+    const width = this.metaInfo.width || theme.rowHeadWidth || 0;
     return width;
   }
 

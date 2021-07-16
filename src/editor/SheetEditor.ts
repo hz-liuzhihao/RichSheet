@@ -113,8 +113,8 @@ export default class SheetEditor extends BaseEditor {
    * @param undoItem 
    */
   protected renderSelect(undoItem: UndoItem) {
-    const c = undoItem.c as SheetBuild;
-    const selector = c.getSelector();
+    const sheetBuild = this.build;
+    const selector = sheetBuild.getSelector();
     const focuCell = selector.focusCell;
     const selectInfos = selector.selectors;
     const { selectDom } = this;
@@ -123,44 +123,16 @@ export default class SheetEditor extends BaseEditor {
     } else {
       const selectInfo = selectInfos[0];
       const { rowStart, colStart, rowEnd, colEnd } = selectInfo;
-      const startEditor = this.getCellEditor(rowStart, colStart);
-      const endEditor = this.getCellEditor(rowEnd, colEnd);
-      const startPosition = startEditor.getPosRelaTable();
-      const endPosition = endEditor.getPosRelaTable();
-      const { top, left, width, height } = startPosition;
-      const { top: endTop, left: endLeft, width: endWidth, height: endHeight } = endPosition;
-      let realTop;
-      let maxTop;
-      let realLeft;
-      let maxLeft;
-      let lastWidth;
-      let lastHeight;
-      if (top < endTop) {
-        realTop = top;
-        maxTop = endTop;
-        lastHeight = endHeight;
-      } else {
-        realTop = endTop;
-        maxTop = top;
-        lastHeight = height;
-      }
-      if (left < endLeft) {
-        realLeft = left;
-        maxLeft = endLeft;
-        lastWidth = endWidth;
-      } else {
-        realLeft = endLeft;
-        maxLeft = left;
-        lastWidth = width;
-      }
-      const right = maxLeft + lastWidth;
-      const bottom = maxTop + lastHeight;
-      // 由于选中边框原因全部缩小1
+      const width = sheetBuild.getSelectWidth(colStart, colEnd);
+      const height = sheetBuild.getSelectHeight(rowStart, rowEnd);
+      const left = sheetBuild.getSelectLeft(colStart);
+      const top = sheetBuild.getSelectTop(rowStart);
+      // 由于选中边框原因全部缩小1.5
       setDomStyle(selectDom, {
-        left: realLeft - 1.5,
-        top: realTop - 1.5,
-        width: right - realLeft - 1.5,
-        height: bottom - realTop - 1.5,
+        left: left - 1.5,
+        top: top - 1.5,
+        width: width - 1.5,
+        height: height - 1.5,
       });
     }
   }

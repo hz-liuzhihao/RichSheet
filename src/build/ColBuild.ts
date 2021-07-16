@@ -87,6 +87,16 @@ export class ColBuild extends BaseBuild<ColMeta> {
   }
 
   /**
+   * 
+   * @returns 获取行头高度
+   */
+  public getHeight() {
+    const theme = this.excelBuild.getTheme();
+    const height = this.metaInfo.height || theme.colHeadHeight || 0;
+    return height;
+  }
+
+  /**
    * 设置属性值
    * @param key 
    * @param value 
