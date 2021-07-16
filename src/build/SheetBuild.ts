@@ -249,37 +249,51 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
       colStart = startCol;
       colEnd = endCol;
     }
-    // 遍历开始行确定上边界
-    // 遍历结束行确定下边界
     let finalStartRow = rowStart;
     let finalStartCol = colStart;
     let finalEndRow = rowEnd;
     let finalEndCol = colEnd;
-    for (let i = colStart; i <= colEnd; i++) {
-      const startRowCellBuild = this.getCell(rowStart, i);
-      const endRowCellBuild = this.getCell(rowEnd, i);
-      if (startRowCellBuild.getRow() < finalStartRow) {
-        finalStartRow = startRowCellBuild.getRow();
+    // 记住最终的修改
+    let isUpdate = false;
+    const calcSelect = (startRowParam: number, endRowParam: number, startColParam: number, endColParam: number) => {
+      // 遍历开始行确定上边界
+      // 遍历结束行确定下边界
+      for (let i = startColParam; i <= endColParam; i++) {
+        const startRowCellBuild = this.getCell(startRowParam, i);
+        const endRowCellBuild = this.getCell(endRowParam, i);
+        if (startRowCellBuild.getRow() < finalStartRow) {
+          finalStartRow = startRowCellBuild.getRow();
+          isUpdate = true;
+        }
+        const endRowResult = endRowCellBuild.getRow() + endRowCellBuild.getRowSpan() - 1;
+        if (endRowResult > finalEndRow) {
+          finalEndRow = endRowResult;
+          isUpdate = true;
+        }
       }
-      const endRowResult = endRowCellBuild.getRow() + endRowCellBuild.getRowSpan() - 1;
-      if (endRowResult > finalEndRow) {
-        finalEndRow = endRowResult;
-      }
-    }
 
-    // 遍历开始列确定左边界
-    // 遍历结束列确定右边界
-    for (let j = rowStart; j <= rowEnd; j++) {
-      const startColCellBuild = this.getCell(j, colStart);
-      const endColCellBuild = this.getCell(j, colEnd);
-      if (startColCellBuild.getCol() < finalStartCol) {
-        finalStartCol = startColCellBuild.getCol();
+      // 遍历开始列确定左边界
+      // 遍历结束列确定右边界
+      for (let j = startRowParam; j <= endRowParam; j++) {
+        const startColCellBuild = this.getCell(j, startColParam);
+        const endColCellBuild = this.getCell(j, endColParam);
+        if (startColCellBuild.getCol() < finalStartCol) {
+          finalStartCol = startColCellBuild.getCol();
+          isUpdate = true;
+        }
+        const endColResult = endColCellBuild.getCol() + endColCellBuild.getColSpan() - 1;
+        if (endColResult > finalEndCol) {
+          finalEndCol = endColResult;
+          isUpdate = true;
+        }
       }
-      const endColResult = endColCellBuild.getCol() + endColCellBuild.getColSpan() - 1;
-      if (endColResult > finalEndCol) {
-        finalEndCol = endColResult;
+      // 如果行列发生了更新继续向外进行范围计算,直至不发生修改位置
+      if (isUpdate) {
+        isUpdate = false;
+        calcSelect(finalStartRow, finalEndRow, finalStartCol, finalEndCol)
       }
     }
+    calcSelect(finalStartRow, finalEndRow, finalStartCol, finalEndCol);
     const undoManage = this.excelBuild.getUndoManage();
     const selector = { ...this.selector }
     const info: Selector = {
