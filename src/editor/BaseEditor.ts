@@ -41,8 +41,16 @@ export default abstract class BaseEditor {
    */
   protected initData(args: BaseEditorArgs) {
     this.build = args.build;
+    this.parentDom = args.domParent;
     this.needRenderUndoItems = [];
     this.acceptDom = [];
+  }
+
+  /**
+   * 移除元素
+   */
+  public removeDom() {
+    this.mainDom.remove();
   }
 
   /**

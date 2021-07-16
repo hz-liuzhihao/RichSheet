@@ -26,6 +26,8 @@ export default class RowEditor extends BaseEditor {
 
   protected colHeadEditor: RowHeadEditor;
 
+  protected acceptDom: CellEditor[];
+
   public constructor(args: RowEditorArgs) {
     args.type = 'tr';
     super(args);
@@ -81,7 +83,7 @@ export default class RowEditor extends BaseEditor {
 
   /** @override */
   protected requestRenderChildrenUndoItem(undoItem: UndoItem) {
-    this.cells.forEach(item => item.requestRenderUndoItem(undoItem));
+    this.cells.forEach(item => item && item.requestRenderUndoItem(undoItem));
     this.colHeadEditor.requestRenderUndoItem(undoItem);
   }
 
@@ -90,12 +92,53 @@ export default class RowEditor extends BaseEditor {
   }
 
   /**
+   * 移除cellEditor
+   * @param i 
+   */
+  private removeCellEditor(i: number) {
+    this.cells[i].removeDom();
+    this.acceptDom.push(this.cells[i]);
+    this.cells[i] = null;
+  }
+
+  /**
+   * 添加excelEditor
+   * @param i 
+   * @param cellBuild 
+   */
+  private addCellEditor(i: number, cellBuild: CellBuild) {
+    if (this.acceptDom.length > 0) {
+      const cellEditor = this.acceptDom[0];
+      cellEditor.setBuild(cellBuild);
+      cellEditor.setParent(this.mainDom);
+      this.cells[i] = cellEditor;
+    } else {
+      this.cells[i] = new CellEditor({
+        build: cellBuild,
+        domParent: this.mainDom
+      });
+    }
+  }
+
+  /**
    * 渲染合并单元格
    */
   protected renderMerge(item: UndoItem) {
-    const v = item.v as CellBuild;
-    const ov = item.ov as CellBuild;
-    
+    const col = item.i;
+    const row = this.build.getRow();
+    const cellBuild = this.build.getCell(col);
+    const cellRow = cellBuild.getRow();
+    const cellCol = cellBuild.getCol();
+    const cellEditor = this.cells[col];
+    if (cellEditor == null) {
+      if (cellRow == row && cellCol == col) {
+        this.addCellEditor(col, cellBuild);
+      }
+    } else if (cellEditor.getBuild() !== cellBuild) {
+      if (cellRow != row || cellCol != col) {
+        this.removeCellEditor(col);
+      }
+    }
   }
 
   /**

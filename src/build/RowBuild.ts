@@ -147,7 +147,7 @@ export class RowBuild extends BaseBuild<RowMeta> {
   }
 
   /**
-   * 获取行头
+   * 获取行头文本索引
    * row索引从0开始
    */
   public getIndex() {
@@ -156,6 +156,14 @@ export class RowBuild extends BaseBuild<RowMeta> {
       return title;
     }
     return this.metaInfo.index + 1;
+  }
+
+  /**
+   * 获取行索引
+   * @returns 
+   */
+  public getRow() {
+    return this.metaInfo.index;
   }
 
   public getCells() {
