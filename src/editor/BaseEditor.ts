@@ -69,6 +69,7 @@ export default abstract class BaseEditor {
     if (build == this.build) {
       return;
     }
+    this.mainDom.__build__ = build;
     this.build = build;
     this.requestRender();
   }

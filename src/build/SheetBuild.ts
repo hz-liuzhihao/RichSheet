@@ -211,6 +211,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
       rowEnd,
       colEnd
     };
+    console.log(info);
     if (this.selector.selectors) {
       selector.selectors = [...this.selector.selectors];
     }

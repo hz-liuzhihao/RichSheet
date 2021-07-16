@@ -45,6 +45,7 @@ export default class ColHeadEditor extends BaseEditor {
       const colHeadClassName = item.getThemeClassName();
       colHeadClassName && td.classList.add(colHeadClassName);
       td.classList.add('colhead_item');
+      // TODO 当列头数据层修改时需要同步
       td.__build__ = item;
       Object.assign(td.style, item.toStyle());
       textDom.textContent = colName;
