@@ -182,8 +182,12 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
   public doSelect(startCell: CellBuild, endCell: CellBuild, isCtrl = false) {
     const startRow = startCell.getProperty('row');
     const startCol = startCell.getProperty('col');
+    const startRowSpan = startCell.getProperty('rowSpan');
+    const startColSpan = startCell.getProperty('colSpan');
     const endRow = endCell.getProperty('row');
     const endCol = endCell.getProperty('col');
+    const endRowSpan = endCell.getProperty('rowSpan');
+    const endColSpan = endCell.getProperty('colSpan');
     let rowStart;
     let rowEnd;
     let colStart;
