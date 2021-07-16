@@ -222,16 +222,14 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
   /**
    * 选中单元格
    * startCell一定是focusCell
+   * rowStart colStart
+   * rowEnd colEnd
    */
   public doSelect(startCell: CellBuild, endCell: CellBuild, isCtrl = false) {
     const startRow = startCell.getProperty('row');
     const startCol = startCell.getProperty('col');
-    const startRowSpan = startCell.getProperty('rowSpan');
-    const startColSpan = startCell.getProperty('colSpan');
     const endRow = endCell.getProperty('row');
     const endCol = endCell.getProperty('col');
-    const endRowSpan = endCell.getProperty('rowSpan');
-    const endColSpan = endCell.getProperty('colSpan');
     let rowStart;
     let rowEnd;
     let colStart;
@@ -251,13 +249,44 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
       colStart = startCol;
       colEnd = endCol;
     }
+    // 遍历开始行确定上边界
+    // 遍历结束行确定下边界
+    let finalStartRow = rowStart;
+    let finalStartCol = colStart;
+    let finalEndRow = rowEnd;
+    let finalEndCol = colEnd;
+    for (let i = colStart; i <= colEnd; i++) {
+      const startRowCellBuild = this.getCell(rowStart, i);
+      const endRowCellBuild = this.getCell(rowEnd, i);
+      if (startRowCellBuild.getRow() < finalStartRow) {
+        finalStartRow = startRowCellBuild.getRow();
+      }
+      const endRowResult = endRowCellBuild.getRow() + endRowCellBuild.getRowSpan() - 1;
+      if (endRowResult > finalEndRow) {
+        finalEndRow = endRowResult;
+      }
+    }
+
+    // 遍历开始列确定左边界
+    // 遍历结束列确定右边界
+    for (let j = rowStart; j <= rowEnd; j++) {
+      const startColCellBuild = this.getCell(j, colStart);
+      const endColCellBuild = this.getCell(j, colEnd);
+      if (startColCellBuild.getCol() < finalStartCol) {
+        finalStartCol = startColCellBuild.getCol();
+      }
+      const endColResult = endColCellBuild.getCol() + endColCellBuild.getColSpan() - 1;
+      if (endColResult > finalEndCol) {
+        finalEndCol = endColResult;
+      }
+    }
     const undoManage = this.excelBuild.getUndoManage();
     const selector = { ...this.selector }
     const info: Selector = {
-      rowStart,
-      colStart,
-      rowEnd,
-      colEnd
+      rowStart: finalStartRow,
+      colStart: finalStartCol,
+      rowEnd: finalEndRow,
+      colEnd: finalEndCol
     };
     if (this.selector.selectors) {
       selector.selectors = [...this.selector.selectors];

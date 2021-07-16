@@ -145,14 +145,15 @@ export class ColBuild extends BaseBuild<ColMeta> {
     const undoManage = this.excelBuild.getUndoManage();
     undoManage.beginUpdate();
     try {
-      undoManage.storeUndoItem({
-        c: this,
-        p: 'merge',
-        op: Operate.Modify,
-        v: cell,
-        i: row,
-        ov: this.cells[row]
-      });
+      // 列单元格目前不要记修改后的单元格,因为不触发渲染
+      // undoManage.storeUndoItem({
+      //   c: this,
+      //   p: 'merge',
+      //   op: Operate.Modify,
+      //   v: cell,
+      //   i: row,
+      //   ov: this.cells[row]
+      // });
       this.cells[row] = cell;
     } finally {
       undoManage.endUpdate();
