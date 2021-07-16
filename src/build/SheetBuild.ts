@@ -219,40 +219,15 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
     return this.cols;
   }
 
+
   /**
-   * 选中单元格
-   * startCell一定是focusCell
-   * rowStart colStart
-   * rowEnd colEnd
+   * 根据开始行开始列结束行结束列计算区域
    */
-  public doSelect(startCell: CellBuild, endCell: CellBuild, isCtrl = false) {
-    const startRow = startCell.getProperty('row');
-    const startCol = startCell.getProperty('col');
-    const endRow = endCell.getProperty('row');
-    const endCol = endCell.getProperty('col');
-    let rowStart;
-    let rowEnd;
-    let colStart;
-    let colEnd;
-    // 将选中的cell重新排行列
-    if (startRow > endRow) {
-      rowStart = endRow;
-      rowEnd = startRow;
-    } else {
-      rowStart = startRow;
-      rowEnd = endRow;
-    }
-    if (startCol > endCol) {
-      colStart = endCol;
-      colEnd = startCol;
-    } else {
-      colStart = startCol;
-      colEnd = endCol;
-    }
-    let finalStartRow = rowStart;
-    let finalStartCol = colStart;
-    let finalEndRow = rowEnd;
-    let finalEndCol = colEnd;
+  private calcArea(startRow: number, endRow: number, startCol: number, endCol: number): Selector {
+    let finalStartRow = startRow;
+    let finalStartCol = startCol;
+    let finalEndRow = endRow;
+    let finalEndCol = endCol;
     // 记住最终的修改
     let isUpdate = false;
     const calcSelect = (startRowParam: number, endRowParam: number, startColParam: number, endColParam: number) => {
@@ -294,14 +269,47 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
       }
     }
     calcSelect(finalStartRow, finalEndRow, finalStartCol, finalEndCol);
-    const undoManage = this.excelBuild.getUndoManage();
-    const selector = { ...this.selector }
-    const info: Selector = {
+    return {
       rowStart: finalStartRow,
       colStart: finalStartCol,
       rowEnd: finalEndRow,
       colEnd: finalEndCol
     };
+  }
+
+  /**
+   * 选中单元格
+   * startCell一定是focusCell
+   * rowStart colStart
+   * rowEnd colEnd
+   */
+  public doSelect(startCell: CellBuild, endCell: CellBuild, isCtrl = false) {
+    const startRow = startCell.getProperty('row');
+    const startCol = startCell.getProperty('col');
+    const endRow = endCell.getProperty('row');
+    const endCol = endCell.getProperty('col');
+    let rowStart;
+    let rowEnd;
+    let colStart;
+    let colEnd;
+    // 将选中的cell重新排行列
+    if (startRow > endRow) {
+      rowStart = endRow;
+      rowEnd = startRow;
+    } else {
+      rowStart = startRow;
+      rowEnd = endRow;
+    }
+    if (startCol > endCol) {
+      colStart = endCol;
+      colEnd = startCol;
+    } else {
+      colStart = startCol;
+      colEnd = endCol;
+    }
+    const info = this.calcArea(rowStart, rowEnd, colStart, colEnd);
+    const undoManage = this.excelBuild.getUndoManage();
+    const selector = { ...this.selector };
     if (this.selector.selectors) {
       selector.selectors = [...this.selector.selectors];
     }
