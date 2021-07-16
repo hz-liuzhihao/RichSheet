@@ -259,7 +259,6 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
       rowEnd,
       colEnd
     };
-    console.log(info);
     if (this.selector.selectors) {
       selector.selectors = [...this.selector.selectors];
     }
@@ -369,16 +368,18 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
           return;
         }
         let isSplit = false;
+        const hasDealCellBuild = [];
         for (let i = rowStart; i <= rowEnd; i++) {
           for (let j = colStart; j <= colEnd; j++) {
             const cellBuild = this.getCell(i, j);
             const rowSpan = cellBuild.getRowSpan();
             const colSpan = cellBuild.getColSpan();
-            if (rowSpan > 1 || colSpan > 1) {
+            if ((rowSpan > 1 || colSpan > 1) && hasDealCellBuild.indexOf(cellBuild) < 0) {
               isSplit = true;
               this.splitCell(cellBuild);
               cellBuild.setProperty('rowSpan', 1);
               cellBuild.setProperty('colSpan', 1);
+              hasDealCellBuild.push(cellBuild);
             }
           }
         }
