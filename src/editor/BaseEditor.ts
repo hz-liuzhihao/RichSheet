@@ -79,9 +79,10 @@ export default abstract class BaseEditor {
    * @returns 
    */
   public setParent(parentDom: HTMLElement) {
-    if (this.parentDom == parentDom) {
+    if (this.parentDom == parentDom && this.mainDom.parentElement) {
       return;
     }
+    this.parentDom = parentDom;
     parentDom.appendChild(this.mainDom);
   }
 
@@ -162,4 +163,11 @@ export default abstract class BaseEditor {
   protected requestRenderChildrenUndoItem(undoItem: UndoItem) {
   }
 
+  /**
+   * 获取主元素
+   * @returns 
+   */
+  public getMainDom(): HTMLElement {
+    return this.mainDom;
+  }
 }

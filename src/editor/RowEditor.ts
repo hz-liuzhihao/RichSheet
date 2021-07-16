@@ -107,16 +107,35 @@ export default class RowEditor extends BaseEditor {
    * @param cellBuild 
    */
   private addCellEditor(i: number, cellBuild: CellBuild) {
+    let beforeEditor: CellEditor = null;
+    for (let index = i + 1; index < this.cells.length; index++) {
+      if (this.cells[index] != null) {
+        beforeEditor = this.cells[index];
+        break;
+      }
+    }
     if (this.acceptDom.length > 0) {
-      const cellEditor = this.acceptDom[0];
+      const cellEditor = this.acceptDom.shift();
       cellEditor.setBuild(cellBuild);
+      const mainDom = cellEditor.getMainDom();
+      if (beforeEditor) {
+        this.mainDom.insertBefore(mainDom, beforeEditor.getMainDom());
+      } else {
+        this.mainDom.appendChild(mainDom);
+      }
       cellEditor.setParent(this.mainDom);
       this.cells[i] = cellEditor;
     } else {
-      this.cells[i] = new CellEditor({
-        build: cellBuild,
-        domParent: this.mainDom
+      const cellEditor = new CellEditor({
+        build: cellBuild
       });
+      const mainDom = cellEditor.getMainDom();
+      if (beforeEditor) {
+        this.mainDom.insertBefore(mainDom, beforeEditor.getMainDom());
+      } else {
+        this.mainDom.appendChild(mainDom);
+      }
+      this.cells[i] = cellEditor;
     }
   }
 

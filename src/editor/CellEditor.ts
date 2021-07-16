@@ -59,6 +59,10 @@ export default class CellEditor extends BaseEditor {
 
   }
 
+  /**
+   * 渲染跨行单元格
+   * @param item 
+   */
   protected renderRowSpan(item: UndoItem) {
     const build = this.build;
     const rowSpan = build.getRowSpan();
@@ -66,6 +70,10 @@ export default class CellEditor extends BaseEditor {
     mainDom.rowSpan = rowSpan;
   }
 
+  /**
+   * 渲染跨列单元格
+   * @param item 
+   */
   protected renderColSpan(item: UndoItem) {
     const build = this.build;
     const colSpan = build.getColSpan();
@@ -98,6 +106,9 @@ export default class CellEditor extends BaseEditor {
    * 渲染
    */
   protected render() {
+    if (this.mainDom.parentElement == null) {
+      this.parentDom && this.parentDom.appendChild(this.mainDom);
+    }
     const build = this.build;
     const mainDom = this.mainDom;
     const themeClassName = build.getThemeClassName();
