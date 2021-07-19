@@ -130,6 +130,11 @@ class Workbench implements IWorkBench {
 export interface RichSeetConfig {
   dom: string | HTMLElement;
 
+  /**
+   * 是否处于设计模式
+   */
+  isDesign?: boolean;
+
   excel?: ExcelMeta;
 
   /**
