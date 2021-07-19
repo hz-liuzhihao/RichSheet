@@ -11,8 +11,6 @@ export interface ExcelEditorArgs {
 
 export default class ExcelEditor extends BaseEditor {
 
-  private workbench: IWorkBench;
-
   protected build: ExcelBuild;
 
   protected sheetEditors: SheetEditor[];
@@ -23,7 +21,6 @@ export default class ExcelEditor extends BaseEditor {
 
   protected initData(args: ExcelEditorArgs) {
     super.initData(args);
-    this.workbench = args.workbench;
     this.sheetEditors = [];
   }
 
@@ -33,7 +30,8 @@ export default class ExcelEditor extends BaseEditor {
     sheets.forEach(item => {
       this.sheetEditors.push(new SheetEditor({
         build: item,
-        domParent: this.mainDom
+        domParent: this.mainDom,
+        workbench: this.workbench
       }));
     });
   }

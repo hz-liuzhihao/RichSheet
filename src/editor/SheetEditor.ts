@@ -61,7 +61,8 @@ export default class SheetEditor extends BaseEditor {
     // 初始化行头
     this.rowHeadEditor = new ColHeadEditor({
       build,
-      domParent: table
+      domParent: table,
+      workbench: this.workbench
     });
     // 初始化行
     rows.forEach((item, index) => {
@@ -70,7 +71,8 @@ export default class SheetEditor extends BaseEditor {
       this.rows.push(new RowEditor({
         build: item,
         domParent: table,
-        colHeadBuild
+        colHeadBuild,
+        workbench: this.workbench
       }));
     });
     this.mainDom.appendChild(table);

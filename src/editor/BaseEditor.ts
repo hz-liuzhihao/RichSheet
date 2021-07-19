@@ -1,7 +1,9 @@
-import { BaseBuild, UndoItem } from '../flow/UndoManage';
+import { BaseBuild, UndoItem, IWorkBench } from '../flow/UndoManage';
 
 export interface BaseEditorArgs {
   build: BaseBuild<any>;
+
+  workbench: IWorkBench;
 
   domParent?: HTMLElement;
 
@@ -27,6 +29,8 @@ export default abstract class BaseEditor {
 
   protected acceptDom: any[];
 
+  protected workbench: IWorkBench;
+
   public constructor(args: BaseEditorArgs) {
     this.initData(args);
     this.initMainDom(args.type);
@@ -40,6 +44,7 @@ export default abstract class BaseEditor {
    * 初始化数据
    */
   protected initData(args: BaseEditorArgs) {
+    this.workbench = args.workbench;
     this.build = args.build;
     this.parentDom = args.domParent;
     this.needRenderUndoItems = [];

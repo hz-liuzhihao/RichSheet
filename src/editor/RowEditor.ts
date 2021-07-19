@@ -69,14 +69,16 @@ export default class RowEditor extends BaseEditor {
     // 初始化行头
     this.colHeadEditor = new RowHeadEditor({
       build,
-      domParent: this.mainDom
+      domParent: this.mainDom,
+      workbench: this.workbench
     });
 
     // 初始化行其他单元格
     cells.forEach(cell => {
       this.cells.push(new CellEditor({
         build: cell,
-        domParent: this.mainDom
+        domParent: this.mainDom,
+        workbench: this.workbench
       }));
     });
   }
@@ -127,7 +129,8 @@ export default class RowEditor extends BaseEditor {
       this.cells[i] = cellEditor;
     } else {
       const cellEditor = new CellEditor({
-        build: cellBuild
+        build: cellBuild,
+        workbench: this.workbench
       });
       const mainDom = cellEditor.getMainDom();
       if (beforeEditor) {
