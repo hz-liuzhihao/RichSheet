@@ -35,6 +35,11 @@ export interface IListener {
   dealDbClick?(event: MouseEvent): void;
 
   /**
+   * 处理鼠标单击
+   */
+  dealClick?(event: MouseEvent): void;
+
+  /**
    * 处理快捷键
    * @param event 
    */
@@ -166,11 +171,37 @@ export default class BehaviorListener {
    * @param dom 
    */
   private initListen(dom: HTMLElement) {
+    dom.addEventListener('dblclick', this.doDbClick);
+    dom.addEventListener('click', this.doClick)
     dom.addEventListener('contextmenu', this.doContextMenu);
     dom.addEventListener('mousedown', this.doMouseDown);
     dom.addEventListener('mousemove', this.doMouseMove);
     document.addEventListener('mouseup', this.doMouseUp);
     this.shortCutDom.addEventListener('keydown', this.doKeyDown);
+  }
+
+  /**
+   * 处理点击事件
+   * @param event 
+   */
+  private doClick = (event: MouseEvent) => {
+    this.listeners.forEach(item => {
+      if (typeof item.dealClick == 'function') {
+        item.dealClick(event);
+      }
+    });
+  }
+
+  /**
+   * 双击
+   * @param event 
+   */
+  private doDbClick = (event: MouseEvent) => {
+    this.listeners.forEach(item => {
+      if (typeof item.dealDbClick == 'function') {
+        item.dealDbClick(event);
+      }
+    });
   }
 
   /**
