@@ -436,9 +436,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
         }
         // 如果前面没有做过拆分操作,那么就意味着可以合并
         if (!isSplit) {
-          if (index !== selectors.length - 1) {
-            focusCell = this.getCell(rowStart, colStart);
-          }
+          focusCell = this.getCell(rowStart, colStart);
           focusCell.setProperty('row', rowStart);
           focusCell.setProperty('col', colStart);
           focusCell.setProperty('rowSpan', rowEnd - rowStart + 1);
