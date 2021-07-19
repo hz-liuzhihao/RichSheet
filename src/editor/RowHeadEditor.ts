@@ -21,11 +21,13 @@ export default class RowHeadEditor extends BaseEditor {
 
   /** @override */
   protected initDom() {
-    const dragDom = document.createElement('div');
     const textDom = this.textDom = document.createElement('span');
     this.mainDom.appendChild(textDom);
-    dragDom.classList.add('row_head_drag');
-    this.mainDom.appendChild(dragDom);
+    if (this.workbench.isDesign()) {
+      const dragDom = document.createElement('div');
+      dragDom.classList.add('row_head_drag');
+      this.mainDom.appendChild(dragDom);
+    }
   }
 
   /**

@@ -33,15 +33,18 @@ export default class ColHeadEditor extends BaseEditor {
     const cornerClass = build.getCornerClass();
     cornerClass && tdHead.classList.add(cornerClass);
     this.mainDom.appendChild(tdHead);
+    const isDesign = this.workbench.isDesign();
     // 初始化行头
     cols.forEach((item, index) => {
       const colName = item.getProperty('index');
       const td = document.createElement('td');
       const textDom = document.createElement('span');
       td.appendChild(textDom);
-      const dragDom = document.createElement('div');
-      dragDom.classList.add('col_head_drag');
-      td.appendChild(dragDom);
+      if (isDesign) {
+        const dragDom = document.createElement('div');
+        dragDom.classList.add('col_head_drag');
+        td.appendChild(dragDom);
+      }
       const colHeadClassName = item.getThemeClassName();
       colHeadClassName && td.classList.add(colHeadClassName);
       td.classList.add('colhead_item');
