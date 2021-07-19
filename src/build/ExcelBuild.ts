@@ -233,4 +233,12 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
   public getUndoManage() {
     return this.workbench.getUndoManage();
   }
+
+  /**
+   * 是否处于设计阶段
+   * @returns 
+   */
+  public isDesign() {
+    return this.workbench.isDesign();
+  }
 }

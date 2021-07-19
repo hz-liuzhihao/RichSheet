@@ -125,6 +125,11 @@ class Workbench implements IWorkBench {
   public getUndoManage() {
     return this.undoManage;
   }
+
+  /** @implements */
+  public isDesign() {
+    return this.config.isDesign == null ? true : this.config.isDesign;
+  }
 }
 
 export interface RichSeetConfig {
@@ -135,6 +140,9 @@ export interface RichSeetConfig {
    */
   isDesign?: boolean;
 
+  /**
+   * excel元数据
+   */
   excel?: ExcelMeta;
 
   /**

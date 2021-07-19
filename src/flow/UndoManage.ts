@@ -10,6 +10,11 @@ export interface IWorkBench {
    * 获取undo
    */
   getUndoManage: () => UndoManage;
+
+  /**
+   * 是否处于设计模式
+   */
+  isDesign: () => boolean;
 }
 
 /**
