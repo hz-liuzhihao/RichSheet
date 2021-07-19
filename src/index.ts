@@ -113,10 +113,13 @@ class Workbench implements IWorkBench {
       emitBehavior,
       excelBuld: this.excelBuild
     });
-    // 初始化选中监听器
-    this.behaviorListener.addListener(new SelectListener(this.excelBuild));
-    // 初始化行列大小监听器
-    this.behaviorListener.addListener(new RowColSizeListener(this.excelBuild));
+    // 设计阶段需要初始化的监听器
+    if (this.isDesign()) {
+      // 初始化选中监听器
+      this.behaviorListener.addListener(new SelectListener(this.excelBuild));
+      // 初始化行列大小监听器
+      this.behaviorListener.addListener(new RowColSizeListener(this.excelBuild));
+    }
     // 初始化快捷键监听器
     this.behaviorListener.addListener(new ShortcutListener(this.excelBuild));
   }
