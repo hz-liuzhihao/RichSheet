@@ -19,6 +19,8 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
 
   private excelBuild: ExcelBuild;
 
+  private index: number;
+
   // cssRule索引
   private styleIndex: number;
   // 样式类名
@@ -42,6 +44,29 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
    */
   protected initMeta() {
 
+  }
+
+  /**
+   * 获取所在列表的索引
+   */
+  public getIndex() {
+    if (this.index != null) {
+      return this.index;
+    }
+    this.index = this.excelBuild.getStyleBuilds().indexOf(this);
+    return this.index;
+  }
+
+  /**
+   * 刷新索引编号
+   * @returns 
+   */
+  public refreshIndex() {
+    if (this.index == null) {
+      return;
+    }
+    this.index = this.excelBuild.getStyleBuilds().indexOf(this);
+    return this.index;
   }
 
   /**

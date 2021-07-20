@@ -4,6 +4,7 @@ import { StyleBuild, StyleMeta } from './StyleBuild';
 import { ExcelBehavior } from '../controllers/ToolBar';
 import { ITheme, DefaultTheme, ThemeStyle } from '../controllers/Theme';
 import { BorderStyleMeta, BorderStyleBuild } from './BorderStyleBuild';
+import { CellPropertyBuild } from './CellPropertyBuild';
 
 /**
  * excel元数据
@@ -43,6 +44,8 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
 
   private borderStyleBuilds: BorderStyleBuild[];
 
+  private cellPropertyBuilds: CellPropertyBuild[];
+
   private theme: ITheme;
 
   private themeStyle: ThemeStyle;
@@ -65,10 +68,35 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
     this.sheets = [];
     this.styleBuilds = [];
     this.borderStyleBuilds = [];
+    this.cellPropertyBuilds = [];
     this.theme = Object.assign({}, DefaultTheme, this.metaInfo.theme || {});
     this.themeStyle = new ThemeStyle({
       theme: this.theme
     });
+  }
+
+  /**
+   * 获取样式层列表
+   * @returns 
+   */
+  public getStyleBuilds() {
+    return this.styleBuilds;
+  }
+
+  /**
+   * 获取单元格属性数据层
+   * @returns 
+   */
+  public getCellPropertyBuilds() {
+    return this.cellPropertyBuilds;
+  }
+
+  /**
+   * 获取边框样式数据层
+   * @returns 
+   */
+  public getBorderBuilds() {
+    return this.borderStyleBuilds;
   }
 
   /**

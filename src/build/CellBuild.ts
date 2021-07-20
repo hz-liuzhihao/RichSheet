@@ -231,7 +231,16 @@ export class CellBuild extends BaseBuild<CellMeta> {
     return this.metaInfo.colSpan || 1;
   }
 
-  restoreUndoItem(undoItem: UndoItem) {
+  /** @override */
+  public toJSON() {
+    const result = super.toJSON() as CellMeta;
+    if (this.styleBuild) {
+      result.styleIndex = this.styleBuild.getIndex() || 0;
+    }
+    return result;
+  }
+
+  public restoreUndoItem(undoItem: UndoItem) {
     const op = undoItem.op;
     switch (op) {
       case Operate.Add:
