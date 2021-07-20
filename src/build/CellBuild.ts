@@ -72,8 +72,10 @@ export class CellBuild extends BaseBuild<CellMeta> {
    */
   protected initMeta() {
     // 在行列中记录单元格
-    const { row, col, styleIndex } = this.metaInfo;
+    const { row, col, styleIndex, expressionIndex, cellPropertyIndex } = this.metaInfo;
     this.styleBuild = this.excelBuild.getStyleBuild(styleIndex);
+    this.cellPropertyBuild = this.excelBuild.getCellPropertyBuild(cellPropertyIndex);
+    this.expressionBuild = this.excelBuild.getExpressionBuild(expressionIndex);
   }
 
   /**

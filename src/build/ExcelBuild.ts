@@ -4,7 +4,8 @@ import { StyleBuild, StyleMeta } from './StyleBuild';
 import { ExcelBehavior } from '../controllers/ToolBar';
 import { ITheme, DefaultTheme, ThemeStyle } from '../controllers/Theme';
 import { BorderStyleMeta, BorderStyleBuild } from './BorderStyleBuild';
-import { CellPropertyBuild } from './CellPropertyBuild';
+import { CellPropertyBuild, CellPropertyMeta } from './CellPropertyBuild';
+import { ExpressionBuild } from './ExpressionBuild';
 
 /**
  * excel元数据
@@ -20,6 +21,7 @@ export interface ExcelMeta {
   sheets?: SheetMeta[];
   styles?: StyleMeta[];
   borderStyles?: BorderStyleMeta[];
+  cellPropertys?: CellPropertyMeta[];
 }
 
 type ExcelMetaKey = keyof ExcelMeta;
@@ -46,6 +48,8 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
 
   private cellPropertyBuilds: CellPropertyBuild[];
 
+  private expressionBuilds: ExpressionBuild[];
+
   private theme: ITheme;
 
   private themeStyle: ThemeStyle;
@@ -69,6 +73,7 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
     this.styleBuilds = [];
     this.borderStyleBuilds = [];
     this.cellPropertyBuilds = [];
+    this.expressionBuilds = [];
     this.theme = Object.assign({}, DefaultTheme, this.metaInfo.theme || {});
     this.themeStyle = new ThemeStyle({
       theme: this.theme
@@ -83,6 +88,10 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
     return this.styleBuilds;
   }
 
+  public getStyleBuild(index: number) {
+    return this.styleBuilds[index];
+  }
+
   /**
    * 获取单元格属性数据层
    * @returns 
@@ -91,12 +100,37 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
     return this.cellPropertyBuilds;
   }
 
+  public getCellPropertyBuild(index: number) {
+    return this.cellPropertyBuilds[index];
+  }
+
   /**
    * 获取边框样式数据层
    * @returns 
    */
   public getBorderBuilds() {
     return this.borderStyleBuilds;
+  }
+
+  public getBorderBuild(index: number) {
+    return this.borderStyleBuilds[index];
+  }
+
+  /**
+   * 获取表达式数据层
+   * @returns 
+   */
+  public getExpressionBuilds() {
+    return this.expressionBuilds;
+  }
+
+  /**
+   * 获取表达式
+   * @param index 
+   * @returns 
+   */
+  public getExpressionBuild(index: number) {
+    return this.expressionBuilds[index];
   }
 
   /**
@@ -166,10 +200,6 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
     });
   }
 
-  public getStyleBuild(index: number) {
-    return this.styleBuilds[index];
-  }
-
   /**
    * 初始化excel边框样式蓝图
    */
@@ -185,6 +215,20 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
   }
 
   /**
+   * 初始化单元格属性数据层
+   */
+  protected initCellPropertys() {
+    const metaInfo = this.metaInfo || {};
+    const cellPropertys = metaInfo.cellPropertys || [];
+    cellPropertys.forEach(item => {
+      this.cellPropertyBuilds.push(new CellPropertyBuild({
+        execelBuild: this,
+        metaInfo: item
+      }));
+    });
+  }
+
+  /**
    * 转换元数据
    * @override
    */
@@ -193,6 +237,7 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
     const sheets = metaInfo.sheets || [];
     this.initStyles();
     this.initBorderStyles();
+    this.initCellPropertys();
     if (sheets.length == 0) {
       // 用户第一次使用richsheet,则为用户生成默认表格
       this.sheets.push(new SheetBuild({

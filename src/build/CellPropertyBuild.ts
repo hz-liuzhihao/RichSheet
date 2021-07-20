@@ -1,7 +1,7 @@
 import { BaseBuildArgs, UndoItem, Operate } from '../flow/UndoManage';
 import { ExcelBuild } from './ExcelBuild';
 import CellPluginBuild from './CellPluginBuild';
-export interface CellProperty {
+export interface CellPropertyMeta {
   // 单元格输入类型,填报阶段需要
   inputType: string;
   // 输入前的placeholder
@@ -10,13 +10,13 @@ export interface CellProperty {
   [key: string]: any;
 }
 
-type CellPropertyKey = keyof CellProperty;
+type CellPropertyKey = keyof CellPropertyMeta;
 
 export interface CellPropertyArgs extends BaseBuildArgs {
   execelBuild: ExcelBuild;
 }
 
-export class CellPropertyBuild extends CellPluginBuild<CellProperty> {
+export class CellPropertyBuild extends CellPluginBuild<CellPropertyMeta> {
 
   private excelBuild: ExcelBuild;
 
