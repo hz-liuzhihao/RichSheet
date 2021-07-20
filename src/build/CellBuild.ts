@@ -5,6 +5,7 @@ import { StyleBuild } from './StyleBuild';
 import { ExcelBuild } from './ExcelBuild';
 import { ExpressionBuild } from './ExpressionBuild';
 import { BorderStyleBuild } from './BorderStyleBuild';
+import { CellPropertyBuild } from './CellPropertyBuild';
 
 export interface CellMeta {
   /**
@@ -25,6 +26,8 @@ export interface CellMeta {
   styleIndex?: number;
 
   expressionIndex?: number;
+
+  cellPropertyIndex?: number;
 }
 
 export interface CellBuildArgs extends BaseBuildArgs {
@@ -48,6 +51,8 @@ export class CellBuild extends BaseBuild<CellMeta> {
   private styleBuild: StyleBuild;
 
   private expressionBuild: ExpressionBuild;
+
+  private cellPropertyBuild: CellPropertyBuild;
 
   private excelBuild: ExcelBuild;
 
