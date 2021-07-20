@@ -91,6 +91,20 @@ export class CellBuild extends BaseBuild<CellMeta> {
   }
 
   /**
+   * 设置单元格的属性数据层
+   * @param cellProperty 
+   * @returns 
+   */
+  public setCellPropertyBuild(cellProperty: CellPropertyBuild) {
+    if (this.cellPropertyBuild == cellProperty) {
+      return;
+    }
+    this.cellPropertyBuild.removeCell(this);
+    cellProperty.addCell(this);
+    this.cellPropertyBuild = cellProperty;
+  }
+
+  /**
    * 设置单元格的边框数据层
    * @param borderStyleBuild 
    * @returns 
