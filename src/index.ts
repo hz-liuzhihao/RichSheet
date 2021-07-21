@@ -21,6 +21,9 @@ interface WorkbenchArgs {
   emitBehavior?: EmitBehavior
 }
 
+/**
+ * excel行为暴露
+ */
 class ExcelBehavior implements IExcelBehavior {
   protected excelBuild: ExcelBuild;
 
