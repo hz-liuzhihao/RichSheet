@@ -34,7 +34,7 @@ export interface ExcelBuildArgs extends BaseBuildArgs {
  * sheet的全局数据层
  * 包含sheet的一些共用数据,如样式,
  */
-export class ExcelBuild extends BaseBuild<ExcelMeta> {
+export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
 
   private currentIndex: number;
 
@@ -274,9 +274,26 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> {
     }
   }
 
+
+  /** @override */
   public fallback(cmd: string, params: any[]) {
     const currentSheet = this.getCurrentSheet();
     currentSheet.commond(cmd, params);
+  }
+
+  /** @implements */
+  public undo() {
+    this.getUndoManage().undo();
+  }
+
+  /** @implements */
+  public redo() {
+    this.getUndoManage().redo();
+  }
+
+  /** @implements */
+  public save() {
+
   }
 
   /**

@@ -28,12 +28,19 @@ class ExcelBehavior implements IExcelBehavior {
   protected excelBuild: ExcelBuild;
 
   @Behavior
-  public addRow(count?: number) {
-  }
+  public addRow(count?: number) { }
 
   @Behavior
-  public mergeCell() {
-  }
+  public deleteRow() { }
+
+  @Behavior
+  public addCol(count?: number) { }
+
+  @Behavior
+  public deleteCol() {}
+
+  @Behavior
+  public mergeCell() { }
 }
 
 class Workbench extends ExcelBehavior implements IWorkBench {
