@@ -309,6 +309,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
       colEnd = endCol;
     }
     const info = this.calcArea(rowStart, rowEnd, colStart, colEnd);
+    
     const undoManage = this.excelBuild.getUndoManage();
     const selector = { ...this.selector };
     if (this.selector.selectors) {

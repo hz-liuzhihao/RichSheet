@@ -51,6 +51,8 @@ export class CellBuild extends BaseBuild<CellMeta> {
 
   private excelBuild: ExcelBuild;
 
+  private isSelect: boolean;
+
   public constructor(args: CellBuildArgs) {
     super(args);
   }
@@ -235,6 +237,18 @@ export class CellBuild extends BaseBuild<CellMeta> {
       result.styleIndex = this.styleBuild.getIndex() || 0;
     }
     return result;
+  }
+
+  /**
+   * 获取单元格是否被选中
+   * @returns 
+   */
+  public getIsSelect() {
+    return this.isSelect;
+  }
+
+  public refreshSelect() {
+    
   }
 
   public restoreUndoItem(undoItem: UndoItem) {
