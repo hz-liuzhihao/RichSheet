@@ -39,8 +39,6 @@ export class ColBuild extends BaseBuild<ColMeta> {
 
   private excelBuild: ExcelBuild;
 
-  private isSelect: boolean;
-
   public constructor(args: ColBuildArgs) {
     super(args);
   }
@@ -49,7 +47,6 @@ export class ColBuild extends BaseBuild<ColMeta> {
     this.sheet = args.sheet;
     this.cells = [];
     this.excelBuild = args.excelBuild;
-    this.isSelect = false;
   }
 
   /**
@@ -134,21 +131,6 @@ export class ColBuild extends BaseBuild<ColMeta> {
     } finally {
       undoManage.endUpdate();
     }
-  }
-
-  /**
-   * 获取行是否被选中
-   * @returns 
-   */
-   public getIsSelect() {
-    return this.isSelect;
-  }
-
-  /**
-   * 刷新选中区域
-   */
-  public refreshSelect() {
-    this.isSelect = this.cells.every(item => item.getIsSelect());
   }
 
   /**

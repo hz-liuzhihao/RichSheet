@@ -38,8 +38,6 @@ export class RowBuild extends BaseBuild<RowMeta> {
 
   private excelBuild: ExcelBuild;
 
-  private isSelect: boolean;
-
   public constructor(args: RowBuildArgs) {
     super(args);
   }
@@ -52,7 +50,6 @@ export class RowBuild extends BaseBuild<RowMeta> {
     this.sheet = args.sheet;
     this.cells = [];
     this.excelBuild = args.excelBuild;
-    this.isSelect = false;
   }
 
   /**
@@ -212,21 +209,6 @@ export class RowBuild extends BaseBuild<RowMeta> {
    */
   public getSheetBuild() {
     return this.sheet;
-  }
-
-  /**
-   * 获取行是否被选中
-   * @returns 
-   */
-  public getIsSelect() {
-    return this.isSelect;
-  }
-
-  /**
-   * 刷新选中区域
-   */
-  public refreshSelect() {
-    this.isSelect = this.cells.every(item => item.getIsSelect());
   }
 
   restoreUndoItem(undoItem: UndoItem) {
