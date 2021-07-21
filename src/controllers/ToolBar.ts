@@ -5,7 +5,7 @@ export interface IExcelBehavior {
   addRow?: (count: number) => void;
 
   /** 合并单元格 */
-  merge?: () => void;
+  mergeCell?: () => void;
 }
 
 export interface AbsToolbarArgs {

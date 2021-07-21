@@ -1,4 +1,5 @@
 import { upperFirst } from 'lodash';
+import CommondProvider from '../controllers/CommondProvider';
 
 export interface IWorkBench {
   /**
@@ -27,11 +28,12 @@ export interface BaseBuildArgs {
 /**
  * 数据层基类
  */
-export abstract class BaseBuild<T> {
+export abstract class BaseBuild<T> extends CommondProvider {
 
   protected metaInfo: T;
 
   public constructor(args: BaseBuildArgs) {
+    super();
     this.metaInfo = args.metaInfo || {};
     this.initData(args);
     this.initMeta();

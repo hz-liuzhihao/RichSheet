@@ -34,7 +34,7 @@ export interface ExcelBuildArgs extends BaseBuildArgs {
  * sheet的全局数据层
  * 包含sheet的一些共用数据,如样式,
  */
-export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
+export class ExcelBuild extends BaseBuild<ExcelMeta> {
 
   private currentIndex: number;
 
@@ -274,17 +274,9 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
     }
   }
 
-  /**
-   * 添加行
-   * @param count
-   */
-  public addRow(count?: number) {
-    this.getCurrentSheet().addRow(count);
-  }
-
-  /** @override */
-  public merge() {
-    this.getCurrentSheet().mergeCell();
+  public fallback(cmd: string, params: any[]) {
+    const currentSheet = this.getCurrentSheet();
+    currentSheet.commond(cmd, params);
   }
 
   /**

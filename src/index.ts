@@ -8,6 +8,7 @@ import SelectListener from './controllers/SelectListener';
 import RowColSizeListener from './controllers/RowColSizeListener';
 import ShortcutListener from './controllers/ShortcutListener';
 import { IExcelBehavior } from './controllers/ToolBar';
+import { Behavior } from './utils/annotate';
 
 export interface SheetConfig {
   row: number;
@@ -23,14 +24,12 @@ interface WorkbenchArgs {
 class ExcelBehavior implements IExcelBehavior {
   protected excelBuild: ExcelBuild;
 
-  
-
+  @Behavior
   public addRow(count?: number) {
-    this.excelBuild.addRow(count);
   }
 
-  public merge() {
-    this.excelBuild.merge();
+  @Behavior
+  public mergeCell() {
   }
 }
 

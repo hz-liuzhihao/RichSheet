@@ -3,6 +3,7 @@ import { ExcelBuild } from './ExcelBuild';
 import { RowBuild, RowMeta } from './RowBuild';
 import { ColBuild, ColMeta } from './ColBuild';
 import { CellMeta, CellBuild } from './CellBuild';
+import { IExcelBehavior } from '../controllers/ToolBar';
 
 /**
  * 表格元数据
@@ -50,7 +51,7 @@ interface Selectors {
 /**
  * 表格数据层
  */
-export class SheetBuild extends BaseBuild<SheetMeta> {
+export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
 
   private excelBuild: ExcelBuild;
 
@@ -363,7 +364,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
    * 添加单元格
    * @param cell
    */
-  public splitCell(cell: CellBuild) {
+  private splitCell(cell: CellBuild) {
     const row = cell.getRow();
     const col = cell.getCol();
     const rowSpan = cell.getRowSpan();
@@ -392,7 +393,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
    * 合并拆分单元格会用到
    * @param cell 
    */
-  public replaceCell(row: number, col: number, cell: CellBuild) {
+  private replaceCell(row: number, col: number, cell: CellBuild) {
     const rowBuild = this.rows[row];
     const colBuild = this.cols[col];
     rowBuild.replaceCell(col, cell);

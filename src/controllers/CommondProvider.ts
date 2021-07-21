@@ -8,7 +8,7 @@ export default abstract class CommondProvider {
    * @param cmd 
    * @param params 
    */
-  public commond(cmd: string, params: any[]) {
+  public commond(cmd: string, ...params: any[]) {
     if (typeof this[cmd] == 'function') {
       this[cmd](...params);
     } else {
@@ -21,5 +21,7 @@ export default abstract class CommondProvider {
    * @param cmd 
    * @param params 
    */
-  public abstract fallback(cmd: string, params: any[]);
+  public fallback(cmd: string, params: any[]) {
+
+  }
 }
