@@ -23,6 +23,8 @@ interface WorkbenchArgs {
 class ExcelBehavior implements IExcelBehavior {
   protected excelBuild: ExcelBuild;
 
+  
+
   public addRow(count?: number) {
     this.excelBuild.addRow(count);
   }

@@ -2,10 +2,10 @@
  * excel所有行为接口,ExcelBuild必须实现它
  */
 export interface IExcelBehavior {
-  addRow: (count: number) => void;
+  addRow?: (count: number) => void;
 
   /** 合并单元格 */
-  merge: () => void;
+  merge?: () => void;
 }
 
 export interface AbsToolbarArgs {
