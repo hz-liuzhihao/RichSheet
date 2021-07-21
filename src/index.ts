@@ -7,6 +7,7 @@ import { EmitBehavior } from './controllers/BehaviorListener';
 import SelectListener from './controllers/SelectListener';
 import RowColSizeListener from './controllers/RowColSizeListener';
 import ShortcutListener from './controllers/ShortcutListener';
+import { IExcelBehavior } from './controllers/ToolBar';
 
 export interface SheetConfig {
   row: number;
@@ -18,11 +19,24 @@ interface WorkbenchArgs {
 
   emitBehavior?: EmitBehavior
 }
-class Workbench implements IWorkBench {
+
+class ExcelBehavior implements IExcelBehavior {
+  protected excelBuild: ExcelBuild;
+
+  public addRow(count?: number) {
+    this.excelBuild.addRow(count);
+  }
+
+  public merge() {
+    this.excelBuild.merge();
+  }
+}
+
+class Workbench extends ExcelBehavior implements IWorkBench {
 
   private undoManage: UndoManage;
 
-  private excelBuild: ExcelBuild;
+  protected excelBuild: ExcelBuild;
 
   private excelEditor: ExcelEditor;
 
@@ -33,6 +47,7 @@ class Workbench implements IWorkBench {
   private config: RichSeetConfig;
 
   public constructor(args: WorkbenchArgs) {
+    super();
     const config = this.config = args.config;
     this.emitBehavior = args.emitBehavior;
     config.onInit && config.onInit();
@@ -174,7 +189,11 @@ export default class RichSheet {
   /**
    * 加载
    */
-  public laod() {
+  public load() {
     this.workbench.load();
+  }
+
+  public getWorkbench() {
+
   }
 }

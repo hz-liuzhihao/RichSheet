@@ -454,6 +454,13 @@ export class SheetBuild extends BaseBuild<SheetMeta> {
   }
 
   /**
+   * 添加行
+   */
+  public addRow(count?: number) {
+
+  }
+
+  /**
    * 获取选择数据
    * @returns 
    */

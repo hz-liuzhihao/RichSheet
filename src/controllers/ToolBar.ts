@@ -1,7 +1,7 @@
 /**
  * excel所有行为接口,ExcelBuild必须实现它
  */
-export interface ExcelBehavior {
+export interface IExcelBehavior {
   addRow: (count: number) => void;
 
   /** 合并单元格 */
@@ -9,7 +9,7 @@ export interface ExcelBehavior {
 }
 
 export interface AbsToolbarArgs {
-  excelBehavior: ExcelBehavior;
+  excelBehavior: IExcelBehavior;
 }
 
 /**
@@ -17,7 +17,7 @@ export interface AbsToolbarArgs {
  */
 export abstract class AbsToolbar {
 
-  private excelBehavior: ExcelBehavior;
+  private excelBehavior: IExcelBehavior;
 
   public constructor(args: AbsToolbarArgs) {
     this.excelBehavior = args.excelBehavior;

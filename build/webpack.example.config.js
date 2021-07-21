@@ -15,7 +15,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
     mode: 'development',
-    entry: path.join(__dirname, '../example/src/index.ts'),
+    entry: path.join(__dirname, '../example/src/index.tsx'),
     output: {
         path: path.join(__dirname, '../example/dist'),
         // 为从 entry 中配置生成的 Chunk 配置输出文件的名称

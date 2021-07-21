@@ -113,8 +113,6 @@ export abstract class BaseBuild<T> {
   public parseJSON(data: JSONObject) {
     this.metaInfo = data as T;
   }
-
-
 }
 
 export enum Operate {

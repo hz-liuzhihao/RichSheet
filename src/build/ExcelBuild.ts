@@ -1,7 +1,7 @@
 import { BaseBuild, Operate, UndoItem, IWorkBench, BaseBuildArgs } from '../flow/UndoManage';
 import { SheetBuild, SheetMeta } from './SheetBuild';
 import { StyleBuild, StyleMeta } from './StyleBuild';
-import { ExcelBehavior } from '../controllers/ToolBar';
+import { IExcelBehavior } from '../controllers/ToolBar';
 import { ITheme, DefaultTheme, ThemeStyle } from '../controllers/Theme';
 import { BorderStyleMeta, BorderStyleBuild } from './BorderStyleBuild';
 import { CellPropertyBuild, CellPropertyMeta } from './CellPropertyBuild';
@@ -34,7 +34,7 @@ export interface ExcelBuildArgs extends BaseBuildArgs {
  * sheet的全局数据层
  * 包含sheet的一些共用数据,如样式,
  */
-export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
+export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
 
   private currentIndex: number;
 
@@ -278,8 +278,8 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements ExcelBehavior {
    * 添加行
    * @param count
    */
-  public addRow(count: number) {
-    // TOOD
+  public addRow(count?: number) {
+    this.getCurrentSheet().addRow(count);
   }
 
   /** @override */
