@@ -8,11 +8,6 @@ import { BorderStyleBuild } from './BorderStyleBuild';
 import { CellPropertyBuild } from './CellPropertyBuild';
 
 export interface CellMeta {
-  /**
-   * 单元格扩展属性
-   */
-  extend?: JSONObject;
-
   colSpan?: number;
 
   rowSpan?: number;
