@@ -13,6 +13,8 @@ export default class ColHeadEditor extends BaseEditor {
 
   private tds: HTMLElement[];
 
+  private thHead: HTMLElement;
+
   protected build: SheetBuild;
 
   public constructor(args: ColHeadEditorArgs) {
@@ -29,7 +31,7 @@ export default class ColHeadEditor extends BaseEditor {
     const build = this.build;
     const cols = build.getCols();
     // 预留列头的位置
-    const tdHead = document.createElement('td');
+    const tdHead = this.thHead = document.createElement('td');
     const cornerClass = build.getCornerClass();
     cornerClass && tdHead.classList.add(cornerClass);
     this.mainDom.appendChild(tdHead);
@@ -70,6 +72,22 @@ export default class ColHeadEditor extends BaseEditor {
     }
   }
 
+  /**
+   * 渲染单元格选中时选中单元格显示
+   * @param item 
+   */
+  protected renderSelect(item: UndoItem) {
+    const sheetBuild = this.build;
+    const focusCell = sheetBuild.getSelector().focusCell;
+    const rows = sheetBuild.getRows();
+    const cols = sheetBuild.getCols();
+    if (focusCell) {
+      const rowBuild = rows[focusCell.getRow()];
+      const colBuild = cols[focusCell.getCol()];
+      this.thHead.textContent = `${colBuild.getIndex()}${rowBuild.getIndex()}`
+    }
+  }
+
   /** @override */
   protected renderBuild(undoItem: UndoItem) {
     const { c } = undoItem;
@@ -86,12 +104,10 @@ export default class ColHeadEditor extends BaseEditor {
    */
   protected renderUndoItem() {
     this.needRenderUndoItems.forEach(item => {
-      const { p, op } = item;
-      if (op == Operate.Modify) {
-        const method = `render${upperFirst(p)}`;
-        if (typeof this[method] == 'function') {
-          return this[method](item);
-        }
+      const { p } = item;
+      const method = `render${upperFirst(p)}`;
+      if (typeof this[method] == 'function') {
+        return this[method](item);
       }
     });
   }
