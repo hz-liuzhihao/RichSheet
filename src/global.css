@@ -9,11 +9,20 @@ table {
   table-layout: fixed;
 }
 
-td {
-  overflow: hidden;
+td > .cell_text_container > .cell_text {
   text-overflow: ellipsis;
-  white-space: nowrap;
-  word-break: keep-all;
+  word-wrap: break-word;
+  word-break: break-all;
+  width: 100%;
+}
+
+td > .cell_text_container {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
 }
 
 * {

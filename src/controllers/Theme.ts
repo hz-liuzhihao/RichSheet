@@ -24,6 +24,10 @@ export interface ITheme {
   cellTextAlign?: string;
   // 单元格内部元素垂直布局
   cellVerticalAlign?: string;
+  // 单元格内容单行还是多行
+  cellIsSingle?: boolean;
+  // 单行是否显示省略号
+  showEllipsis?: boolean;
 }
 
 /**
@@ -40,7 +44,9 @@ export const DefaultTheme: ITheme = {
   colHeadHeight: 25,
   colHeadWidth: 75,
   cellTextAlign: 'center',
-  cellVerticalAlign: 'middle'
+  cellVerticalAlign: 'center',
+  cellIsSingle: true,
+  showEllipsis: false
 }
 
 interface ThemeStyleArgs {
@@ -80,11 +86,20 @@ export class ThemeStyle {
       borderBottom: borderString
     };
     const style = {
-      textAlign: theme.cellTextAlign,
-      verticalAlign: theme.cellVerticalAlign
+      alignItems: theme.cellVerticalAlign,
+      justifyContent: theme.cellTextAlign
     };
+
+    const textStyle: JSONObject = {
+      whiteSpace: theme.cellIsSingle ? 'nowrap' : 'normal',
+      textAlign: theme.cellTextAlign
+    };
+    if (theme.showEllipsis) {
+      textStyle.overflow = 'hidden';
+    }
     addCssRule(cellTheme, styleAfter as CSSStyleDeclaration, ':after');
-    addCssRule(cellTheme, style as CSSStyleDeclaration);
+    addCssRule(cellTheme + '>.cell_text_container', style as CSSStyleDeclaration);
+    addCssRule(cellTheme + '>.cell_text_container>.cell_text', textStyle as CSSStyleDeclaration);
     return cellTheme;
   }
 

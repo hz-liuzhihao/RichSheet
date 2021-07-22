@@ -17,13 +17,20 @@ export default class CellEditor extends BaseEditor {
 
   protected build: CellBuild;
 
+  protected textDom: HTMLElement;
+
   public constructor(args: CellEditorArgs) {
     args.type = 'td';
     super(args);
   }
 
   protected initDom() {
-
+    const textContainerDom = document.createElement('div');
+    textContainerDom.classList.add('cell_text_container');
+    const textDom = this.textDom = document.createElement('div');
+    textDom.classList.add('cell_text');
+    textContainerDom.appendChild(textDom);
+    this.mainDom.appendChild(textContainerDom);
   }
 
   /**
