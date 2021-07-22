@@ -55,13 +55,6 @@ export abstract class AbsListener {
   }
 }
 
-interface InputArgs {
-  top: number;
-  left: number;
-  width: number;
-  height: number;
-}
-
 /**
  * 通知用户行为接口
  */
@@ -102,8 +95,6 @@ export default class BehaviorListener {
 
   private shortCutDom: HTMLDivElement;
 
-  private inputDom: HTMLDivElement;
-
   public constructor(args: BehaviorListenerArgs) {
     this.excelBuild = args.excelBuld;
     this.emitBehavior = args.emitBehavior || {};
@@ -121,23 +112,6 @@ export default class BehaviorListener {
     shortCutDom.classList.add('behavior_shortcut');
     shortCutDom.contentEditable = 'true';
     this.listenDom.appendChild(shortCutDom);
-    const inputDom = this.inputDom = document.createElement('div');
-    inputDom.classList.add('behavior_input');
-    inputDom.contentEditable = 'true';
-    this.listenDom.appendChild(inputDom);
-  }
-
-  /**
-   * 渲染输入框位置
-   */
-  renderInput(inputArgs: InputArgs) {
-    const inputDom = this.inputDom;
-    setDomStyle(inputDom, {
-      top: inputArgs.top,
-      left: inputArgs.left,
-      width: inputArgs.width,
-      height: inputArgs.height
-    });
   }
 
   /**
@@ -281,7 +255,9 @@ export default class BehaviorListener {
    */
   private doMouseUp = (event: MouseEvent) => {
     this.downEvent = null;
-    this.shortCutDom.focus();
+    if (!document.activeElement.closest('.behavior_input')) {
+      this.shortCutDom.focus();
+    }
     this.listeners.forEach(item => {
       if (typeof item.dealMouseUp == 'function') {
         item.dealMouseUp(event);

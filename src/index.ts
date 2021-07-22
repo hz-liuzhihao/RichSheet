@@ -150,7 +150,10 @@ class Workbench extends ExcelBehavior implements IWorkBench {
     // 初始化快捷键监听器
     this.behaviorListener.addListener(new ShortcutListener(this.excelBuild));
     // 初始化输入监听器
-    this.behaviorListener.addListener(new InputListener(this.excelBuild));
+    this.behaviorListener.addListener(new InputListener({
+      listenDom: dom,
+      excelBuild: this.excelBuild
+    }));
   }
 
   /** @override */

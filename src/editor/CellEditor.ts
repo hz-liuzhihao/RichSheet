@@ -29,7 +29,6 @@ export default class CellEditor extends BaseEditor {
     textContainerDom.classList.add('cell_text_container');
     const textDom = this.textDom = document.createElement('div');
     textDom.classList.add('cell_text');
-    textDom.contentEditable = 'true';
     textContainerDom.appendChild(textDom);
     this.mainDom.appendChild(textContainerDom);
   }

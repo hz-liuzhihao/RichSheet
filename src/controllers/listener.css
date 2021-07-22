@@ -1,7 +1,11 @@
 .behavior_input {
   position: absolute;
-  background-color: #fff;
+  background-color: transparent;
   z-index: 1000;
+}
+
+.behavior_input:focus {
+  outline: none;
 }
 
 .behavior_shortcut {
