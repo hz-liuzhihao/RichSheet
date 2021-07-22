@@ -1,5 +1,5 @@
 .selector {
-  background-color: transparent;
+  background-color: rgba(207, 207, 207, 0.3);
   border-width: 1.5px;
   border-style: solid;
   position: absolute;
@@ -14,6 +14,7 @@
 
 .selector_focus_cell {
   background-color: #fff;
+  position: absolute;
 }
 
 .selector_dot {
@@ -24,4 +25,5 @@
   right: -3px;
   bottom: -3px;
   cursor: move;
+  z-index: 3;
 }

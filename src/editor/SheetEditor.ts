@@ -47,7 +47,7 @@ export default class SheetEditor extends BaseEditor {
     dotDom.classList.add(theme.getSelectDotClass());
     selectDom.appendChild(dotDom)
     // 聚焦单元格先不做
-    // selectDom.appendChild(focusCellDom);
+    selectDom.appendChild(focusCellDom);
     this.mainDom.appendChild(selectDom);
   }
 
@@ -119,22 +119,44 @@ export default class SheetEditor extends BaseEditor {
     const selector = sheetBuild.getSelector();
     const focuCell = selector.focusCell;
     const selectInfos = selector.selectors;
-    const { selectDom } = this;
+    const { selectDom, focusCellDom } = this;
     if (selectInfos.length > 1) {
       // TODO 渲染有多个选区时
     } else {
       const selectInfo = selectInfos[0];
       const { rowStart, colStart, rowEnd, colEnd } = selectInfo;
+      const focusRow = focuCell.getRow();
+      const focusCol = focuCell.getCol();
+      const focusRowSpan = focuCell.getRowSpan() || 1;
+      const focusColSpan = focuCell.getColSpan() || 1;
       const width = sheetBuild.getSelectWidth(colStart, colEnd);
       const height = sheetBuild.getSelectHeight(rowStart, rowEnd);
       const left = sheetBuild.getSelectLeft(colStart);
       const top = sheetBuild.getSelectTop(rowStart);
+      const focusWidth = sheetBuild.getSelectWidth(focusCol, focusCol + focusColSpan - 1);
+      const focusHeight = sheetBuild.getSelectHeight(focusRow, focusRow + focusRowSpan - 1);
+      const focusLeft = sheetBuild.getSelectLeft(focusCol);
+      const focusTop = sheetBuild.getSelectTop(focusRow);
+      let isSingleWidth = false;
+      let isSingleHeight = false;
+      if (colEnd - colStart == focusColSpan - 1) {
+        isSingleWidth = true;
+      }
+      if (rowEnd - rowStart == focusRowSpan - 1) {
+        isSingleHeight = true;
+      }
+      setDomStyle(focusCellDom, {
+        left: focusLeft - left > 0 ? focusLeft -left : 1.5,
+        top: focusTop - top > 0 ? focusTop - top : 1.5,
+        width: isSingleWidth ? focusWidth - 6 : focusWidth - 3,
+        height: isSingleHeight ? focusHeight - 6 : focusHeight - 3,
+      });
       // 由于选中边框原因全部缩小1.5
       setDomStyle(selectDom, {
         left: left - 1.5,
         top: top - 1.5,
-        width: width - 1.5,
-        height: height - 1.5,
+        width: width - 3,
+        height: height - 3,
       });
     }
   }

@@ -61,7 +61,9 @@ export function setDomStyle(dom: HTMLElement, style: JSONObject, unit: string = 
     if (typeof style[key] == 'number') {
       dom.style[key as any] = `${style[key]}${unit}`;
     } else {
-      dom.style[key as any] = style[key];
+      if (style[key] != null) {
+        dom.style[key as any] = style[key];
+      }
     }
   }
 }
