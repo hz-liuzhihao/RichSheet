@@ -20,6 +20,10 @@ export interface ITheme {
   rowHeadWidth?: number;
   // 行头高
   rowHeadHeight?: number;
+  // 单元格内部水平布局
+  cellTextAlign?: string;
+  // 单元格内部元素垂直布局
+  cellVerticalAlign?: string;
 }
 
 /**
@@ -34,7 +38,9 @@ export const DefaultTheme: ITheme = {
   rowHeadHeight: 25,
   rowHeadWidth: 45,
   colHeadHeight: 25,
-  colHeadWidth: 75
+  colHeadWidth: 75,
+  cellTextAlign: 'center',
+  cellVerticalAlign: 'middle'
 }
 
 interface ThemeStyleArgs {
@@ -69,11 +75,16 @@ export class ThemeStyle {
     const theme = this.theme;
     const cellTheme = this.cellTheme = uniqueId(AppConst.classNamePrefix + 'theme_');
     const borderString = `${theme.borderWidth}px ${theme.borderStyle} ${theme.borderColor}`;
-    const style = {
+    const styleAfter = {
       borderRight: borderString,
       borderBottom: borderString
     };
-    addCssRule(cellTheme, style as CSSStyleDeclaration, ':after');
+    const style = {
+      textAlign: theme.cellTextAlign,
+      verticalAlign: theme.cellVerticalAlign
+    };
+    addCssRule(cellTheme, styleAfter as CSSStyleDeclaration, ':after');
+    addCssRule(cellTheme, style as CSSStyleDeclaration);
     return cellTheme;
   }
 

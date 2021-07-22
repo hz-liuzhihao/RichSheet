@@ -47,7 +47,7 @@ export default class SheetEditor extends BaseEditor {
     dotDom.classList.add(theme.getSelectDotClass());
     selectDom.appendChild(dotDom)
     // 聚焦单元格先不做
-    selectDom.appendChild(focusCellDom);
+    // selectDom.appendChild(focusCellDom);
     this.mainDom.appendChild(selectDom);
   }
 
