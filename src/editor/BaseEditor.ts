@@ -97,7 +97,7 @@ export default abstract class BaseEditor {
    */
   protected initMainDom(type = 'div'): void {
     const mainDom = this.mainDom = document.createElement(type);
-    (mainDom as any).__build__ = this.build;
+    mainDom.__build__ = this.build;
     mainDom.classList.add(`${this.constructor.name.toLowerCase()}_main`);
   }
 
@@ -175,5 +175,12 @@ export default abstract class BaseEditor {
    */
   public getMainDom(): HTMLElement {
     return this.mainDom;
+  }
+
+  /**
+   * 对元素进行销毁
+   */
+  public destroy(): void {
+
   }
 }

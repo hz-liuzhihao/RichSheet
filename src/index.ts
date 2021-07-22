@@ -9,6 +9,7 @@ import RowColSizeListener from './controllers/RowColSizeListener';
 import ShortcutListener from './controllers/ShortcutListener';
 import { IExcelBehavior } from './controllers/ToolBar';
 import { Behavior } from './utils/annotate';
+import InputListener from './controllers/InputListener';
 
 export interface SheetConfig {
   row: number;
@@ -148,6 +149,8 @@ class Workbench extends ExcelBehavior implements IWorkBench {
     }
     // 初始化快捷键监听器
     this.behaviorListener.addListener(new ShortcutListener(this.excelBuild));
+    // 初始化输入监听器
+    this.behaviorListener.addListener(new InputListener(this.excelBuild));
   }
 
   /** @override */

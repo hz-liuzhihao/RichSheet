@@ -16,6 +16,10 @@ td > .cell_text_container > .cell_text {
   width: 100%;
 }
 
+td > .cell_text_container > .cell_text:focus {
+  outline: none;
+}
+
 td > .cell_text_container {
   display: flex;
   position: absolute;

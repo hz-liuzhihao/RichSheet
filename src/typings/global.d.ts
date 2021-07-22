@@ -80,4 +80,5 @@ interface Coordinate {
 
 interface HTMLElement {
   __build__: any;
+  __editor__: any;
 }
