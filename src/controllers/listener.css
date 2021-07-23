@@ -1,11 +1,18 @@
-.behavior_input {
-  position: absolute;
-  background-color: transparent;
-  z-index: 1000;
+div.behavior_container > .behavior_input {
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  word-break: break-all;
+  width: 100%;
+  user-select: text;
 }
 
-.behavior_input:focus {
+.behavior_container > .behavior_input:focus {
   outline: none;
+}
+
+div.behavior_container {
+  position: absolute;
+  display: flex;
 }
 
 .behavior_shortcut {

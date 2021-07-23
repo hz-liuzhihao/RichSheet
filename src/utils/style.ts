@@ -25,7 +25,7 @@ export function addCssRule(selector: string, rules: JSONObject = {}, suffix = ''
     globalSheet = createStyleSheet();
   }
   let identify;
-  if (type) {
+  if (type && !selector.startsWith('.')) {
     identify = type == 'class' ? '.' : '#';
   } else {
     identify = '';

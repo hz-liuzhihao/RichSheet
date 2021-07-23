@@ -38,7 +38,7 @@ class ExcelBehavior implements IExcelBehavior {
   public addCol(count?: number) { }
 
   @Behavior
-  public deleteCol() {}
+  public deleteCol() { }
 
   @Behavior
   public mergeCell() { }

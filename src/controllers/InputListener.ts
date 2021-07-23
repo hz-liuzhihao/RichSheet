@@ -19,6 +19,8 @@ export default class InputListener extends AbsListener implements IListener {
 
   private inputDom: HTMLDivElement;
 
+  private inputContainer: HTMLElement;
+
   private listenDom: HTMLElement;
 
   public constructor(args: InputListenerArgs) {
@@ -29,14 +31,17 @@ export default class InputListener extends AbsListener implements IListener {
 
   protected initDom() {
     const inputDom = this.inputDom = document.createElement('div');
+    const inputContainer = this.inputContainer = document.createElement('div');
+    inputContainer.classList.add('behavior_container');
     inputDom.classList.add('behavior_input');
     inputDom.contentEditable = 'true';
-    document.body.appendChild(inputDom);
+    inputContainer.appendChild(inputDom);
+    this.listenDom.appendChild(inputContainer);
   }
 
   private renderInput(inputArgs: InputArgs) {
-    const inputDom = this.inputDom;
-    setDomStyle(inputDom, {
+    const inputContainer = this.inputContainer;
+    setDomStyle(inputContainer, {
       top: inputArgs.top,
       left: inputArgs.left,
       width: inputArgs.width,
@@ -64,13 +69,17 @@ export default class InputListener extends AbsListener implements IListener {
         const sheetBuild = build.getSheetBuild();
         const row = build.getRow();
         const col = build.getCol();
+        const rowSpan = build.getRowSpan();
+        const colSpan = build.getColSpan();
         const left = sheetBuild.getSelectLeft(col);
         const top = sheetBuild.getSelectTop(row);
+        const width = sheetBuild.getSelectWidth(col, col + colSpan - 1);
+        const height = sheetBuild.getSelectHeight(row, row + rowSpan - 1);
         this.renderInput({
           left,
           top,
-          width: 100,
-          height: 40
+          width,
+          height
         });
         this.inputDom.focus();
       }
