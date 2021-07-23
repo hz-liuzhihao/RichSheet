@@ -99,7 +99,7 @@ export class ThemeStyle {
     }
     addCssRule(cellTheme, styleAfter as CSSStyleDeclaration, ':after');
     addCssRule('behavior_container', style as CSSStyleDeclaration);
-    addCssRule('behavior_container>.behavior_input', style as CSSStyleDeclaration);
+    addCssRule('behavior_container>.behavior_input', textStyle as CSSStyleDeclaration);
     addCssRule(cellTheme + '>.cell_text_container', style as CSSStyleDeclaration);
     addCssRule(cellTheme + '>.cell_text_container>.cell_text', textStyle as CSSStyleDeclaration);
     return cellTheme;

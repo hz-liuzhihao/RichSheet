@@ -120,7 +120,7 @@ export class CellBuild extends BaseBuild<CellMeta> {
    * @param key 
    * @param value 
    */
-   public setProperty(key: CellMetaKey, value: any) {
+  public setProperty(key: CellMetaKey, value: any) {
     const isPreview = this.excelBuild.getIsPreview();
     const undoManage = this.excelBuild.getUndoManage();
     const oldValue = this.metaInfo[key];
@@ -235,6 +235,14 @@ export class CellBuild extends BaseBuild<CellMeta> {
       result.styleIndex = this.styleBuild.getIndex() || 0;
     }
     return result;
+  }
+
+  /**
+   * 处理单元格输入值
+   * @param value 
+   */
+  public inputValue(value: string) {
+
   }
 
   public restoreUndoItem(undoItem: UndoItem) {

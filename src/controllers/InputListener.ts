@@ -23,6 +23,8 @@ export default class InputListener extends AbsListener implements IListener {
 
   private listenDom: HTMLElement;
 
+  private cellBuild: CellBuild;
+
   public constructor(args: InputListenerArgs) {
     super(args.excelBuild);
     this.listenDom = args.listenDom;
@@ -35,6 +37,10 @@ export default class InputListener extends AbsListener implements IListener {
     inputContainer.classList.add('behavior_container');
     inputDom.classList.add('behavior_input');
     inputDom.contentEditable = 'true';
+    inputDom.onblur = () => {
+      this.inputContainer.style.display = 'none';
+      this.cellBuild.inputValue(this.inputDom.textContent);
+    }
     inputContainer.appendChild(inputDom);
     this.listenDom.appendChild(inputContainer);
   }
@@ -51,7 +57,41 @@ export default class InputListener extends AbsListener implements IListener {
 
   public dealClick(event: MouseEvent) {
     const isDesign = this.excelBuild.isDesign();
+    if (!isDesign) {
+      this.input(event);
+    }
+  }
 
+  /**
+   * 进行输入
+   * @param event 
+   */
+  public input(event: MouseEvent) {
+    const srcElement = event.target as HTMLElement;
+    if (srcElement.closest('.celleditor_main')) {
+      const cell: HTMLElement = srcElement.closest('.celleditor_main');
+      const build: CellBuild = this.cellBuild = cell.__build__;
+      if (!build) {
+        return;
+      }
+      const sheetBuild = build.getSheetBuild();
+      const row = build.getRow();
+      const col = build.getCol();
+      const rowSpan = build.getRowSpan();
+      const colSpan = build.getColSpan();
+      const left = sheetBuild.getSelectLeft(col);
+      const top = sheetBuild.getSelectTop(row);
+      const width = sheetBuild.getSelectWidth(col, col + colSpan - 1);
+      const height = sheetBuild.getSelectHeight(row, row + rowSpan - 1);
+      this.renderInput({
+        left,
+        top,
+        width,
+        height
+      });
+      this.inputContainer.style.display = 'flex';
+      this.inputDom.focus();
+    }
   }
 
   /**
@@ -60,29 +100,8 @@ export default class InputListener extends AbsListener implements IListener {
    */
   public dealDbClick(event: MouseEvent) {
     const isDesign = this.excelBuild.isDesign();
-    const srcElement = event.target as HTMLElement;
-    const isCtrl = event.ctrlKey;
     if (isDesign) {
-      if (srcElement.closest('.celleditor_main')) {
-        const cell: HTMLElement = srcElement.closest('.celleditor_main');
-        const build: CellBuild = cell.__build__;
-        const sheetBuild = build.getSheetBuild();
-        const row = build.getRow();
-        const col = build.getCol();
-        const rowSpan = build.getRowSpan();
-        const colSpan = build.getColSpan();
-        const left = sheetBuild.getSelectLeft(col);
-        const top = sheetBuild.getSelectTop(row);
-        const width = sheetBuild.getSelectWidth(col, col + colSpan - 1);
-        const height = sheetBuild.getSelectHeight(row, row + rowSpan - 1);
-        this.renderInput({
-          left,
-          top,
-          width,
-          height
-        });
-        this.inputDom.focus();
-      }
+      this.input(event);
     }
   }
 }
