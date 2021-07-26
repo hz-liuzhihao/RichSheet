@@ -82,9 +82,12 @@ class Workbench extends ExcelBehavior implements IWorkBench {
     }
     this.excelEditor.requestRender().then(() => {
       (domParent as HTMLElement).innerHTML = '';
-      this.excelEditor.setParent(domParent as HTMLElement);
+      const tableContainer = document.createElement('div');
+      this.excelEditor.setParent(tableContainer);
+      tableContainer.classList.add('table_container');
+      (domParent as HTMLElement).appendChild(tableContainer);
       onLoad && onLoad();
-      this.initListener(domParent as HTMLElement)
+      this.initListener(tableContainer)
     }).catch(() => {
       console.log('richsheet渲染失败');
     });

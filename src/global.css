@@ -9,6 +9,13 @@ table {
   table-layout: fixed;
 }
 
+.table_container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
 * {
   box-sizing: border-box;
 }

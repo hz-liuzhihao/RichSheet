@@ -2,6 +2,11 @@ interface JSONObject {
   [key: string]: any;
 }
 
+declare module '*.less' {
+  const content: any;
+  export default content;
+}
+
 declare const enum BorderStyle {
   Solid = 0,
   Dashed = 1,
