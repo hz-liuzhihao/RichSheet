@@ -197,8 +197,11 @@ export class UndoManage {
 
   private workbench: IWorkBench;
 
+  private saveCount: number;
+
   public constructor(args: UndoManageArgs) {
     this.workbench = args.workbench;
+    this.saveCount = 0;
   }
 
   /**
@@ -208,6 +211,7 @@ export class UndoManage {
     if (!this.canRedo()) {
       return;
     }
+    this.saveCount++;
     this.isRedo = true;
     const curUndoItems = this.redoItems.pop();
     curUndoItems.forEach(item => {
@@ -226,6 +230,7 @@ export class UndoManage {
     if (!this.canUndo()) {
       return;
     }
+    this.saveCount--;
     this.isUndo = true;
     const curUndoItems = this.undoItems.pop();
     curUndoItems.forEach(item => {
@@ -250,6 +255,7 @@ export class UndoManage {
   public endUpdate(): void {
     this.count--;
     if (this.count == 0) {
+      this.saveCount++;
       if (this.curUndoItems.length) {
         this.undoItems.push(this.curUndoItems);
       }
@@ -296,5 +302,13 @@ export class UndoManage {
    */
   public canRedo() {
     return this.redoItems.length > 0;
+  }
+
+  /**
+   * 是否可以执行保存操作
+   * @returns 
+   */
+  public canSave() {
+    return this.saveCount != 0;
   }
 }

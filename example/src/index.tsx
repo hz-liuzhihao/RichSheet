@@ -20,8 +20,8 @@ class TableContainer extends Component {
         dom: this.tableElement
       });
       this.richSheet.load();
+      this.workbench = this.richSheet.getWorkbench();
     }
-    this.workbench
   }
 
   public render() {
@@ -34,6 +34,8 @@ class TableContainer extends Component {
     </div>;
   }
 }
+
+
 (function () {
   const root = document.getElementById('root');
   ReactDom.render(<TableContainer />, root);

@@ -165,6 +165,30 @@ class Workbench extends ExcelBehavior implements IWorkBench {
   public isDesign() {
     return this.config.isDesign == null ? true : this.config.isDesign;
   }
+
+  public canUndo() {
+    return this.undoManage.canUndo();
+  }
+
+  public canRedo() {
+    return this.undoManage.canRedo();
+  }
+
+  public canSave() {
+    return this.undoManage.canSave();
+  }
+
+  public undo() {
+    this.undoManage.undo();
+  }
+
+  public redo() {
+    this.undoManage.redo();
+  }
+  
+  public save() {
+    // TODO 元数据
+  }
 }
 
 export interface RichSeetConfig {
@@ -211,6 +235,6 @@ export default class RichSheet {
   }
 
   public getWorkbench() {
-
+    return this.workbench;
   }
 }
