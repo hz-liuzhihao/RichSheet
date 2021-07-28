@@ -37,11 +37,11 @@ html,body,#root {
   height: 100%;
 }
 
-.anticon {
-  padding: 0 10px;
+.customicon {
+  padding: 0 8px;
   color: #40a9ff;
 }
 
-.anticon[disabled] {
+.customicon[disabled] {
   color: #d9d9d9;
 }

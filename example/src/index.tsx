@@ -8,9 +8,17 @@ import 'antd/dist/antd.css';
 import './index.css';
 
 const TabPanel = Tabs.TabPane;
-const CustomIcon = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_2705379_l89i2n8h2os.js'
-});
+
+function CustomIcon(props) {
+  const Wrapper = createFromIconfontCN({
+    scriptUrl: '//at.alicdn.com/t/font_2705379_l89i2n8h2os.js'
+  });
+  return <Wrapper {...props} onClick={() => {
+    if (!props.disabled && typeof props.onClick == 'function') {
+      props.onClick();
+    }
+  }} className="customicon" />
+}
 class TableContainer extends Component<JSONObject, {
   workbench?: IExcelBehavior
 }> {
@@ -39,9 +47,9 @@ class TableContainer extends Component<JSONObject, {
   public renderBasicOperate() {
     const { workbench } = this.state;
     return <div style={{ padding: '0 20px' }}>
-      <CustomIcon type="icon-undo" disabled={!workbench.canUndo()} />
-      <CustomIcon type="icon-save" disabled={!workbench.canSave()} />
-      <CustomIcon type="icon-redo" disabled={!workbench.canRedo()} />
+      <CustomIcon type="icon-undo" disabled={!workbench.canUndo()} onClick={() => workbench.undo()} />
+      <CustomIcon type="icon-save" disabled={!workbench.canSave()} onClick={() => workbench.save()} />
+      <CustomIcon type="icon-redo" disabled={!workbench.canRedo()} onClick={() => workbench.redo()} />
     </div>;
   }
 
