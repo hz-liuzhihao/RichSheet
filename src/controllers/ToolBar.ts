@@ -43,6 +43,21 @@ export interface IExcelBehavior {
    * 保存元数据
    */
   save?: () => void;
+
+  /**
+   * 是否可以undo
+   */
+  canUndo?: () => boolean;
+
+  /**
+   * 是否可以redo
+   */
+  canRedo?: () => boolean;
+
+  /**
+   * 是否可以保存
+   */
+  canSave?: () => boolean;
 }
 
 export interface AbsToolbarArgs {
