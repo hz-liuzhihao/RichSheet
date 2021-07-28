@@ -58,6 +58,8 @@ export interface IExcelBehavior {
    * 是否可以保存
    */
   canSave?: () => boolean;
+
+  addBahaviorChangeListener?: (func: Function) => void;
 }
 
 export interface AbsToolbarArgs {

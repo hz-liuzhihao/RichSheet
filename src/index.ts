@@ -44,7 +44,7 @@ class ExcelBehavior implements IExcelBehavior {
   public mergeCell() { }
 }
 
-class Workbench extends ExcelBehavior implements IWorkBench {
+class Workbench extends ExcelBehavior implements IWorkBench, IExcelBehavior {
 
   private undoManage: UndoManage;
 
@@ -57,6 +57,8 @@ class Workbench extends ExcelBehavior implements IWorkBench {
   private emitBehavior: EmitBehavior;
 
   private config: RichSeetConfig;
+
+  private refreshToolbarFunc: Function;
 
   public constructor(args: WorkbenchArgs) {
     super();
@@ -98,6 +100,9 @@ class Workbench extends ExcelBehavior implements IWorkBench {
    * @param undoItems 
    */
   doChange = (undoItems: UndoItem[]) => {
+    if (typeof this.refreshToolbarFunc == 'function') {
+      this.refreshToolbarFunc();
+    }
     undoItems.forEach(item => {
       this.excelEditor.requestRenderUndoItem(item);
     });
@@ -191,6 +196,10 @@ class Workbench extends ExcelBehavior implements IWorkBench {
   
   public save() {
     // TODO 元数据
+  }
+
+  public addBahaviorChangeListener(func) {
+    this.refreshToolbarFunc = func;
   }
 }
 
