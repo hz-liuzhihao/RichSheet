@@ -149,7 +149,7 @@ export class RowBuild extends BaseBuild<RowMeta> {
    * 获取行头文本索引
    * row索引从0开始
    */
-  public getIndex() {
+  public getRowName() {
     const title = this.metaInfo.title;
     if (title) {
       return title;
@@ -161,7 +161,7 @@ export class RowBuild extends BaseBuild<RowMeta> {
    * 获取行索引
    * @returns 
    */
-  public getRow() {
+  public getIndex() {
     return this.metaInfo.index;
   }
 

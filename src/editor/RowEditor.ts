@@ -147,7 +147,7 @@ export default class RowEditor extends BaseEditor {
    */
   protected renderMerge(item: UndoItem) {
     const col = item.i;
-    const row = this.build.getRow();
+    const row = this.build.getIndex();
     const cellBuild = this.build.getCell(col);
     const cellRow = cellBuild.getRow();
     const cellCol = cellBuild.getCol();

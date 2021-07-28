@@ -60,7 +60,7 @@ export class ColBuild extends BaseBuild<ColMeta> {
   /**
    * 获取行头
    */
-  public getIndex() {
+  public getColName() {
     const title = this.metaInfo.title;
     if (title) {
       return title;
@@ -73,7 +73,7 @@ export class ColBuild extends BaseBuild<ColMeta> {
    * 获取列号
    * @returns 
    */
-  public getColNumber() {
+  public getIndex() {
     return this.metaInfo.index;
   }
 

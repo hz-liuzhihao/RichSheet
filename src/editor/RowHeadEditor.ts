@@ -62,7 +62,7 @@ export default class RowHeadEditor extends BaseEditor {
 
   protected render() {
     const { mainDom, build } = this;
-    const index = build.getProperty('index');
+    const index = build.getRowName().toString();
     Object.assign(mainDom.style, build.toStyle());
     this.textDom.textContent = index;
     const rowHeadClass = build.getThemeClassName();

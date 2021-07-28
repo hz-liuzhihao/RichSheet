@@ -5,6 +5,7 @@ import { upperFirst } from 'lodash';
 import './RowHeadEditor.css';
 import { Operate, UndoItem } from '../flow/UndoManage';
 import { ColBuild } from '../build/ColBuild';
+import { RowBuild } from '../build/RowBuild';
 export interface ColHeadEditorArgs extends BaseEditorArgs {
 
 }
@@ -38,7 +39,7 @@ export default class ColHeadEditor extends BaseEditor {
     const isDesign = this.workbench.isDesign();
     // 初始化行头
     cols.forEach((item, index) => {
-      const colName = item.getProperty('index');
+      const colName = item.getColName();
       const td = document.createElement('td');
       const textDom = document.createElement('span');
       td.appendChild(textDom);
@@ -62,7 +63,7 @@ export default class ColHeadEditor extends BaseEditor {
   protected renderWidth(item: UndoItem) {
     const { v, isPreview } = item;
     const build = item.c as ColBuild;
-    const index = build.getColNumber();
+    const index = build.getIndex();
     const colDom = this.tds[index];
     if (isPreview) {
       colDom.style.width = `${v}px`;
@@ -82,9 +83,9 @@ export default class ColHeadEditor extends BaseEditor {
     const rows = sheetBuild.getRows();
     const cols = sheetBuild.getCols();
     if (focusCell) {
-      const rowBuild = rows[focusCell.getRow()];
-      const colBuild = cols[focusCell.getCol()];
-      this.thHead.textContent = `${colBuild.getIndex()}${rowBuild.getIndex()}`
+      const rowBuild = rows[focusCell.getRow()] as RowBuild;
+      const colBuild = cols[focusCell.getCol()] as ColBuild;
+      this.thHead.textContent = `${colBuild.getColName()}${rowBuild.getRowName()}`
     }
   }
 

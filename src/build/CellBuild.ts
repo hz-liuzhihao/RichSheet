@@ -201,7 +201,7 @@ export class CellBuild extends BaseBuild<CellMeta> {
    * @returns 
    */
   public getRow() {
-    return this.metaInfo.row;
+    return this.row.getIndex();
   }
 
   /**
@@ -209,7 +209,7 @@ export class CellBuild extends BaseBuild<CellMeta> {
    * @returns 
    */
   public getCol() {
-    return this.metaInfo.col;
+    return this.col.getIndex();
   }
 
   /**
