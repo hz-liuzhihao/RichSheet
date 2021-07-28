@@ -4,6 +4,7 @@ import ReactDom from 'react-dom';
 import { IExcelBehavior } from '../../src/controllers/ToolBar';
 import { createFromIconfontCN } from '@ant-design/icons';
 import { Tabs } from 'antd';
+import { debounce } from 'lodash';
 import 'antd/dist/antd.css';
 import './index.css';
 
@@ -27,9 +28,12 @@ class TableContainer extends Component<JSONObject, {
 
   private richSheet: RichSheet;
 
+  private isSetState: boolean;
+
   public constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+    };
   }
 
   public componentDidMount() {
@@ -38,8 +42,12 @@ class TableContainer extends Component<JSONObject, {
         dom: this.tableElement
       });
       this.richSheet.load();
+      const workbench = this.richSheet.getWorkbench();
+      workbench.addBahaviorChangeListener(debounce(() => {
+        this.forceUpdate()
+      }, 300));
       this.setState({
-        workbench: this.richSheet.getWorkbench()
+        workbench
       });
     }
   }

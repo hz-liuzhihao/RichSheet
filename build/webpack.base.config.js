@@ -9,6 +9,14 @@ module.exports = {
     path: path.resolve(__dirname, "../lib"),
     libraryTarget: "commonjs2",
   },
+  externals: {
+    lodash: {
+      commonjs: "lodash", //如果我们的库运行在Node.js环境中，import _ from 'lodash'等价于const _ = require('lodash')
+      commonjs2: "lodash", //同上
+      amd: "lodash", //如果我们的库使用require.js等加载,等价于 define(["lodash"], factory);
+      root: "_",
+    },
+  },
   resolve: {
     extensions: [".ts", ".js"],
   },

@@ -255,8 +255,8 @@ export class UndoManage {
   public endUpdate(): void {
     this.count--;
     if (this.count == 0) {
-      this.saveCount++;
       if (this.curUndoItems.length) {
+        this.saveCount++;
         this.undoItems.push(this.curUndoItems);
       }
       // 在进行数据驱动渲染时,需要将查询操作一起合并
