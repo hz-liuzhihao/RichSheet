@@ -10,6 +10,7 @@ import ShortcutListener from './controllers/ShortcutListener';
 import { IExcelBehavior } from './controllers/ToolBar';
 import { Behavior } from './utils/annotate';
 import InputListener from './controllers/InputListener';
+import { debounce } from 'lodash';
 
 export interface SheetConfig {
   row: number;
@@ -199,7 +200,8 @@ class Workbench extends ExcelBehavior implements IWorkBench, IExcelBehavior {
   }
 
   public addBahaviorChangeListener(func) {
-    this.refreshToolbarFunc = func;
+    // 防抖
+    this.refreshToolbarFunc = debounce(func, 100);
   }
 }
 

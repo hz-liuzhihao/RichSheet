@@ -43,9 +43,9 @@ class TableContainer extends Component<JSONObject, {
       });
       this.richSheet.load();
       const workbench = this.richSheet.getWorkbench();
-      workbench.addBahaviorChangeListener(debounce(() => {
+      workbench.addBahaviorChangeListener(() => {
         this.forceUpdate()
-      }, 300));
+      });
       this.setState({
         workbench
       });
