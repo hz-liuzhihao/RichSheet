@@ -236,4 +236,9 @@ export class RowBuild extends BaseBuild<RowMeta> {
         break;
     }
   }
+
+  /** @override */
+  public toJSON() {
+
+  }
 }

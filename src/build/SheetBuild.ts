@@ -535,4 +535,9 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
         break;
     }
   }
+
+  /** @override */
+  public toJSON() {
+
+  }
 }

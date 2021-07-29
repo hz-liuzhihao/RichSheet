@@ -323,4 +323,9 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
   public isDesign() {
     return this.workbench.isDesign();
   }
+
+  /** @override */
+  public toJSON() {
+
+  }
 }

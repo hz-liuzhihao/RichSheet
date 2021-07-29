@@ -196,7 +196,7 @@ class Workbench extends ExcelBehavior implements IWorkBench, IExcelBehavior {
   }
   
   public save() {
-    // TODO 元数据
+    this.excelBuild.toJSON();
   }
 
   public addBahaviorChangeListener(func) {

@@ -219,4 +219,9 @@ export class ColBuild extends BaseBuild<ColMeta> {
         break;
     }
   }
+
+  /** @override */
+  public toJSON() {
+
+  }
 }

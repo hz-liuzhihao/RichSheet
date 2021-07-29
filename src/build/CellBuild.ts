@@ -263,5 +263,5 @@ export class CellBuild extends BaseBuild<CellMeta> {
         }
         break;
     }
-  };
+  }
 }
