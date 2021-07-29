@@ -509,20 +509,32 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
    * @param count
    * @param isDown 是否在下面添加行
    */
-  public addRow(count?: number, isDown: boolean = true) {
+  public addRow(count: number = 1, isDown: boolean = true) {
     const selector = this.selector;
     const selectors = selector.selectors;
     const lastSelector = selectors[selectors.length - 1];
+    const undoManage = this.excelBuild.getUndoManage();
+    if (!lastSelector) {
+      const rowLength = this.rows.length;
+      undoManage.beginUpdate();
+      try {
+        for (let i = 0; i < count; i++) {
+          this.addRowBuild(rowLength + i - 1);
+        }
+      } finally {
+        undoManage.endUpdate();
+      }
+      return;
+    }
     const rowStart = lastSelector.rowStart;
     const rowEnd = lastSelector.rowEnd;
     const rowCount = rowEnd - rowStart;
-    const startRow = isDown ? rowStart : rowStart - 1;
+    const startRow = isDown ? rowEnd : rowStart - 1;
     const needChangeRows = this.rows.slice(startRow + 1);
-    const undoManage = this.excelBuild.getUndoManage();
     undoManage.beginUpdate();
     try {
       for (let i = 0; i < rowCount; i++) {
-        this.addRowBuild(i + rowStart);
+        this.addRowBuild(i + startRow);
       }
       needChangeRows.forEach(item => item.setIndex(item.getIndex() + rowCount));
     } finally {
@@ -578,20 +590,32 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
    * @param count 
    * @param isRight 是否在右边添加列
    */
-  public addCol(count?: number, isRight: boolean = true) {
+  public addCol(count: number = 1, isRight: boolean = true) {
     const selector = this.selector;
     const selectors = selector.selectors;
     const lastSelector = selectors[selectors.length - 1];
+    const undoManage = this.excelBuild.getUndoManage();
+    if (!lastSelector) {
+      const colLength = this.cols.length;
+      undoManage.beginUpdate();
+      try {
+        for (let i = 0; i < count; i++) {
+          this.addColbuild(colLength + i - 1);
+        }
+      } finally {
+        undoManage.endUpdate();
+      }
+      return;
+    }
     const colStart = lastSelector.colStart;
     const colEnd = lastSelector.colEnd;
     const colCount = colEnd - colStart;
-    const startCol = isRight ? colStart : colStart - 1;
+    const startCol = isRight ? colEnd : colStart - 1;
     const needChangeCols = this.cols.splice(startCol + 1);
-    const undoManage = this.excelBuild.getUndoManage();
     undoManage.beginUpdate();
     try {
       for (let i = 0; i< colCount; i++) {
-        this.addColbuild(i + colStart);
+        this.addColbuild(i + startCol);
       }
       needChangeCols.forEach(item => item.setIndex(item.getIndex() + colCount));
     } finally {
