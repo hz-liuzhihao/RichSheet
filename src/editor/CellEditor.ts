@@ -19,6 +19,8 @@ export default class CellEditor extends BaseEditor {
 
   protected textDom: HTMLElement;
 
+  protected mainDom: HTMLTableCellElement;
+
   public constructor(args: CellEditorArgs) {
     args.type = 'td';
     super(args);
@@ -73,7 +75,7 @@ export default class CellEditor extends BaseEditor {
   protected renderRowSpan(item: UndoItem) {
     const build = this.build;
     const rowSpan = build.getRowSpan();
-    const mainDom = this.mainDom as HTMLTableCellElement;
+    const mainDom = this.mainDom;
     mainDom.rowSpan = rowSpan;
   }
 
@@ -84,7 +86,7 @@ export default class CellEditor extends BaseEditor {
   protected renderColSpan(item: UndoItem) {
     const build = this.build;
     const colSpan = build.getColSpan();
-    const mainDom = this.mainDom as HTMLTableCellElement;
+    const mainDom = this.mainDom;
     mainDom.colSpan = colSpan;
   }
 
@@ -121,6 +123,8 @@ export default class CellEditor extends BaseEditor {
     const themeClassName = build.getThemeClassName();
     const styleClassName = build.getClassName();
     const borderClassName = build.getBorderClassName();
+    mainDom.rowSpan = build.getRowSpan();
+    mainDom.colSpan = build.getColSpan();
     themeClassName && mainDom.classList.add(themeClassName);
     styleClassName && mainDom.classList.add(styleClassName);
     borderClassName && mainDom.classList.add(borderClassName);

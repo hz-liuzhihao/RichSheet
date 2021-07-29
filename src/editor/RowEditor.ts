@@ -74,12 +74,15 @@ export default class RowEditor extends BaseEditor {
     });
 
     // 初始化行其他单元格
-    cells.forEach(cell => {
-      this.cells.push(new CellEditor({
-        build: cell,
-        domParent: this.mainDom,
-        workbench: this.workbench
-      }));
+    cells.forEach((cell, index) => {
+      // 只有单元格的行列刚好在这个位置采取渲染单元格
+      if (cell.getRow() == build.getIndex() && cell.getCol() == index) {
+        this.cells.push(new CellEditor({
+          build: cell,
+          domParent: this.mainDom,
+          workbench: this.workbench
+        }));
+      }
     });
   }
 
