@@ -85,7 +85,9 @@ export default abstract class BaseEditor {
    * @returns 
    */
   public setParent(parentDom: HTMLElement) {
-    if (this.parentDom == parentDom && this.mainDom.parentElement) {
+    // 当父元素等于传进来的父元素且元素当前有父元素则返回或者传进来的父元素刚好等于当前的父元素则返回
+    if (this.parentDom == parentDom && this.mainDom.parentElement || parentDom == this.mainDom.parentElement) {
+      this.parentDom = parentDom;
       return;
     }
     this.parentDom = parentDom;

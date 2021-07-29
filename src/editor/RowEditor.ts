@@ -137,6 +137,7 @@ export default class RowEditor extends BaseEditor {
         build: cellBuild,
         workbench: this.workbench
       });
+      cellEditor.requestRender();
       const mainDom = cellEditor.getMainDom();
       if (beforeEditor) {
         this.mainDom.insertBefore(mainDom, beforeEditor.getMainDom());
