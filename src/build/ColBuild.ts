@@ -182,12 +182,11 @@ export class ColBuild extends BaseBuild<ColMeta> {
    * 转换列头样式
    */
   public toStyle() {
-    const { excelBuild, metaInfo } = this;
-    const theme = excelBuild.getTheme();
-    const { width, height } = metaInfo;
+    const width = this.getWidth();
+    const height = this.getHeight();
     const style = {
-      width: `${width || theme.colHeadWidth}px`,
-      height: `${height || theme.colHeadHeight}px`,
+      width: `${width}px`,
+      height: `${height}px`,
     };
     return style;
   }

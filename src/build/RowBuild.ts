@@ -67,11 +67,11 @@ export class RowBuild extends BaseBuild<RowMeta> {
    * 转换行头样式
    */
   public toStyle() {
-    const { excelBuild } = this;
-    const theme = excelBuild.getTheme();
+    const width = this.getWidth();
+    const height = this.getHeight();
     const style = {
-      width: `${theme.rowHeadWidth}px`,
-      height: `${theme.rowHeadHeight}px`,
+      width: `${width}px`,
+      height: `${height}px`,
     };
     return style;
   }
