@@ -232,6 +232,8 @@ export class CellBuild extends BaseBuild<CellMeta> {
   /** @override */
   public toJSON() {
     const result = super.toJSON() as CellMeta;
+    result.row = this.getRow();
+    result.col = this.getCol();
     if (this.styleBuild) {
       result.styleIndex = this.styleBuild.getIndex() || 0;
     }

@@ -99,22 +99,12 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const cellMap: {
       [key: string]: CellMeta;
     } = {};
-    let rowLength = 0;
-    let colLength = 0;
     cells.forEach(cell => {
-      const rowSpan = cell.rowSpan || 1;
-      if (cell.row + rowSpan - 1 > rowLength) {
-        rowLength = cell.row + rowSpan - 1;
-      }
-      const colSpan = cell.colSpan || 1;
-      if (cell.col + colSpan - 1 > colLength) {
-        colLength = cell.col + colSpan - 1;
-      }
       cellMap[`${cell.row}${cell.col}`] = cell;
     });
     // 获取行数,先获取本表格的配置再获取顶级配置
-    const rowLines = rowLength || defaultRows || this.excelBuild.getProperty('defaultRows') || 20;
-    const colLines = colLength || defaultCols || this.excelBuild.getProperty('defaultCols') || 20;
+    const rowLines = rows.length || defaultRows || this.excelBuild.getProperty('defaultRows') || 20;
+    const colLines = cols.length || defaultCols || this.excelBuild.getProperty('defaultCols') || 20;
     // 初始化行列
     for (let row = 0; row < rowLines; row++) {
       // 当行未初始化时,进行初始化
@@ -540,6 +530,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
   public toJSON() {
     const result = super.toJSON() as SheetMeta;
     const rows = this.rows;
+    const cols = this.cols;
     const cellMetas: CellMeta[] = [];
     const cellMeta = {};
     rows.forEach(row => {
@@ -548,14 +539,17 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
         const rowIndex = cell.getRow();
         const colIndex = cell.getCol();
         if (!cellMeta[`${rowIndex}${colIndex}`]) {
-          cellMetas.push(cell.toJSON());
+          const cellJson = cell.toJSON();
+          if (Object.keys(cellJson).length > 2) {
+            cellMetas.push(cell.toJSON());
+          }
           cellMeta[`${rowIndex}${colIndex}`] = true;
         }
       });
     });
     result.cells = cellMetas;
     result.rows = rows.map(item => item.toJSON());
-    result.cols = rows.map(item => item.toJSON());
+    result.cols = cols.map(item => item.toJSON());
     return result;
   }
 }

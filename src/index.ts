@@ -179,24 +179,29 @@ class Workbench extends ExcelBehavior implements IWorkBench, IExcelBehavior {
     return this.undoManage.canUndo();
   }
 
+  /** @implements */
   public canRedo() {
     return this.undoManage.canRedo();
   }
 
+  /** @implements */
   public canSave() {
     return this.undoManage.canSave();
   }
 
+  /** @implements */
   public undo() {
     this.undoManage.undo();
   }
 
+  /** @implements */
   public redo() {
     this.undoManage.redo();
   }
   
+  /** @implements */
   public save() {
-    this.excelBuild.toJSON();
+    console.log(this.excelBuild.toJSON());
   }
 
   public addBahaviorChangeListener(func) {
