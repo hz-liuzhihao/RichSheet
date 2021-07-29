@@ -326,6 +326,8 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
 
   /** @override */
   public toJSON() {
-
+    const result = super.toJSON() as ExcelMeta;
+    result.sheets = this.sheets.map(item => item.toJSON());
+    return result;
   }
 }

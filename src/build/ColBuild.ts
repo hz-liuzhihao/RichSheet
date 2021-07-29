@@ -227,6 +227,6 @@ export class ColBuild extends BaseBuild<ColMeta> {
   /** @override */
   public toJSON() {
     const result = super.toJSON() as ColMeta;
-    
+    return result;
   }
 }

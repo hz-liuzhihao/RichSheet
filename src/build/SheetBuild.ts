@@ -538,6 +538,24 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
 
   /** @override */
   public toJSON() {
-
+    const result = super.toJSON() as SheetMeta;
+    const rows = this.rows;
+    const cellMetas: CellMeta[] = [];
+    const cellMeta = {};
+    rows.forEach(row => {
+      const cells = row.getCells();
+      cells.forEach(cell => {
+        const rowIndex = cell.getRow();
+        const colIndex = cell.getCol();
+        if (!cellMeta[`${rowIndex}${colIndex}`]) {
+          cellMetas.push(cell.toJSON());
+          cellMeta[`${rowIndex}${colIndex}`] = true;
+        }
+      });
+    });
+    result.cells = cellMetas;
+    result.rows = rows.map(item => item.toJSON());
+    result.cols = rows.map(item => item.toJSON());
+    return result;
   }
 }

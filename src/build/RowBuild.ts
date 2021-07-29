@@ -243,6 +243,7 @@ export class RowBuild extends BaseBuild<RowMeta> {
 
   /** @override */
   public toJSON() {
-
+    const result = super.toJSON() as RowMeta;
+    return result;
   }
 }
