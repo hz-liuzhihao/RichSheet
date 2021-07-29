@@ -40,7 +40,7 @@ class TableContainer extends Component<JSONObject, {
     if (this.tableElement) {
       this.richSheet = new RichSheet({
         dom: this.tableElement,
-        excel: JSON.parse('{"sheets":[{"cells":[{"row":0,"col":8,"rowSpan":6,"colSpan":4},{"row":9,"col":2,"rowSpan":8,"colSpan":5}],"rows":[{},{},{},{},{},{},{},{},{},{"height":160},{},{},{},{},{},{},{},{},{},{}],"cols":[{},{},{},{},{"width":227},{},{},{},{"width":258},{},{},{},{},{},{},{},{},{},{},{}]}]}')
+        // excel: JSON.parse('{"sheets":[{"cells":[{"row":0,"col":8,"rowSpan":6,"colSpan":4},{"row":9,"col":2,"rowSpan":8,"colSpan":5}],"rows":[{},{},{},{},{},{},{},{},{},{"height":160},{},{},{},{},{},{},{},{},{},{}],"cols":[{},{},{},{},{"width":227},{},{},{},{"width":258},{},{},{},{},{},{},{},{},{},{},{}]}]}')
       });
       this.richSheet.load();
       const workbench = this.richSheet.getWorkbench();

@@ -138,8 +138,6 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
         // 对单元格进行初始化
         if (!cell) {
           cell = {
-            row,
-            col
           }
         };
         const existCellBuild = this.rows[cell.row].getCells()[cell.col];
@@ -508,8 +506,140 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
 
   /**
    * 添加行
+   * @param count
+   * @param isDown 是否在下面添加行
    */
-  public addRow(count?: number) {
+  public addRow(count?: number, isDown: boolean = true) {
+    const selector = this.selector;
+    const selectors = selector.selectors;
+    const lastSelector = selectors[selectors.length - 1];
+    const rowStart = lastSelector.rowStart;
+    const rowEnd = lastSelector.rowEnd;
+    const rowCount = rowEnd - rowStart;
+    const startRow = isDown ? rowStart : rowStart - 1;
+    const needChangeRows = this.rows.slice(startRow + 1);
+    const undoManage = this.excelBuild.getUndoManage();
+    undoManage.beginUpdate();
+    try {
+      for (let i = 0; i < rowCount; i++) {
+        this.addRowBuild(i + rowStart);
+      }
+      needChangeRows.forEach(item => item.setIndex(item.getIndex() + rowCount));
+    } finally {
+      undoManage.endUpdate();
+    }
+  }
+
+  /**
+   * 从start位置添加一行
+   * @param start 
+   */
+  public addRowBuild(start: number) {
+    const colLength = this.cols.length;
+    const undoManage = this.excelBuild.getUndoManage();
+    undoManage.beginUpdate();
+    try {
+      const rowBuild = new RowBuild({
+        metaInfo: {},
+        excelBuild: this.excelBuild,
+        sheet: this,
+        index: start + 1
+      });
+      for (let i = 0; i < colLength; i++) {
+        const cellBuild = new CellBuild({
+          metaInfo: {},
+          row: rowBuild,
+          col: this.cols[i],
+          excelBuild: this.excelBuild
+        });
+        rowBuild.getCells()[i] = cellBuild;
+        this.cols[i].getCells().splice(start, 0, cellBuild);
+      }
+      this.rows.splice(start, 0, rowBuild);
+      undoManage.storeUndoItem({
+        c: this,
+        op: Operate.Add,
+        v: rowBuild
+      });
+    } finally {
+      undoManage.endUpdate();
+    }
+  }
+
+  /**
+   * 删除选中行
+   */
+  public deleteRow() {
+
+  }
+
+  /**
+   * 添加列
+   * @param count 
+   * @param isRight 是否在右边添加列
+   */
+  public addCol(count?: number, isRight: boolean = true) {
+    const selector = this.selector;
+    const selectors = selector.selectors;
+    const lastSelector = selectors[selectors.length - 1];
+    const colStart = lastSelector.colStart;
+    const colEnd = lastSelector.colEnd;
+    const colCount = colEnd - colStart;
+    const startCol = isRight ? colStart : colStart - 1;
+    const needChangeCols = this.cols.splice(startCol + 1);
+    const undoManage = this.excelBuild.getUndoManage();
+    undoManage.beginUpdate();
+    try {
+      for (let i = 0; i< colCount; i++) {
+        this.addColbuild(i + colStart);
+      }
+      needChangeCols.forEach(item => item.setIndex(item.getIndex() + colCount));
+    } finally {
+      undoManage.endUpdate();
+    }
+  }
+
+  /**
+   * 从start位置开始添加列
+   * @param start 
+   */
+  public addColbuild(start: number) {
+    const rowLength = this.rows.length;
+    const undoManage = this.excelBuild.getUndoManage();
+    undoManage.beginUpdate();
+    try {
+      const colBuild = new ColBuild({
+        metaInfo: {},
+        excelBuild: this.excelBuild,
+        sheet: this,
+        index: start + 1,
+      });
+      for (let i = 0; i < rowLength; i++) {
+        const cellBuild = new CellBuild({
+          metaInfo: {},
+          row: this.rows[i],
+          col: colBuild,
+          excelBuild: this.excelBuild
+        });
+        this.rows[i].getCells().splice(start, 0, cellBuild);
+        colBuild.getCells()[i] = cellBuild;
+      }
+      this.cols.splice(start, 0, colBuild);
+      undoManage.storeUndoItem({
+        c: this,
+        op: Operate.Add,
+        v: colBuild
+      });
+    } finally {
+      undoManage.endUpdate();
+    }
+  }
+
+  /**
+   * 删除列
+   * @param count 
+   */
+  public deleteCol(count?: number) {
 
   }
 

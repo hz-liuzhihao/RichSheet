@@ -81,6 +81,22 @@ export class ColBuild extends BaseBuild<ColMeta> {
     return this.index;
   }
 
+  public setIndex(index: number) {
+    const undoManage = this.excelBuild.getUndoManage();
+    undoManage.beginUpdate();
+    try {
+      undoManage.storeUndoItem({
+        c: this,
+        op: Operate.Modify,
+        v: index,
+        ov: this.index,
+        p: 'index'
+      });
+    } finally {
+      undoManage.endUpdate();
+    }
+  }
+
   /**
    * 获取列宽
    */
