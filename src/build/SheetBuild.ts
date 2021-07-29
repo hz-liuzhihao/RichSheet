@@ -76,21 +76,45 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
   }
 
   /**
+   * 预处理单元格元数据信息,将rowSpan和colSpan进行处理
+   * 解析合并单元格
+   * @param cells 
+   */
+  private prepareCells(cells: CellMeta[][] = []) {
+    const rows = [];
+    cells.forEach((row, rowIndex) => {
+      row.forEach((cell, colIndex) => {
+
+      });
+    });
+  }
+
+  /**
    * 转换元数据
    * @override
    */
   protected initMeta() {
     const { cells = [], rows = [], cols = [], defaultRows, defaultCols } = this.metaInfo;
-    // 获取行数,先获取本表格的配置再获取顶级配置
-    const rowLines = defaultRows || this.excelBuild.getProperty('defaultRows') || 20;
-    const colLines = defaultCols || this.excelBuild.getProperty('defaultCols') || 20;
+
     const cellMap: {
       [key: string]: CellMeta;
     } = {};
-    // 
+    let rowLength = 0;
+    let colLength = 0;
     cells.forEach(cell => {
+      const rowSpan = cell.rowSpan || 1;
+      if (cell.row + rowSpan - 1 > rowLength) {
+        rowLength = cell.row + rowSpan -1;
+      }
+      const colSpan = cell.colSpan || 1;
+      if (cell.col + colSpan - 1 > colLength) {
+        colLength = cell.col + colSpan - 1;
+      }
       cellMap[`${cell.row}${cell.col}`] = cell;
     });
+    // 获取行数,先获取本表格的配置再获取顶级配置
+    const rowLines = rowLength || defaultRows || this.excelBuild.getProperty('defaultRows') || 20;
+    const colLines = colLength || defaultCols || this.excelBuild.getProperty('defaultCols') || 20;
     // 初始化行列
     for (let row = 0; row < rowLines; row++) {
       // 当行未初始化时,进行初始化

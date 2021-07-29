@@ -8,13 +8,14 @@ import { BorderStyleBuild } from './BorderStyleBuild';
 import { CellPropertyBuild } from './CellPropertyBuild';
 
 export interface CellMeta {
+  // 单元格行
+  row?: number;
+  // 单元格列
+  col?: number;
+
   colSpan?: number;
 
   rowSpan?: number;
-
-  row: number;
-
-  col: number;
 
   index?: number;
 
@@ -67,7 +68,7 @@ export class CellBuild extends BaseBuild<CellMeta> {
    */
   protected initMeta() {
     // 在行列中记录单元格
-    const { row, col, styleIndex, expressionIndex, cellPropertyIndex } = this.metaInfo;
+    const { styleIndex, expressionIndex, cellPropertyIndex } = this.metaInfo;
     this.styleBuild = this.excelBuild.getStyleBuild(styleIndex);
     this.cellPropertyBuild = this.excelBuild.getCellPropertyBuild(cellPropertyIndex);
     this.expressionBuild = this.excelBuild.getExpressionBuild(expressionIndex);
