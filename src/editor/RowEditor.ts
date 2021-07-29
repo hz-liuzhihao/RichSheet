@@ -82,6 +82,8 @@ export default class RowEditor extends BaseEditor {
           domParent: this.mainDom,
           workbench: this.workbench
         }));
+      } else {
+        this.cells.push(null);
       }
     });
   }
@@ -190,7 +192,7 @@ export default class RowEditor extends BaseEditor {
    * @override
    */
   protected render() {
-    this.cells.forEach(item => item.requestRender());
+    this.cells.forEach(item => item && item.requestRender());
     this.colHeadEditor.requestRender();
   }
 }
