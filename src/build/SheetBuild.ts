@@ -121,13 +121,13 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
       if (this.rows[row] == null) {
         if (rows[row] == null) {
           rows[row] = {
-            index: row
           };
         }
         this.rows[row] = new RowBuild({
           metaInfo: rows[row],
           sheet: this,
-          excelBuild: this.excelBuild
+          excelBuild: this.excelBuild,
+          index: row
         });
       }
       for (let col = 0; col < colLines; col++) {
@@ -135,13 +135,13 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
         if (this.cols[col] == null) {
           if (cols[col] == null) {
             cols[col] = {
-              index: col
             };
           }
           this.cols[col] = new ColBuild({
             metaInfo: cols[col],
             sheet: this,
-            excelBuild: this.excelBuild
+            excelBuild: this.excelBuild,
+            index: col
           });
         }
         let cell = cellMap[`${row}${col}`];

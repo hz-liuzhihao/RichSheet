@@ -16,10 +16,6 @@ export interface RowMeta {
    * 行头
    */
   title?: string;
-  /**
-   * 行数
-   */
-  index?: number;
 }
 
 type RowMetaKey = keyof RowMeta;
@@ -28,6 +24,11 @@ export interface RowBuildArgs extends BaseBuildArgs {
   sheet: SheetBuild;
 
   excelBuild: ExcelBuild;
+
+  /**
+   * 行数
+   */
+   index?: number;
 }
 
 export class RowBuild extends BaseBuild<RowMeta> {
@@ -37,6 +38,8 @@ export class RowBuild extends BaseBuild<RowMeta> {
   private cells: CellBuild[];
 
   private excelBuild: ExcelBuild;
+
+  private index: number;
 
   public constructor(args: RowBuildArgs) {
     super(args);
@@ -50,6 +53,7 @@ export class RowBuild extends BaseBuild<RowMeta> {
     this.sheet = args.sheet;
     this.cells = [];
     this.excelBuild = args.excelBuild;
+    this.index = args.index;
   }
 
   /**
@@ -154,7 +158,7 @@ export class RowBuild extends BaseBuild<RowMeta> {
     if (title) {
       return title;
     }
-    return this.metaInfo.index + 1;
+    return this.index + 1;
   }
 
   /**
@@ -162,7 +166,7 @@ export class RowBuild extends BaseBuild<RowMeta> {
    * @returns 
    */
   public getIndex() {
-    return this.metaInfo.index;
+    return this.index;
   }
 
   public getCells() {

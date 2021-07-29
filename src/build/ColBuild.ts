@@ -17,10 +17,6 @@ export interface ColMeta {
    * 列头文本
    */
   title?: string;
-  /**
-   * 序号
-   */
-  index: number;
 }
 
 type ColMetaKey = keyof ColMeta;
@@ -29,6 +25,11 @@ export interface ColBuildArgs extends BaseBuildArgs {
   sheet: SheetBuild;
 
   excelBuild: ExcelBuild;
+
+  /**
+   * 列序号
+   */
+  index: number;
 }
 
 export class ColBuild extends BaseBuild<ColMeta> {
@@ -39,6 +40,8 @@ export class ColBuild extends BaseBuild<ColMeta> {
 
   private excelBuild: ExcelBuild;
 
+  private index: number;
+
   public constructor(args: ColBuildArgs) {
     super(args);
   }
@@ -47,6 +50,7 @@ export class ColBuild extends BaseBuild<ColMeta> {
     this.sheet = args.sheet;
     this.cells = [];
     this.excelBuild = args.excelBuild;
+    this.index = args.index;
   }
 
   /**
@@ -65,7 +69,7 @@ export class ColBuild extends BaseBuild<ColMeta> {
     if (title) {
       return title;
     }
-    const col = this.metaInfo.index;
+    const col = this.index;
     return getColNameByOrder(col + 1);
   }
 
@@ -74,7 +78,7 @@ export class ColBuild extends BaseBuild<ColMeta> {
    * @returns 
    */
   public getIndex() {
-    return this.metaInfo.index;
+    return this.index;
   }
 
   /**
@@ -222,6 +226,7 @@ export class ColBuild extends BaseBuild<ColMeta> {
 
   /** @override */
   public toJSON() {
-
+    const result = super.toJSON() as ColMeta;
+    
   }
 }
