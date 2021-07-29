@@ -157,7 +157,32 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
         const cellRow = cell.row;
         const cellCol = cell.col;
         for (let startRow = cellRow; startRow < cellRow + rowSpan; startRow++) {
+          // 当合并单元格也需要行列时需要初始化
+          if (this.rows[startRow] == null) {
+            if (rows[startRow] == null) {
+              rows[startRow] = {
+              };
+            }
+            this.rows[startRow] = new RowBuild({
+              metaInfo: rows[startRow],
+              sheet: this,
+              excelBuild: this.excelBuild,
+              index: startRow
+            });
+          }
           for (let startCol = cellCol; startCol < cellCol + colSpan; startCol++) {
+            if (this.cols[startCol] == null) {
+              if (cols[startCol] == null) {
+                cols[startCol] = {
+                };
+              }
+              this.cols[startCol] = new ColBuild({
+                metaInfo: cols[startCol],
+                sheet: this,
+                excelBuild: this.excelBuild,
+                index: startCol
+              });
+            }
             this.rows[startRow].getCells()[startCol] = cellBuild;
             this.cols[startCol].getCells()[startRow] = cellBuild;
           }
