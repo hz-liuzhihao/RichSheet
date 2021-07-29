@@ -104,7 +104,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     cells.forEach(cell => {
       const rowSpan = cell.rowSpan || 1;
       if (cell.row + rowSpan - 1 > rowLength) {
-        rowLength = cell.row + rowSpan -1;
+        rowLength = cell.row + rowSpan - 1;
       }
       const colSpan = cell.colSpan || 1;
       if (cell.col + colSpan - 1 > colLength) {
@@ -152,14 +152,26 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
             col
           }
         };
+        const existCellBuild = this.rows[cell.row].getCells()[cell.col];
+        if (existCellBuild) {
+          continue;
+        }
         const cellBuild = new CellBuild({
           row: this.rows[cell.row],
           col: this.cols[cell.col],
           metaInfo: cell,
           excelBuild: this.excelBuild
         });
-        this.rows[cell.row].getCells()[cell.col] = cellBuild;
-        this.cols[cell.col].getCells()[cell.row] = cellBuild;
+        const rowSpan = cell.rowSpan || 1;
+        const colSpan = cell.colSpan || 1;
+        const cellRow = cell.row;
+        const cellCol = cell.col;
+        for (let startRow = cellRow; startRow < cellRow + rowSpan; startRow++) {
+          for (let startCol = cellCol; startCol < cellCol + colSpan; startCol++) {
+            this.rows[startRow].getCells()[startCol] = cellBuild;
+            this.cols[startCol].getCells()[startRow] = cellBuild;
+          }
+        }
       }
     }
   }
@@ -333,7 +345,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
       colEnd = endCol;
     }
     const info = this.calcArea(rowStart, rowEnd, colStart, colEnd);
-    
+
     const undoManage = this.excelBuild.getUndoManage();
     const selector = { ...this.selector };
     if (this.selector.selectors) {
