@@ -527,7 +527,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
           p: 'row',
           v: {
             start: rowLength - 1,
-            end: rowLength - 1 + count,
+            count,
             builds: this.rows.slice(rowLength, rowLength + count)
           }
         });
@@ -657,7 +657,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
           p: 'col',
           v: {
             start: colLength - 1,
-            end: colLength - 1 + count,
+            count,
             builds: this.cols.slice(colLength, colLength + count)
           }
         });
@@ -668,7 +668,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     }
     const colStart = lastSelector.colStart;
     const colEnd = lastSelector.colEnd;
-    const colCount = colEnd - colStart;
+    const colCount = colEnd - colStart + 1;
     const start = isRight ? colEnd : colStart - 1;
     undoManage.beginUpdate();
     try {
@@ -677,9 +677,10 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
         c: this,
         op: Operate.Add,
         p: 'col',
+        // 从start开始增加了colCount列
         v: {
           start,
-          end: start + colCount,
+          count: colCount,
           builds: this.cols.slice(start + 1, start + 1 + colCount)
         }
       });
