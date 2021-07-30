@@ -633,6 +633,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
       undoManage.storeUndoItem({
         c: this,
         op: Operate.Remove,
+        p: 'row',
         v: {
           start,
           count,
@@ -738,14 +739,47 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
 
   /**
    * 删除列
-   * @param count 
    */
   public deleteCol() {
-
+    const selector = this.selector;
+    const selectors = selector.selectors;
+    const lastSelector = selectors[selectors.length - 1];
+    if (lastSelector) {
+      const colStart = lastSelector.colStart;
+      const colEnd = lastSelector.colEnd;
+      const colCount = colEnd - colStart + 1;
+      this.deleteColBuild(colStart - 1, colCount);
+    }
   }
 
+  /**
+   * 删除列
+   * @param start 删除开始的前一列
+   * @param count 需要删除的列
+   */
   public deleteColBuild(start: number, count: number) {
-
+    const undoManage = this.excelBuild.getUndoManage();
+    const needChangeCols = this.cols.slice(start + count + 1);
+    undoManage.beginUpdate();
+    try {
+      needChangeCols.forEach(item => item.setIndex(item.getIndex() - count));
+      const deleteCols = this.cols.splice(start + 1, count);
+      this.rows.forEach(item => {
+        item.getCells().splice(start + 1, count);
+      });
+      undoManage.storeUndoItem({
+        c: this,
+        op: Operate.Remove,
+        p: 'col',
+        v: {
+          start,
+          count,
+          builds: deleteCols
+        }
+      });
+    } finally {
+      undoManage.endUpdate();
+    }
   }
 
   /**
