@@ -138,6 +138,8 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
         // 对单元格进行初始化
         if (!cell) {
           cell = {
+            row,
+            col
           }
         };
         const existCellBuild = this.rows[cell.row].getCells()[cell.col];
@@ -519,6 +521,16 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
       undoManage.beginUpdate();
       try {
         this.addRowBuild(rowLength - 1, count);
+        undoManage.storeUndoItem({
+          c: this,
+          op: Operate.Add,
+          p: 'row',
+          v: {
+            start: rowLength - 1,
+            count,
+            builds: this.rows.slice(rowLength, rowLength + count)
+          }
+        });
       } finally {
         undoManage.endUpdate();
       }
@@ -535,10 +547,12 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
       undoManage.storeUndoItem({
         c: this,
         op: Operate.Add,
+        p: 'row',
         // 从start开始增加了rowCount行
         v: {
           start,
-          count: rowCount
+          count: rowCount,
+          builds: this.rows.slice(start + 1, start + 1 + rowCount)
         }
       });
       needChangeRows.forEach(item => item.setIndex(item.getIndex() + rowCount));
@@ -603,9 +617,17 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
       const colLength = this.cols.length;
       undoManage.beginUpdate();
       try {
-        for (let i = 0; i < count; i++) {
-          this.addColbuild(colLength + i - 1);
-        }
+        this.addColbuild(colLength - 1, count);
+        undoManage.storeUndoItem({
+          c: this,
+          op: Operate.Add,
+          p: 'col',
+          v: {
+            start: colLength - 1,
+            count,
+            builds: this.cols.slice(colLength, colLength + count)
+          }
+        });
       } finally {
         undoManage.endUpdate();
       }
@@ -614,13 +636,21 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const colStart = lastSelector.colStart;
     const colEnd = lastSelector.colEnd;
     const colCount = colEnd - colStart;
-    const startCol = isRight ? colEnd : colStart - 1;
-    const needChangeCols = this.cols.splice(startCol + 1);
+    const start = isRight ? colEnd : colStart - 1;
+    const needChangeCols = this.cols.splice(start + 1);
     undoManage.beginUpdate();
     try {
-      for (let i = 0; i< colCount; i++) {
-        this.addColbuild(i + startCol);
-      }
+      this.addColbuild(start, colCount);
+      undoManage.storeUndoItem({
+        c: this,
+        op: Operate.Add,
+        p: 'col',
+        v: {
+          start,
+          count: colCount,
+          builds: this.cols.slice(start + 1, start + 1 + colCount)
+        }
+      });
       needChangeCols.forEach(item => item.setIndex(item.getIndex() + colCount));
     } finally {
       undoManage.endUpdate();
@@ -631,36 +661,26 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
    * 从start位置开始添加列
    * @param start 
    */
-  public addColbuild(start: number) {
+  public addColbuild(start: number, count: number) {
     const rowLength = this.rows.length;
-    const undoManage = this.excelBuild.getUndoManage();
-    undoManage.beginUpdate();
-    try {
+    for (let i = 0; i < count; i++) {
       const colBuild = new ColBuild({
         metaInfo: {},
         excelBuild: this.excelBuild,
         sheet: this,
         index: start + 1,
       });
-      for (let i = 0; i < rowLength; i++) {
+      for (let j = 0; j < rowLength; j++) {
         const cellBuild = new CellBuild({
           metaInfo: {},
-          row: this.rows[i],
+          row: this.rows[j],
           col: colBuild,
           excelBuild: this.excelBuild
         });
-        this.rows[i].getCells().splice(start, 0, cellBuild);
-        colBuild.getCells()[i] = cellBuild;
+        this.rows[j].getCells().splice(start, 0, cellBuild);
+        colBuild.getCells()[j] = cellBuild;
       }
       this.cols.splice(start, 0, colBuild);
-      undoManage.storeUndoItem({
-        c: this,
-        op: Operate.Add,
-        
-        v: colBuild
-      });
-    } finally {
-      undoManage.endUpdate();
     }
   }
 
