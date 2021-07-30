@@ -800,13 +800,26 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
 
   /** @implements */
   public restoreUndoItem(undoItem: UndoItem) {
-    const op = undoItem.op;
+    const op = this.excelBuild.getUndoRedoOperate(undoItem);
+    const p = undoItem.p;
     switch (op) {
       case Operate.Add:
-        const c = undoItem.c;
-        const i = undoItem.i;
+        if (p == 'row') {
+          const { start, count, builds } = undoItem.v || {};
+          this.addRowBuild(start, count, builds);
+        } else if (p == 'col') {
+          const { start, count, builds } = undoItem.v || {};
+          this.addColbuild(start, count, builds);
+        }
         break;
       case Operate.Remove:
+        if (p == 'row') {
+          const { start, count } = undoItem.v || {};
+          this.deleteRowBuild(start, count);
+        } else if (p == 'col') {
+          const { start, count } = undoItem.v || {};
+          this.deleteRowBuild(start, count);
+        }
         break;
       case Operate.Modify:
         const key = undoItem.p;
