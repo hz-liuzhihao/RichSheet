@@ -157,6 +157,27 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
   }
 
   /**
+   * 获取undo/redo时的正确操作
+   * @param undoItme 
+   * @returns 
+   */
+  public getUndoRedoOperate(undoItme: UndoItem) {
+    const undoManage = this.getUndoManage();
+    const { op } = undoItme;
+    if (undoManage.isRedo) {
+      return op;
+    } else {
+      if (op == Operate.Add) {
+        return Operate.Remove;
+      } else if (op == Operate.Remove) {
+        return Operate.Add;
+      } else {
+        return Operate.Modify;
+      }
+    }
+  }
+
+  /**
    * 获取主题样式表
    * @returns 
    */

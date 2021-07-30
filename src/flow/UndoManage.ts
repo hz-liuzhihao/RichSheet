@@ -166,6 +166,11 @@ export interface UndoItem {
    * 是否预览
    */
   isPreview?: boolean;
+
+  /**
+   * 扩展属性
+   */
+  extend?: JSONObject;
 }
 
 /**
