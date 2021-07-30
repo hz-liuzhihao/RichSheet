@@ -607,33 +607,41 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const selector = this.selector;
     const selectors = selector.selectors;
     const lastSelector = selectors[selectors.length - 1];
-    const undoManage = this.excelBuild.getUndoManage();
     if (lastSelector) {
-      undoManage.beginUpdate();
-      try {
-        const rowStart = lastSelector.rowStart;
-        const rowEnd = lastSelector.rowEnd;
-        const rowCount = rowEnd - rowStart;
-        const needChangeRows = this.rows.slice(rowEnd + 1);
-        const deleteRows = this.rows.splice(rowStart, rowEnd + 1);
-        undoManage.storeUndoItem({
-          c: this,
-          op: Operate.Remove,
-          v: {
-            start: rowStart,
-            end: rowEnd,
-            builds: deleteRows
-          }
-        });
-        needChangeRows.forEach(item => item.setIndex(item.getIndex() - rowCount));
-      } finally {
-        undoManage.endUpdate();
-      }
+      const rowStart = lastSelector.rowStart;
+      const rowEnd = lastSelector.rowEnd;
+      const rowCount = rowEnd - rowStart + 1;
+      this.deleteRowBuild(rowStart - 1, rowCount);
     }
   }
 
+  /**
+   * 删除行
+   * @param start 删除开始的前一行
+   * @param count 需要删除多少行
+   */
   public deleteRowBuild(start: number, count: number) {
-
+    const undoManage = this.excelBuild.getUndoManage();
+    const needChangeRows = this.rows.slice(start + count + 1);
+    undoManage.beginUpdate();
+    try {
+      needChangeRows.forEach(item => item.setIndex(item.getIndex() - count));
+      const deleteRows = this.rows.splice(start + 1, count);
+      this.cols.forEach(item => {
+        item.getCells().splice(start + 1, count);
+      });
+      undoManage.storeUndoItem({
+        c: this,
+        op: Operate.Remove,
+        v: {
+          start,
+          count,
+          builds: deleteRows
+        }
+      });
+    } finally {
+      undoManage.endUpdate();
+    }
   }
 
   /**
