@@ -520,14 +520,14 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
       const rowLength = this.rows.length;
       undoManage.beginUpdate();
       try {
-        this.addRowBuild(rowLength - 1, count);
+        this.addRowBuild(rowLength - 1, rowLength - 1 + count);
         undoManage.storeUndoItem({
           c: this,
           op: Operate.Add,
           p: 'row',
           v: {
             start: rowLength - 1,
-            count,
+            end: rowLength - 1 + count,
             builds: this.rows.slice(rowLength, rowLength + count)
           }
         });
@@ -538,9 +538,9 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     }
     const rowStart = lastSelector.rowStart;
     const rowEnd = lastSelector.rowEnd;
-    const rowCount = rowEnd - rowStart;
+    // 选择 0 - 2, 需要增加行应该是 2 - 0 + 1
+    const rowCount = rowEnd - rowStart + 1;
     const start = isDown ? rowEnd : rowStart - 1;
-    const needChangeRows = this.rows.slice(start + 1);
     undoManage.beginUpdate();
     try {
       this.addRowBuild(start, rowCount);
@@ -555,7 +555,6 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
           builds: this.rows.slice(start + 1, start + 1 + rowCount)
         }
       });
-      needChangeRows.forEach(item => item.setIndex(item.getIndex() + rowCount));
     } finally {
       undoManage.endUpdate();
     }
@@ -563,16 +562,29 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
 
   /**
    * 从start位置添加一行
-   * @param start 
+   * @param start 需要在此行的后面增增加
+   * @param count 需要增加的行数
    */
-  public addRowBuild(start: number, count: number) {
+  public addRowBuild(start: number, count: number, addRows: RowBuild[] = []) {
     const colLength = this.cols.length;
+    const needChangeRows = this.rows.slice(start + 1);
+    needChangeRows.forEach(item => item.setIndex(item.getIndex() + count));
     for (let i = 0; i < count; i++) {
+      // 如果传进来的有rowBuild则使用传进来的
+      if (addRows[i]) {
+        this.rows.splice(start + i, 0, addRows[i]);
+        // 对列单元格进行插入
+        addRows[i].getCells().forEach((item, col) => {
+          this.cols[col].getCells().splice(start + i, 0, item);
+        });
+        continue;
+      }
+      const rowIndex = start + i + 1;
       const rowBuild = new RowBuild({
         metaInfo: {},
         excelBuild: this.excelBuild,
         sheet: this,
-        index: start + 1
+        index: rowIndex
       });
       for (let j = 0; j < colLength; j++) {
         const cellBuild = new CellBuild({
@@ -582,9 +594,9 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
           excelBuild: this.excelBuild
         });
         rowBuild.getCells()[j] = cellBuild;
-        this.cols[j].getCells().splice(start, 0, cellBuild);
+        this.cols[j].getCells().splice(start + i, 0, cellBuild);
       }
-      this.rows.splice(start, 0, rowBuild);
+      this.rows.splice(start + i, 0, rowBuild);
     }
   }
 
@@ -596,10 +608,31 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const selectors = selector.selectors;
     const lastSelector = selectors[selectors.length - 1];
     const undoManage = this.excelBuild.getUndoManage();
-
+    if (lastSelector) {
+      undoManage.beginUpdate();
+      try {
+        const rowStart = lastSelector.rowStart;
+        const rowEnd = lastSelector.rowEnd;
+        const rowCount = rowEnd - rowStart;
+        const needChangeRows = this.rows.slice(rowEnd + 1);
+        const deleteRows = this.rows.splice(rowStart, rowEnd + 1);
+        undoManage.storeUndoItem({
+          c: this,
+          op: Operate.Remove,
+          v: {
+            start: rowStart,
+            end: rowEnd,
+            builds: deleteRows
+          }
+        });
+        needChangeRows.forEach(item => item.setIndex(item.getIndex() - rowCount));
+      } finally {
+        undoManage.endUpdate();
+      }
+    }
   }
 
-  public deleteRowBuild() {
+  public deleteRowBuild(start: number, count: number) {
 
   }
 
@@ -617,14 +650,14 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
       const colLength = this.cols.length;
       undoManage.beginUpdate();
       try {
-        this.addColbuild(colLength - 1, count);
+        this.addColbuild(colLength - 1, colLength - 1 + count);
         undoManage.storeUndoItem({
           c: this,
           op: Operate.Add,
           p: 'col',
           v: {
             start: colLength - 1,
-            count,
+            end: colLength - 1 + count,
             builds: this.cols.slice(colLength, colLength + count)
           }
         });
@@ -637,21 +670,19 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const colEnd = lastSelector.colEnd;
     const colCount = colEnd - colStart;
     const start = isRight ? colEnd : colStart - 1;
-    const needChangeCols = this.cols.splice(start + 1);
     undoManage.beginUpdate();
     try {
-      this.addColbuild(start, colCount);
+      this.addColbuild(start, start + colCount);
       undoManage.storeUndoItem({
         c: this,
         op: Operate.Add,
         p: 'col',
         v: {
           start,
-          count: colCount,
+          end: start + colCount,
           builds: this.cols.slice(start + 1, start + 1 + colCount)
         }
       });
-      needChangeCols.forEach(item => item.setIndex(item.getIndex() + colCount));
     } finally {
       undoManage.endUpdate();
     }
@@ -659,16 +690,28 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
 
   /**
    * 从start位置开始添加列
-   * @param start 
+   * @param start 以当前列开始在后面添加列
+   * @param count 添加的列数
    */
-  public addColbuild(start: number, count: number) {
+  public addColbuild(start: number, count: number, addCols: ColBuild[] = []) {
     const rowLength = this.rows.length;
+    const needChangeCols = this.cols.splice(start + 1);
+    needChangeCols.forEach(item => item.setIndex(item.getIndex() + count));
     for (let i = 0; i < count; i++) {
+      // 如果传进来的colBuild则使用传进来的
+      if (addCols[i]) {
+        this.cols.splice(start + i, 0, addCols[i]);
+        addCols[i].getCells().forEach((item, row) => {
+          this.rows[row].getCells().splice(start + i, 0, item);
+        });
+        continue;
+      }
+      const colIndex = start + i + 1;
       const colBuild = new ColBuild({
         metaInfo: {},
         excelBuild: this.excelBuild,
         sheet: this,
-        index: start + 1,
+        index: colIndex,
       });
       for (let j = 0; j < rowLength; j++) {
         const cellBuild = new CellBuild({
@@ -677,10 +720,10 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
           col: colBuild,
           excelBuild: this.excelBuild
         });
-        this.rows[j].getCells().splice(start, 0, cellBuild);
+        this.rows[j].getCells().splice(start + i, 0, cellBuild);
         colBuild.getCells()[j] = cellBuild;
       }
-      this.cols.splice(start, 0, colBuild);
+      this.cols.splice(start + i, 0, colBuild);
     }
   }
 
@@ -688,7 +731,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
    * 删除列
    * @param count 
    */
-  public deleteCol(count?: number) {
+  public deleteCol() {
 
   }
 
