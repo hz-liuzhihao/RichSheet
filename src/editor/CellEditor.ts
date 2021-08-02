@@ -109,7 +109,17 @@ export default class CellEditor extends BaseEditor {
     });
   }
 
-
+  public destroy() {
+    const build = this.build;
+    const mainDom = this.mainDom;
+    const themeClassName = build.getThemeClassName();
+    const styleClassName = build.getClassName();
+    const borderClassName = build.getBorderClassName();
+    themeClassName && mainDom.classList.remove(themeClassName);
+    styleClassName && mainDom.classList.remove(styleClassName);
+    borderClassName && mainDom.classList.remove(borderClassName);
+    super.destroy();
+  }
 
   /**
    * 渲染

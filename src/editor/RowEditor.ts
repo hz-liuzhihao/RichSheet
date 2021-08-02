@@ -101,7 +101,7 @@ export default class RowEditor extends BaseEditor {
    * @param i 
    */
   private removeCellEditor(i: number) {
-    this.cells[i].removeDom();
+    this.cells[i].destroy();
     this.acceptDom.push(this.cells[i]);
     this.cells[i] = null;
   }
@@ -114,7 +114,7 @@ export default class RowEditor extends BaseEditor {
   public removeCol(start: number, count: number) {
     const deleteCols = this.cells.splice(start + 1, count);
     deleteCols.forEach(editor => {
-      editor.removeDom();
+      editor.destroy();
       this.acceptDom.push(editor);
     });
   }
@@ -135,6 +135,7 @@ export default class RowEditor extends BaseEditor {
     if (this.acceptDom.length > 0) {
       const cellEditor = this.acceptDom.shift();
       cellEditor.setBuild(cellBuild);
+      cellEditor.requestRender();
       const mainDom = cellEditor.getMainDom();
       if (beforeEditor) {
         this.mainDom.insertBefore(mainDom, beforeEditor.getMainDom());
@@ -175,6 +176,7 @@ export default class RowEditor extends BaseEditor {
     if (this.acceptDom.length > 0) {
       const cellEditor = this.acceptDom.shift();
       cellEditor.setBuild(cellBuild);
+      cellEditor.requestRender();
       const mainDom = cellEditor.getMainDom();
       if (beforeEditor) {
         this.mainDom.insertBefore(mainDom, beforeEditor.getMainDom());

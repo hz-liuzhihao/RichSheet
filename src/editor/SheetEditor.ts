@@ -204,7 +204,7 @@ export default class SheetEditor extends BaseEditor {
     const deleteRowsEditor = this.rows.splice(start + 1, count);
     deleteRowsEditor.forEach(editor => {
       this.acceptDom.push(editor);
-      editor.removeDom();
+      editor.destroy();
     });
     needChangeRows.forEach(i => i.renderRowHead());
   }
@@ -240,6 +240,7 @@ export default class SheetEditor extends BaseEditor {
     this.rows.forEach(rowEditor => {
       rowEditor.removeCol(start, count);
     });
+    this.renderTableWidth(item);
   }
 
   /**

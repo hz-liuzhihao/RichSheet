@@ -120,7 +120,7 @@ export default class ColHeadEditor extends BaseEditor {
    * @param start 
    */
   renderColName(start) {
-    for (let i = start; i < this.tds.length; i++) {
+    for (let i = start + 1; i < this.tds.length; i++) {
       const tdDom = this.tds[i];
       const build = tdDom.__build__ as ColBuild;
       const textDom = tdDom.getElementsByTagName('span')[0];

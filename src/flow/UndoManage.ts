@@ -232,9 +232,9 @@ export class UndoManage {
       item.isUndo = false;
       c.restoreUndoItem(item);
     });
+    this.undoItems.push(curUndoItems);
     this.workbench.doChange([...curUndoItems]);
     this.isRedo = false;
-    this.undoItems.push(curUndoItems);
   }
 
   /**
@@ -253,9 +253,9 @@ export class UndoManage {
       item.isUndo = true;
       c.restoreUndoItem(item);
     });
+    this.redoItems.push(curUndoItems);
     this.workbench.doChange([...curUndoItems]);
     this.isUndo = false;
-    this.redoItems.push(curUndoItems);
   }
 
   /**

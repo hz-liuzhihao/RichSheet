@@ -52,14 +52,6 @@ export default abstract class BaseEditor {
   }
 
   /**
-   * 移除元素
-   */
-  public removeDom() {
-    this.mainDom.className = '';
-    this.mainDom.remove();
-  }
-
-  /**
    * 获取数据层
    * @returns 
    */
@@ -183,6 +175,6 @@ export default abstract class BaseEditor {
    * 对元素进行销毁
    */
   public destroy(): void {
-
+    this.mainDom.remove();
   }
 }
