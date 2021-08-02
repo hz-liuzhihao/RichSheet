@@ -167,7 +167,8 @@ export default class SheetEditor extends BaseEditor {
     const { start, count } = item.v;
     const rows = this.build.getRows();
     const tableDom = this.table;
-    const rowMainDom = this.rows[start + 1].getMainDom();
+    const nextRow = this.rows[start + 1];
+    const rowMainDom = nextRow && nextRow.getMainDom();
     for (let i = start + 1; i <= count; i++) {
       let rowEditor: RowEditor;
       if (this.acceptDom.length) {
@@ -181,8 +182,12 @@ export default class SheetEditor extends BaseEditor {
         });
       }
       const mainDom = rowEditor.getMainDom();
-      this.rows.splice(i, 0, rowEditor);
-      tableDom.insertBefore(mainDom, rowMainDom);
+      this.rows.splice(i + 1, 0, rowEditor);
+      if (rowMainDom) {
+        tableDom.insertBefore(mainDom, rowMainDom);
+      } else {
+        tableDom.appendChild(mainDom);
+      }
     }
   }
 
@@ -192,7 +197,7 @@ export default class SheetEditor extends BaseEditor {
    */
   protected renderRemoveRow(item: UndoItem) {
     const { start, count } = item.v;
-    const deleteRowsEditor = this.rows.splice(start + 1, count);
+    const deleteRowsEditor = this.rows.splice(start + 2, count);
     deleteRowsEditor.forEach(editor => {
       this.acceptDom.push(editor);
       editor.removeDom();
@@ -207,9 +212,7 @@ export default class SheetEditor extends BaseEditor {
     const { start, count } = item.v;
     const rows = this.build.getRows();
     const colHeadEditor = this.colHeadEditor;
-    for (let i = start + 1; i <= count; i++) {
-
-    }
+    colHeadEditor.addCol(start, count);
     const rowLength = this.rows.length;
     for (let i = 0; i < rowLength; i++) {
       const row = this.rows[i];

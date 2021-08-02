@@ -176,7 +176,7 @@ export default class ColHeadEditor extends BaseEditor {
         Object.assign(td.style, item.toStyle());
         textDom.textContent = colName;
       }
-      this.tds.splice(start + 1 + index, 0, td);
+      this.tds.splice(start + 2 + index, 0, td);
       beforeDom.insertBefore(td, beforeDom);
     });
     this.renderColName(start + count);
