@@ -223,7 +223,7 @@ export default class SheetEditor extends BaseEditor {
       const row = this.rows[i];
       for (let j = start + 1; j <= start + count; j++) {
         const cell = rows[i].getCells()[j];
-        row.addCellEditor(j, cell);
+        row.insertCellEditor(j, cell);
       }
     }
     this.renderTableWidth(item);

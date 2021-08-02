@@ -120,7 +120,7 @@ export default class RowEditor extends BaseEditor {
   }
 
   /**
-   * 添加excelEditor
+   * 添加cellEditor 是替换模式
    * @param i 
    * @param cellBuild 
    */
@@ -156,6 +156,46 @@ export default class RowEditor extends BaseEditor {
         this.mainDom.appendChild(mainDom);
       }
       this.cells[i] = cellEditor;
+    }
+  }
+
+  /**
+   * 插入模式
+   * @param i 插入到某个cell的前面
+   * @param cellBuild 
+   */
+  public insertCellEditor(i: number, cellBuild: CellBuild) {
+    let beforeEditor: CellEditor = null;
+    for (let index = i; index < this.cells.length; index++) {
+      if (this.cells[index] != null) {
+        beforeEditor = this.cells[index];
+        break;
+      }
+    }
+    if (this.acceptDom.length > 0) {
+      const cellEditor = this.acceptDom.shift();
+      cellEditor.setBuild(cellBuild);
+      const mainDom = cellEditor.getMainDom();
+      if (beforeEditor) {
+        this.mainDom.insertBefore(mainDom, beforeEditor.getMainDom());
+      } else {
+        this.mainDom.appendChild(mainDom);
+      }
+      cellEditor.setParent(this.mainDom);
+      this.cells.splice(i, 0, cellEditor);
+    } else {
+      const cellEditor = new CellEditor({
+        build: cellBuild,
+        workbench: this.workbench
+      });
+      cellEditor.requestRender();
+      const mainDom = cellEditor.getMainDom();
+      if (beforeEditor) {
+        this.mainDom.insertBefore(mainDom, beforeEditor.getMainDom());
+      } else {
+        this.mainDom.appendChild(mainDom);
+      }
+      this.cells.splice(i, 0, cellEditor);
     }
   }
 
