@@ -219,6 +219,13 @@ export default class RowEditor extends BaseEditor {
   }
 
   /**
+   * 渲染行头
+   */
+  public renderRowHead() {
+    this.rowHeadEditor.requestRender();
+  }
+
+  /**
    * 渲染
    * @override
    */

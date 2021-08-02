@@ -55,6 +55,7 @@ export default abstract class BaseEditor {
    * 移除元素
    */
   public removeDom() {
+    this.mainDom.className = '';
     this.mainDom.remove();
   }
 

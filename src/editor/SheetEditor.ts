@@ -4,7 +4,7 @@ import { SheetBuild } from '../build/SheetBuild';
 import RowEditor from './RowEditor';
 import ColHeadEditor from './ColHeadEditor';
 import './SheetEditor.css';
-import { Operate, UndoItem } from '../flow/UndoManage';
+import { Operate, UndoItem, getOperate } from '../flow/UndoManage';
 import { upperFirst } from 'lodash';
 import { setDomStyle } from '../utils/style';
 import { ColBuild } from '../build/ColBuild';
@@ -167,9 +167,10 @@ export default class SheetEditor extends BaseEditor {
     const { start, count } = item.v;
     const rows = this.build.getRows();
     const tableDom = this.table;
+    const needRenderRows = this.rows.slice(start + 1);
     const nextRow = this.rows[start + 1];
     const rowMainDom = nextRow && nextRow.getMainDom();
-    for (let i = start + 1; i <= count; i++) {
+    for (let i = start + 1; i <= start + count; i++) {
       let rowEditor: RowEditor;
       if (this.acceptDom.length) {
         rowEditor = this.acceptDom.shift();
@@ -182,7 +183,9 @@ export default class SheetEditor extends BaseEditor {
         });
       }
       const mainDom = rowEditor.getMainDom();
-      this.rows.splice(i + 1, 0, rowEditor);
+      this.rows.splice(i, 0, rowEditor);
+      rowEditor.requestRender();
+      needRenderRows.forEach(e => e.renderRowHead());
       if (rowMainDom) {
         tableDom.insertBefore(mainDom, rowMainDom);
       } else {
@@ -197,11 +200,13 @@ export default class SheetEditor extends BaseEditor {
    */
   protected renderRemoveRow(item: UndoItem) {
     const { start, count } = item.v;
-    const deleteRowsEditor = this.rows.splice(start + 2, count);
+    const needChangeRows = this.rows.slice(start + count + 1);
+    const deleteRowsEditor = this.rows.splice(start + 1, count);
     deleteRowsEditor.forEach(editor => {
       this.acceptDom.push(editor);
       editor.removeDom();
     });
+    needChangeRows.forEach(i => i.renderRowHead());
   }
 
   /**
@@ -216,7 +221,7 @@ export default class SheetEditor extends BaseEditor {
     const rowLength = this.rows.length;
     for (let i = 0; i < rowLength; i++) {
       const row = this.rows[i];
-      for (let j = start + 1; j <= count; j++) {
+      for (let j = start + 1; j <= start + count; j++) {
         const cell = rows[i].getCells()[j];
         row.addCellEditor(j, cell);
       }
@@ -241,7 +246,8 @@ export default class SheetEditor extends BaseEditor {
    */
   protected renderUndoItem() {
     this.needRenderUndoItems.forEach(item => {
-      const { p, c, op } = item;
+      const { p, c, isUndo } = item;
+      const op = getOperate(item.op, isUndo);
       if (c == this.build) {
         let method;
         if (op == Operate.Add) {

@@ -4,6 +4,8 @@ import CommondProvider from '../controllers/CommondProvider';
 export interface IWorkBench {
   /**
    * undo改变后触发
+   * @param undoItems undo信息
+   * @param isUndo 是否在undo
    */
   doChange: (undoItems: UndoItem[]) => void;
 
@@ -171,6 +173,11 @@ export interface UndoItem {
    * 扩展属性
    */
   extend?: JSONObject;
+
+  /**
+   * 是否是undo的item
+   */
+  isUndo?: boolean;
 }
 
 /**
@@ -221,6 +228,8 @@ export class UndoManage {
     const curUndoItems = this.redoItems.pop();
     curUndoItems.forEach(item => {
       const c = item.c;
+      // 标记当前操作是否是在undo
+      item.isUndo = false;
       c.restoreUndoItem(item);
     });
     this.workbench.doChange([...curUndoItems]);
@@ -240,6 +249,8 @@ export class UndoManage {
     const curUndoItems = this.undoItems.pop();
     curUndoItems.forEach(item => {
       const c = item.c;
+      // 标记当前操作是否是在undo
+      item.isUndo = true;
       c.restoreUndoItem(item);
     });
     this.workbench.doChange([...curUndoItems]);
@@ -316,4 +327,21 @@ export class UndoManage {
   public canSave() {
     return this.saveCount != 0;
   }
+}
+
+/**
+ * 
+ * @param op 
+ * @param isUndo 
+ */
+export function getOperate(op: Operate, isUndo: boolean) {
+  if (isUndo) {
+    if (op == Operate.Add) {
+      return Operate.Remove;
+    }
+    if (op == Operate.Remove) {
+      return Operate.Add;
+    }
+  }
+  return op;
 }
