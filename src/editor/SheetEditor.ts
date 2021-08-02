@@ -169,19 +169,19 @@ export default class SheetEditor extends BaseEditor {
     const tableDom = this.table;
     const rowMainDom = this.rows[start + 1].getMainDom();
     for (let i = start + 1; i <= count; i++) {
-      let mainDom;
+      let rowEditor: RowEditor;
       if (this.acceptDom.length) {
-        const acceptRowEditor = this.acceptDom.shift();
-        acceptRowEditor.setBuild(rows[i]);
-        mainDom = acceptRowEditor.getMainDom();
+        rowEditor = this.acceptDom.shift();
+        rowEditor.setBuild(rows[i]);
       } else {
         const rowBuild = rows[i];
-        const rowEditor = new RowEditor({
+        rowEditor = new RowEditor({
           build: rowBuild,
           workbench: this.workbench,
         });
-        mainDom = rowEditor.getMainDom();
       }
+      const mainDom = rowEditor.getMainDom();
+      this.rows.splice(i, 0, rowEditor);
       tableDom.insertBefore(mainDom, rowMainDom);
     }
   }
@@ -208,7 +208,7 @@ export default class SheetEditor extends BaseEditor {
     const rows = this.build.getRows();
     const colHeadEditor = this.colHeadEditor;
     for (let i = start + 1; i <= count; i++) {
-      
+
     }
     const rowLength = this.rows.length;
     for (let i = 0; i < rowLength; i++) {
