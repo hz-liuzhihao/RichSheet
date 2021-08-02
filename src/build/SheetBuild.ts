@@ -681,7 +681,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const start = isRight ? colEnd : colStart - 1;
     undoManage.beginUpdate();
     try {
-      this.addColbuild(start, start + colCount);
+      this.addColbuild(start, colCount);
       undoManage.storeUndoItem({
         c: this,
         op: Operate.Add,

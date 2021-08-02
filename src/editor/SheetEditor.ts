@@ -226,6 +226,7 @@ export default class SheetEditor extends BaseEditor {
         row.addCellEditor(j, cell);
       }
     }
+    this.renderTableWidth(item);
   }
 
   /**
