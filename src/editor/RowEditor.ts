@@ -11,8 +11,6 @@ const styleProperty = [''];
 
 export interface RowEditorArgs extends BaseEditorArgs {
   build: RowBuild;
-
-  colHeadBuild: ColBuild;
 }
 
 /**
@@ -24,7 +22,7 @@ export default class RowEditor extends BaseEditor {
 
   protected cells: CellEditor[];
 
-  protected colHeadEditor: RowHeadEditor;
+  protected rowHeadEditor: RowHeadEditor;
 
   protected acceptDom: CellEditor[];
 
@@ -67,7 +65,7 @@ export default class RowEditor extends BaseEditor {
     const cells = build.getCells();
 
     // 初始化行头
-    this.colHeadEditor = new RowHeadEditor({
+    this.rowHeadEditor = new RowHeadEditor({
       build,
       domParent: this.mainDom,
       workbench: this.workbench
@@ -91,7 +89,7 @@ export default class RowEditor extends BaseEditor {
   /** @override */
   protected requestRenderChildrenUndoItem(undoItem: UndoItem) {
     this.cells.forEach(item => item && item.requestRenderUndoItem(undoItem));
-    this.colHeadEditor.requestRenderUndoItem(undoItem);
+    this.rowHeadEditor.requestRenderUndoItem(undoItem);
   }
 
   private renderStyle() {
@@ -109,11 +107,24 @@ export default class RowEditor extends BaseEditor {
   }
 
   /**
+   * 移除列
+   * @param start 
+   * @param count 
+   */
+  public removeCol(start: number, count: number) {
+    const deleteCols = this.cells.splice(start + 1, count);
+    deleteCols.forEach(editor => {
+      editor.removeDom();
+      this.acceptDom.push(editor);
+    });
+  }
+
+  /**
    * 添加excelEditor
    * @param i 
    * @param cellBuild 
    */
-  private addCellEditor(i: number, cellBuild: CellBuild) {
+  public addCellEditor(i: number, cellBuild: CellBuild) {
     let beforeEditor: CellEditor = null;
     for (let index = i + 1; index < this.cells.length; index++) {
       if (this.cells[index] != null) {
@@ -170,6 +181,25 @@ export default class RowEditor extends BaseEditor {
   }
 
   /**
+   * 设置数据层
+   * @param build 
+   */
+  public setBuild(build: RowBuild) {
+    const cells = build.getCells();
+    const row = this.build.getIndex();
+    cells.forEach((cell, index) => {
+      const cellRow = cell.getRow();
+      const cellCol = cell.getCol();
+      const cellEditor = this.cells[index];
+      if (cellEditor == null) {
+        if (cellRow == row && cellCol == index) {
+          this.addCellEditor(index, cell);
+        }
+      }
+    });
+  }
+
+  /**
    * 渲染每个undo信息
    */
   protected renderUndoItem() {
@@ -194,6 +224,6 @@ export default class RowEditor extends BaseEditor {
    */
   protected render() {
     this.cells.forEach(item => item && item.requestRender());
-    this.colHeadEditor.requestRender();
+    this.rowHeadEditor.requestRender();
   }
 }

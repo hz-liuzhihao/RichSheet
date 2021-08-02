@@ -18,6 +18,8 @@ export default class ColHeadEditor extends BaseEditor {
 
   protected build: SheetBuild;
 
+  protected acceptDom: HTMLElement[];
+
   public constructor(args: ColHeadEditorArgs) {
     args.type = 'tr';
     super(args);
@@ -111,6 +113,73 @@ export default class ColHeadEditor extends BaseEditor {
         return this[method](item);
       }
     });
+  }
+
+  /**
+   * 渲染列名
+   * @param start 
+   */
+  renderColName(start) {
+    for (let i = start; i < this.tds.length; i++) {
+      const tdDom = this.tds[i];
+      const build = tdDom.__build__ as ColBuild;
+      const textDom = tdDom.getElementsByTagName('span')[0];
+      textDom.textContent = build.getColName();
+    }
+  }
+
+  /**
+   * 移除指定列
+   * @param start 
+   * @param count 
+   */
+  public removeCol(start: number, count: number) {
+    const deleteCols = this.tds.splice(start + 1, count);
+    deleteCols.forEach(e => {
+      e.remove();
+      this.acceptDom.push(e);
+    });
+    this.renderColName(start);
+  }
+
+  /**
+   * 添加列
+   * @param start 
+   * @param count 
+   */
+  public addCol(start: number, count: number) {
+    const cols = this.build.getCols();
+    const addCols = cols.slice(start + 1, start + count + 1);
+    const beforeDom = this.tds[start + 1];
+    const isDesign = this.workbench.isDesign();
+    addCols.forEach((item, index) => {
+      const colName = item.getColName();
+      let td;
+      if (this.acceptDom.length) {
+        td = this.acceptDom.shift();
+        const textDom = td.getElementsByTagName('span')[0];
+        textDom.textContent = colName;
+      } else {
+        td = document.createElement('td');
+        const textDom = document.createElement('span');
+        td.appendChild(textDom);
+        if (isDesign) {
+          const dragDom = document.createElement('div');
+          dragDom.classList.add('col_head_drag');
+          td.appendChild(dragDom);
+        }
+        const colHeadClassName = item.getThemeClassName();
+        colHeadClassName && td.classList.add(colHeadClassName);
+        td.classList.add('colhead_item');
+        // TODO 当列头数据层修改时需要同步
+        td.__build__ = item;
+        Object.assign(td.style, item.toStyle());
+        textDom.textContent = colName;
+      }
+      this.tds.splice(start + 1 + index, 0, td);
+      beforeDom.insertBefore(td, beforeDom);
+    });
+    this.renderColName(start + count);
   }
 
   protected render() {

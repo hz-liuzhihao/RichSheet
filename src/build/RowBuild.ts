@@ -28,7 +28,7 @@ export interface RowBuildArgs extends BaseBuildArgs {
   /**
    * 行数
    */
-   index: number;
+  index: number;
 }
 
 export class RowBuild extends BaseBuild<RowMeta> {
@@ -175,20 +175,7 @@ export class RowBuild extends BaseBuild<RowMeta> {
    * @param index 
    */
   public setIndex(index: number) {
-    const undoManage = this.excelBuild.getUndoManage();
-    undoManage.beginUpdate();
-    try {
-      undoManage.storeUndoItem({
-        c: this,
-        op: Operate.Modify,
-        v: index,
-        ov: this.index,
-        p: 'index'
-      });
-      this.index = index;
-    } finally {
-      undoManage.endUpdate();
-    }
+    this.index = index;
   }
 
   public getCells() {

@@ -4,7 +4,7 @@ import { SheetBuild } from '../build/SheetBuild';
 import RowEditor from './RowEditor';
 import ColHeadEditor from './ColHeadEditor';
 import './SheetEditor.css';
-import { UndoItem } from '../flow/UndoManage';
+import { Operate, UndoItem } from '../flow/UndoManage';
 import { upperFirst } from 'lodash';
 import { setDomStyle } from '../utils/style';
 import { ColBuild } from '../build/ColBuild';
@@ -20,11 +20,13 @@ export default class SheetEditor extends BaseEditor {
 
   protected rows: RowEditor[];
 
-  protected rowHeadEditor: ColHeadEditor;
+  protected colHeadEditor: ColHeadEditor;
 
   protected selectDom: HTMLElement;
 
   protected focusCellDom: HTMLElement;
+
+  protected acceptDom: RowEditor[];
 
   public constructor(args: SheetEditorArgs) {
     super(args);
@@ -58,20 +60,17 @@ export default class SheetEditor extends BaseEditor {
     const table = this.table = document.createElement('table');
     const width = build.getTableWidth();
     table.style.width = `${width}px`;
-    // 初始化行头
-    this.rowHeadEditor = new ColHeadEditor({
+    // 初始化列头
+    this.colHeadEditor = new ColHeadEditor({
       build,
       domParent: table,
       workbench: this.workbench
     });
     // 初始化行
     rows.forEach((item, index) => {
-      // 初始化列头
-      const colHeadBuild = cols[index];
       this.rows.push(new RowEditor({
         build: item,
         domParent: table,
-        colHeadBuild,
         workbench: this.workbench
       }));
     });
@@ -97,7 +96,7 @@ export default class SheetEditor extends BaseEditor {
   /** @override */
   protected requestRenderChildrenUndoItem(undoItme: UndoItem) {
     this.rows.forEach(item => item.requestRenderUndoItem(undoItme));
-    this.rowHeadEditor.requestRenderUndoItem(undoItme);
+    this.colHeadEditor.requestRenderUndoItem(undoItme);
   }
 
   /**
@@ -146,7 +145,7 @@ export default class SheetEditor extends BaseEditor {
         isSingleHeight = true;
       }
       setDomStyle(focusCellDom, {
-        left: focusLeft - left > 0 ? focusLeft -left : 1.5,
+        left: focusLeft - left > 0 ? focusLeft - left : 1.5,
         top: focusTop - top > 0 ? focusTop - top : 1.5,
         width: isSingleWidth ? focusWidth - 6 : focusWidth - 3,
         height: isSingleHeight ? focusHeight - 6 : focusHeight - 3,
@@ -162,14 +161,98 @@ export default class SheetEditor extends BaseEditor {
   }
 
   /**
+   * 添加行渲染
+   */
+  protected renderAddRow(item: UndoItem) {
+    const { start, count } = item.v;
+    const rows = this.build.getRows();
+    const tableDom = this.table;
+    const rowMainDom = this.rows[start + 1].getMainDom();
+    for (let i = start + 1; i <= count; i++) {
+      let mainDom;
+      if (this.acceptDom.length) {
+        const acceptRowEditor = this.acceptDom.shift();
+        acceptRowEditor.setBuild(rows[i]);
+        mainDom = acceptRowEditor.getMainDom();
+      } else {
+        const rowBuild = rows[i];
+        const rowEditor = new RowEditor({
+          build: rowBuild,
+          workbench: this.workbench,
+        });
+        mainDom = rowEditor.getMainDom();
+      }
+      tableDom.insertBefore(mainDom, rowMainDom);
+    }
+  }
+
+  /**
+   * 渲染移除行
+   * @param item 
+   */
+  protected renderRemoveRow(item: UndoItem) {
+    const { start, count } = item.v;
+    const deleteRowsEditor = this.rows.splice(start + 1, count);
+    deleteRowsEditor.forEach(editor => {
+      this.acceptDom.push(editor);
+      editor.removeDom();
+    });
+  }
+
+  /**
+   * 渲染添加列
+   * @param item 
+   */
+  protected renderAddCol(item: UndoItem) {
+    const { start, count } = item.v;
+    const rows = this.build.getRows();
+    const colHeadEditor = this.colHeadEditor;
+    for (let i = start + 1; i <= count; i++) {
+      
+    }
+    const rowLength = this.rows.length;
+    for (let i = 0; i < rowLength; i++) {
+      const row = this.rows[i];
+      for (let j = start + 1; j <= count; j++) {
+        const cell = rows[i].getCells()[j];
+        row.addCellEditor(j, cell);
+      }
+    }
+  }
+
+  /**
+   * 渲染删除列
+   * @param item 
+   */
+  protected renderRemoveCol(item: UndoItem) {
+    const { start, count } = item.v;
+    this.colHeadEditor.removeCol(start, count);
+    // 每一行移除指定列
+    this.rows.forEach(rowEditor => {
+      rowEditor.removeCol(start, count);
+    });
+  }
+
+  /**
    * 渲染每个undo信息
    */
   protected renderUndoItem() {
     this.needRenderUndoItems.forEach(item => {
-      const { p, c } = item;
-      const methond = `render${upperFirst(p)}`;
-      if (typeof this[methond] == 'function') {
-        return this[methond](item);
+      const { p, c, op } = item;
+      if (c == this.build) {
+        let method;
+        if (op == Operate.Add) {
+          const opName = 'add';
+          method = `render${upperFirst(opName)}${upperFirst(p)}`;
+        } else if (op == Operate.Remove) {
+          const opName = 'remove';
+          method = `render${upperFirst(opName)}${upperFirst(p)}`;
+        } else {
+          method = `render${upperFirst(p)}`;
+        }
+        if (typeof this[method] == 'function') {
+          return this[method](item);
+        }
       }
       if (c instanceof ColBuild) {
         this.renderTableWidth(item);
@@ -192,6 +275,6 @@ export default class SheetEditor extends BaseEditor {
    */
   protected render() {
     this.rows.forEach(item => item.requestRender());
-    this.rowHeadEditor.requestRender();
+    this.colHeadEditor.requestRender();
   }
 }

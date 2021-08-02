@@ -82,19 +82,7 @@ export class ColBuild extends BaseBuild<ColMeta> {
   }
 
   public setIndex(index: number) {
-    const undoManage = this.excelBuild.getUndoManage();
-    undoManage.beginUpdate();
-    try {
-      undoManage.storeUndoItem({
-        c: this,
-        op: Operate.Modify,
-        v: index,
-        ov: this.index,
-        p: 'index'
-      });
-    } finally {
-      undoManage.endUpdate();
-    }
+    this.index = index;
   }
 
   /**
