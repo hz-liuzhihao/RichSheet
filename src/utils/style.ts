@@ -35,7 +35,7 @@ export function addCssRule(selector: string, rules: JSONObject = {}, suffix = ''
     ruleStr += `${kebabCase(key)}:${rules[key]};`;
   }
   ruleStr += '}';
-  return globalSheet.insertRule(identify + selector + suffix + ruleStr);
+  return globalSheet.insertRule(identify + selector + suffix + ruleStr, globalSheet.cssRules.length);
 }
 
 /**

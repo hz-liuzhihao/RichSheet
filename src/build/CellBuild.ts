@@ -91,8 +91,8 @@ export class CellBuild extends BaseBuild<CellMeta> {
     const undoManage = this.excelBuild.getUndoManage();
     undoManage.beginUpdate();
     try {
-      oldBuild.removeCell(this);
-      styleBuild.addCell(this);
+      oldBuild && oldBuild.removeCell(this);
+      styleBuild && styleBuild.addCell(this);
       this.styleBuild = styleBuild;
       undoManage.storeUndoItem({
         c: this,

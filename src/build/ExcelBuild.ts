@@ -356,7 +356,7 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
    * @param value 
    * @param isCheck 
    */
-  public setStyleProperty(key: keyof StyleMeta, value: any, isCheck: boolean = true) {
+  private setStyleProperty(key: keyof StyleMeta, value: any, isCheck: boolean = true) {
     const selectCells = this.getCurrentSheet().getSelectorCells();
     const styleBuildMap: {
       [key: string]: {
@@ -370,7 +370,7 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
       // 获取选中单元格的所有样式表
       const cellStyleBuild = item.getStyleBuild();
       // 如果单元格的样式规则刚好已经是的,就不在修改
-      if (cellStyleBuild == currentStyleBuild) {
+      if (cellStyleBuild && cellStyleBuild == currentStyleBuild) {
         return;
       }
       // 如果有单元格样式又不属于当前规则则需要另外处理

@@ -855,10 +855,6 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     }
   }
 
-  public setColor(color: string) {
-
-  }
-
   /** @override */
   public toJSON() {
     const result = super.toJSON() as SheetMeta;

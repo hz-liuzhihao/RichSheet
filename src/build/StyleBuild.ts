@@ -88,6 +88,7 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
    * @override
    */
   protected initData(args: StyleBuildArgs) {
+    super.initData(args);
     this.excelBuild = args.excelBuild;
   }
 
@@ -96,7 +97,6 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
    * @override
    */
   protected initMeta() {
-
   }
 
   /**
@@ -160,6 +160,7 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
         ov: oldValue
       });
       super.setProperty(key, value);
+      this.refreshClassName();
     } finally {
       undoManage.endUpdate();
     }
