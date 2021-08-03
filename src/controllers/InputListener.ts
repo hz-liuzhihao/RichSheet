@@ -68,6 +68,7 @@ export default class InputListener extends AbsListener implements IListener {
    */
   public input(event: MouseEvent) {
     const srcElement = event.target as HTMLElement;
+    const isDesign = this.excelBuild.isDesign();
     if (srcElement.closest('.celleditor_main')) {
       const cell: HTMLElement = srcElement.closest('.celleditor_main');
       const build: CellBuild = this.cellBuild = cell.__build__;
@@ -89,6 +90,11 @@ export default class InputListener extends AbsListener implements IListener {
         width,
         height
       });
+      if (isDesign) {
+        this.inputDom.textContent = build.getProperty('text');
+      } else {
+        this.inputDom.textContent = build.getProperty('value');
+      }
       this.inputContainer.style.display = 'flex';
       this.inputDom.focus();
     }

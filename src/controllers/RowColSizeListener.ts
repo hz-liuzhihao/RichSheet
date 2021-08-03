@@ -24,13 +24,14 @@ export default class RowColSizeListener extends AbsListener implements IListener
     };
     const srcElement = event.target as HTMLElement;
     const excelBuild = this.excelBuild;
-    excelBuild.beginPreview();
     if (srcElement.closest('.row_head_drag')) {
+      excelBuild.beginPreview();
       const buildDom: HTMLElement = srcElement.closest('.rowheadeditor_main');
       const build: RowBuild = buildDom.__build__;
       this.build = build;
     }
     if (srcElement.closest('.col_head_drag')) {
+      excelBuild.beginPreview();
       const buildDom: HTMLElement = srcElement.closest('.colhead_item');
       const build: ColBuild = buildDom.__build__;
       this.build = build;

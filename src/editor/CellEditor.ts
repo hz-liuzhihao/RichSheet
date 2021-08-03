@@ -91,6 +91,24 @@ export default class CellEditor extends BaseEditor {
   }
 
   /**
+   * 渲染文本
+   * @param item 
+   */
+  protected renderText(item: UndoItem) {
+    const textDom = this.textDom;
+    textDom.textContent = this.build.getProperty('text');
+  }
+
+  /**
+   * 渲染值
+   * @param item 
+   */
+  protected renderValue(item: UndoItem) {
+    const textDom = this.textDom;
+    textDom.textContent = this.build.getProperty('value');
+  }
+
+  /**
    * 渲染每个undo信息
    */
   protected renderUndoItem() {
@@ -130,9 +148,13 @@ export default class CellEditor extends BaseEditor {
     }
     const build = this.build;
     const mainDom = this.mainDom;
+    const textDom = this.textDom;
     const themeClassName = build.getThemeClassName();
     const styleClassName = build.getClassName();
     const borderClassName = build.getBorderClassName();
+    const text = build.getProperty('text');
+    const value = build.getProperty('value');
+    textDom.textContent = value || text;
     mainDom.rowSpan = build.getRowSpan();
     mainDom.colSpan = build.getColSpan();
     themeClassName && mainDom.classList.add(themeClassName);

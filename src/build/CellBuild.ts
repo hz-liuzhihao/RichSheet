@@ -24,6 +24,10 @@ export interface CellMeta {
   expressionIndex?: number;
 
   cellPropertyIndex?: number;
+  // 单元格的值,是指用户在非设计层输入的值
+  value?: string;
+  // 单元格的文本,包含表达式和非表达式
+  text?: string;
 }
 
 export interface CellBuildArgs extends BaseBuildArgs {
@@ -245,7 +249,13 @@ export class CellBuild extends BaseBuild<CellMeta> {
    * @param value 
    */
   public inputValue(value: string) {
-
+    const isDesign = this.excelBuild.isDesign();
+    // 如果是设计层
+    if (isDesign) {
+      this.setProperty('text', value);
+    } else {
+      this.setProperty('value', value);
+    }
   }
 
   public restoreUndoItem(undoItem: UndoItem) {
