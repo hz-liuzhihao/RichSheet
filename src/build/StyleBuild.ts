@@ -241,7 +241,7 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
         break;
       case Operate.Modify:
         const key = undoItem.p;
-        const value = undoItem.v;
+        const value = this.excelBuild.getUndoRedoValue(undoItem);
         if ((key as string).indexOf('.') > -1) {
           this.setDeepProperty(key, value);
         } else {
