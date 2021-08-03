@@ -14,7 +14,7 @@ export interface StyleMeta {
   /**
    * 背景颜色
    */
-  bgColor: string;
+  backgroundColor: string;
 
   /**
    * 水平位置
@@ -49,17 +49,17 @@ export interface StyleMeta {
   /**
    * 文本装饰样式
    */
-  textDecoStyle: string;
+  textDecorationStyle: string;
 
   /**
    * 文本装饰线类型,上划线,删除线,下划线
    */
-  textDecoLine: string;
+  textDecorationLine: string;
 
   /**
    * 文本装饰线颜色
    */
-  textDecoColor: string;
+  textDecorationColor: string;
 }
 
 type StyleMetaKey = keyof StyleMeta;
