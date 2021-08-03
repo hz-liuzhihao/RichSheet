@@ -387,7 +387,6 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
       } else {
         // 如果单元格本身就没有样式则需要添加样式表
         if (currentStyleBuild) {
-          currentStyleBuild.addCell(item);
           item.setStyleBuild(currentStyleBuild);
         } else {
           currentStyleBuild = new StyleBuild({
@@ -396,9 +395,7 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
             },
             excelBuild: this
           });
-          // TODO 进行undo
           this.styleBuilds.push(currentStyleBuild);
-          currentStyleBuild.addCell(item);
           item.setStyleBuild(currentStyleBuild);
         }
       }
@@ -428,11 +425,9 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
           excelBuild: this,
           metaInfo
         });
-        // TODO 进行undo
         this.styleBuilds.push(newStyleBuild);
         styleBuildMap[index].cells.forEach(item => {
-          styleBuild.removeCell(item);
-          newStyleBuild.addCell(item);
+          item.setStyleBuild(newStyleBuild);
         });
       }
     }
@@ -442,6 +437,7 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
   public toJSON() {
     const result = super.toJSON() as ExcelMeta;
     result.sheets = this.sheets.map(item => item.toJSON());
+    result.styles = this.styleBuilds.map(item => item.toJSON());
     return result;
   }
 }

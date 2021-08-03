@@ -84,12 +84,26 @@ export class CellBuild extends BaseBuild<CellMeta> {
    * @returns 
    */
   public setStyleBuild(styleBuild: StyleBuild) {
-    if (this.styleBuild == styleBuild) {
+    const oldBuild = this.styleBuild;
+    if (oldBuild == styleBuild) {
       return;
     }
-    this.styleBuild.removeCell(this);
-    styleBuild.addCell(this);
-    this.styleBuild = styleBuild;
+    const undoManage = this.excelBuild.getUndoManage();
+    undoManage.beginUpdate();
+    try {
+      oldBuild.removeCell(this);
+      styleBuild.addCell(this);
+      this.styleBuild = styleBuild;
+      undoManage.storeUndoItem({
+        c: this,
+        op: Operate.Modify,
+        p: 'style',
+        v: styleBuild,
+        ov: oldBuild,
+      });
+    } finally {
+      undoManage.endUpdate();
+    }
   }
 
   /**

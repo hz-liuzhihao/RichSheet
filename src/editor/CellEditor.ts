@@ -4,8 +4,6 @@ import './CellEditor.css';
 import { Operate, UndoItem } from '../flow/UndoManage';
 import { upperFirst } from 'lodash';
 
-const styleProperty = [''];
-
 export interface CellEditorArgs extends BaseEditorArgs {
   build: CellBuild;
 }
@@ -64,10 +62,6 @@ export default class CellEditor extends BaseEditor {
     };
   }
 
-  private renderStyle() {
-
-  }
-
   /**
    * 渲染跨行单元格
    * @param item 
@@ -109,19 +103,34 @@ export default class CellEditor extends BaseEditor {
   }
 
   /**
+   * 渲染单元格样式
+   * @param item 
+   */
+  protected renderStyle(item: UndoItem) {
+    const { v, ov } = item;
+    let oldStyleBuild;
+    if (item.isUndo) {
+      oldStyleBuild = ov;
+    } else {
+      oldStyleBuild = v;
+    }
+    const styleBuild = this.build.getStyleBuild();
+    const className = styleBuild.getClassName();
+    const oldClassName = oldStyleBuild.getClassName();
+    this.mainDom.classList.remove(oldClassName);
+    this.mainDom.classList.add(className);
+  }
+
+  /**
    * 渲染每个undo信息
    */
   protected renderUndoItem() {
     this.needRenderUndoItems.forEach(item => {
       const { p, op } = item;
       if (op == Operate.Modify) {
-        if (styleProperty.indexOf(p) > -1) {
-          this.renderStyle();
-        } else {
-          const method = `render${upperFirst(p)}`;
-          if (typeof this[method] == 'function') {
-            return this[method](item);
-          }
+        const method = `render${upperFirst(p)}`;
+        if (typeof this[method] == 'function') {
+          return this[method](item);
         }
       }
     });
