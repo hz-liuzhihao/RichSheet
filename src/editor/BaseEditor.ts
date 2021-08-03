@@ -98,9 +98,10 @@ export default abstract class BaseEditor {
   protected abstract initDom(): void;
 
   /**
-   * 子类实现渲染方法
+   * 子类实现渲染方法,只有在元素还未插入到dom中时才能使用
+   * @deprecated
    */
-  protected abstract render(): void;
+  public abstract render(): void;
 
   protected abstract renderUndoItem(): void;
 

@@ -148,10 +148,8 @@ export default class CellEditor extends BaseEditor {
     super.destroy();
   }
 
-  /**
-   * 渲染
-   */
-  protected render() {
+  /** @override */
+  public render() {
     if (this.mainDom.parentElement == null) {
       this.parentDom && this.parentDom.appendChild(this.mainDom);
     }

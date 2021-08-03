@@ -52,7 +52,7 @@ export default class ExcelEditor extends BaseEditor {
     });
   }
 
-  protected render() {
+  public render() {
     this.sheetEditors.forEach(item => item.requestRender());
   }
 }

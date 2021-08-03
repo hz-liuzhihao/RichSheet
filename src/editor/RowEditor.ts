@@ -135,7 +135,7 @@ export default class RowEditor extends BaseEditor {
     if (this.acceptDom.length > 0) {
       const cellEditor = this.acceptDom.shift();
       cellEditor.setBuild(cellBuild);
-      cellEditor.requestRender();
+      cellEditor.render();
       const mainDom = cellEditor.getMainDom();
       if (beforeEditor) {
         this.mainDom.insertBefore(mainDom, beforeEditor.getMainDom());
@@ -149,7 +149,7 @@ export default class RowEditor extends BaseEditor {
         build: cellBuild,
         workbench: this.workbench
       });
-      cellEditor.requestRender();
+      cellEditor.render();
       const mainDom = cellEditor.getMainDom();
       if (beforeEditor) {
         this.mainDom.insertBefore(mainDom, beforeEditor.getMainDom());
@@ -271,7 +271,7 @@ export default class RowEditor extends BaseEditor {
    * 渲染
    * @override
    */
-  protected render() {
+  public render() {
     this.cells.forEach(item => item && item.requestRender());
     this.rowHeadEditor.requestRender();
   }

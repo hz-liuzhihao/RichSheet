@@ -182,7 +182,7 @@ export default class ColHeadEditor extends BaseEditor {
     this.renderColName(start + count);
   }
 
-  protected render() {
+  public render() {
 
   }
 }

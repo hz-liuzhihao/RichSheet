@@ -60,7 +60,7 @@ export default class RowHeadEditor extends BaseEditor {
     });
   }
 
-  protected render() {
+  public render() {
     const { mainDom, build } = this;
     const index = build.getRowName().toString();
     Object.assign(mainDom.style, build.toStyle());

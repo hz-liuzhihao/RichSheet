@@ -284,7 +284,7 @@ export default class SheetEditor extends BaseEditor {
   /**
    * 全量渲染
    */
-  protected render() {
+  public render() {
     this.rows.forEach(item => item.requestRender());
     this.colHeadEditor.requestRender();
   }
