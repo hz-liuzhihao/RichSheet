@@ -485,6 +485,8 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
               } else {
                 metaInfo.textDecorationLine && metaInfo.textDecorationLine.replace(value, '');
               }
+            } else {
+              metaInfo[key] = value as never;
             }
             const newStyleBuild = new StyleBuild({
               excelBuild: this,
