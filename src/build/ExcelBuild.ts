@@ -364,81 +364,87 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
    */
   private setStyleProperty(key: keyof StyleMeta, value: any, isCheck: boolean = true) {
     const selectCells = this.getCurrentSheet().getSelectorCells();
-    const styleBuildMap: {
-      [key: string]: {
-        style?: StyleBuild,
-        length?: number,
-        cells?: CellBuild[]
-      }
-    } = {};
-    let currentStyleBuild = this.styleBuilds.find(item => item.isOnlyStyleValue(key, value));
-    selectCells.forEach(item => {
-      // 获取选中单元格的所有样式表
-      const cellStyleBuild = item.getStyleBuild();
-      // 如果单元格的样式规则刚好已经是的,就不在修改
-      if (cellStyleBuild && cellStyleBuild == currentStyleBuild) {
-        return;
-      }
-      // 如果有单元格样式又不属于当前规则则需要另外处理
-      if (cellStyleBuild) {
-        const index = cellStyleBuild.getClassName();
-        if (styleBuildMap[index] == null) {
-          styleBuildMap[index] = {};
-          styleBuildMap[index].length = 0;
-          styleBuildMap[index].style = cellStyleBuild;
-          styleBuildMap[index].cells = [];
+    const undoManage = this.getUndoManage();
+    undoManage.beginUpdate();
+    try {
+      const styleBuildMap: {
+        [key: string]: {
+          style?: StyleBuild,
+          length?: number,
+          cells?: CellBuild[]
         }
-        styleBuildMap[index].length++;
-        styleBuildMap[index].cells.push(item);
-      } else {
-        // 如果单元格本身就没有样式则需要添加样式表
-        if (currentStyleBuild) {
-          item.setStyleBuild(currentStyleBuild);
-        } else {
-          currentStyleBuild = new StyleBuild({
-            metaInfo: {
-              [key]: value
-            },
-            excelBuild: this
-          });
-          this.styleBuilds.push(currentStyleBuild);
-          item.setStyleBuild(currentStyleBuild);
+      } = {};
+      let currentStyleBuild = this.styleBuilds.find(item => item.isOnlyStyleValue(key, value));
+      selectCells.forEach(item => {
+        // 获取选中单元格的所有样式表
+        const cellStyleBuild = item.getStyleBuild();
+        // 如果单元格的样式规则刚好已经是的,就不在修改
+        if (cellStyleBuild && cellStyleBuild == currentStyleBuild) {
+          return;
         }
-      }
-    });
-    for (const index in styleBuildMap) {
-      // 如果当前选中的样式表的单元格长度刚好与样式表包含的单元格长度是一致的则样式表可以直接修改,且关联单元格不需要移除
-      if (styleBuildMap[index].length == styleBuildMap[index].style.getCells().length) {
-        const styleBuild = styleBuildMap[index].style;
-        styleBuild.setProperty(key, value, isCheck);
-      } else {
-        // 如果不一致那么说明当前单元格必须做出修改,且新生成一个样式表
-        const styleBuild = styleBuildMap[index].style;
-        if (styleBuild.isOnlyStyle(key)) {
-          // 如果样式表只包含了当前修改的样式则单元格可以直接使用currentStyleBuild
-          styleBuildMap[index].cells.forEach(item => item.setStyleBuild(currentStyleBuild));
-        } else {
-          const metaInfo = styleBuild.toJSON();
-          // 特殊样式处理
-          if (key == 'textDecorationLine') {
-            if (isCheck) {
-              if (metaInfo.textDecorationLine) {
-                metaInfo.textDecorationLine += ` ${value}`;
-              } else {
-                metaInfo.textDecorationLine = value;
-              }
-            } else {
-              metaInfo.textDecorationLine && metaInfo.textDecorationLine.replace(value, '');
-            }
+        // 如果有单元格样式又不属于当前规则则需要另外处理
+        if (cellStyleBuild) {
+          const index = cellStyleBuild.getClassName();
+          if (styleBuildMap[index] == null) {
+            styleBuildMap[index] = {};
+            styleBuildMap[index].length = 0;
+            styleBuildMap[index].style = cellStyleBuild;
+            styleBuildMap[index].cells = [];
           }
-          const newStyleBuild = new StyleBuild({
-            excelBuild: this,
-            metaInfo
-          });
-          this.styleBuilds.push(newStyleBuild);
-          styleBuildMap[index].cells.forEach(item => item.setStyleBuild(newStyleBuild));
+          styleBuildMap[index].length++;
+          styleBuildMap[index].cells.push(item);
+        } else {
+          // 如果单元格本身就没有样式则需要添加样式表
+          if (currentStyleBuild) {
+            item.setStyleBuild(currentStyleBuild);
+          } else {
+            currentStyleBuild = new StyleBuild({
+              metaInfo: {
+                [key]: value
+              },
+              excelBuild: this
+            });
+            this.styleBuilds.push(currentStyleBuild);
+            item.setStyleBuild(currentStyleBuild);
+          }
+        }
+      });
+      for (const index in styleBuildMap) {
+        // 如果当前选中的样式表的单元格长度刚好与样式表包含的单元格长度是一致的则样式表可以直接修改,且关联单元格不需要移除
+        if (styleBuildMap[index].length == styleBuildMap[index].style.getCells().length) {
+          const styleBuild = styleBuildMap[index].style;
+          styleBuild.setProperty(key, value, isCheck);
+        } else {
+          // 如果不一致那么说明当前单元格必须做出修改,且新生成一个样式表
+          const styleBuild = styleBuildMap[index].style;
+          if (styleBuild.isOnlyStyle(key)) {
+            // 如果样式表只包含了当前修改的样式则单元格可以直接使用currentStyleBuild
+            styleBuildMap[index].cells.forEach(item => item.setStyleBuild(currentStyleBuild));
+          } else {
+            const metaInfo = styleBuild.toJSON();
+            // 特殊样式处理
+            if (key == 'textDecorationLine') {
+              if (isCheck) {
+                if (metaInfo.textDecorationLine) {
+                  metaInfo.textDecorationLine += ` ${value}`;
+                } else {
+                  metaInfo.textDecorationLine = value;
+                }
+              } else {
+                metaInfo.textDecorationLine && metaInfo.textDecorationLine.replace(value, '');
+              }
+            }
+            const newStyleBuild = new StyleBuild({
+              excelBuild: this,
+              metaInfo
+            });
+            this.styleBuilds.push(newStyleBuild);
+            styleBuildMap[index].cells.forEach(item => item.setStyleBuild(newStyleBuild));
+          }
         }
       }
+    } finally {
+      undoManage.endUpdate();
     }
   }
 
