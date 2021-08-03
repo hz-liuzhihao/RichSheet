@@ -110,15 +110,15 @@ export default class CellEditor extends BaseEditor {
     const { v, ov } = item;
     let oldStyleBuild;
     if (item.isUndo) {
-      oldStyleBuild = ov;
-    } else {
       oldStyleBuild = v;
+    } else {
+      oldStyleBuild = ov;
     }
     const styleBuild = this.build.getStyleBuild();
-    const className = styleBuild.getClassName();
-    const oldClassName = oldStyleBuild.getClassName();
-    this.mainDom.classList.remove(oldClassName);
-    this.mainDom.classList.add(className);
+    const className = styleBuild && styleBuild.getClassName();
+    const oldClassName = oldStyleBuild && oldStyleBuild.getClassName();
+    oldClassName && this.mainDom.classList.remove(oldClassName);
+    className && this.mainDom.classList.add(className);
   }
 
   /**

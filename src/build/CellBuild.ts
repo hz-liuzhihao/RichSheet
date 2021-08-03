@@ -290,6 +290,18 @@ export class CellBuild extends BaseBuild<CellMeta> {
       case Operate.Modify:
         const key = undoItem.p;
         const value = this.excelBuild.getUndoRedoValue(undoItem);
+        // 对undo信息中的样式和边框进行特殊处理
+        if (key == 'style') {
+          this.setStyleBuild(value);
+          return;
+        }
+        if (key == 'border') {
+          this.setBorderStyleBuild(value);
+          return;
+        }
+        if (key == 'expression') {
+          return;
+        }
         if ((key as string).indexOf('.') > -1) {
           this.setDeepProperty(key, value);
         } else {
