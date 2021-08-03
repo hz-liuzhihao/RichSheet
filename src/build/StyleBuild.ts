@@ -6,7 +6,60 @@ import { AppConst } from '../config/constant';
 import CellPluginBuild from './CellPluginBuild';
 
 export interface StyleMeta {
-  value: string;
+  /**
+   * 字体颜色
+   */
+  color: string;
+
+  /**
+   * 背景颜色
+   */
+  bgColor: string;
+
+  /**
+   * 水平位置
+   */
+  textAlign: string;
+
+  /**
+   * 垂直位置
+   */
+  verticalAlign: string;
+
+  /**
+   * 字体大小
+   */
+  fontSize: number;
+
+  /**
+   * 字体粗细
+   */
+  fontWeight: number;
+
+  /**
+   * 字体样式,斜体
+   */
+  fontStyle: string;
+
+  /**
+   * 字体
+   */
+  fontFamily: string;
+
+  /**
+   * 文本装饰样式
+   */
+  textDecoStyle: string;
+
+  /**
+   * 文本装饰线类型,上划线,删除线,下划线
+   */
+  textDecoLine: string;
+
+  /**
+   * 文本装饰线颜色
+   */
+  textDecoColor: string;
 }
 
 type StyleMetaKey = keyof StyleMeta;
@@ -75,6 +128,32 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
   public toStyle() {
     // 转换为内联样式或者样式类
     return this.metaInfo || {};
+  }
+
+  /**
+   * 设置属性值
+   * @param key 
+   * @param value 
+   */
+  public setProperty(key: StyleMetaKey, value: any) {
+    const undoManage = this.excelBuild.getUndoManage();
+    const oldValue = this.metaInfo[key];
+    if (oldValue == value) {
+      return;
+    }
+    undoManage.beginUpdate();
+    try {
+      undoManage.storeUndoItem({
+        c: this,
+        p: key,
+        op: Operate.Modify,
+        v: value,
+        ov: oldValue
+      });
+      super.setProperty(key, value);
+    } finally {
+      undoManage.endUpdate();
+    }
   }
 
   /**
