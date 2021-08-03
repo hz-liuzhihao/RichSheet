@@ -440,9 +440,7 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
           styleBuildMap[index].cells.push(item);
         } else {
           // 如果单元格本身就没有样式则需要添加样式表
-          if (currentStyleBuild) {
-            item.setStyleBuild(currentStyleBuild);
-          } else {
+          if (!currentStyleBuild) {
             currentStyleBuild = new StyleBuild({
               metaInfo: {
                 [key]: value
@@ -450,8 +448,8 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
               excelBuild: this
             });
             this.styleBuilds.push(currentStyleBuild);
-            item.setStyleBuild(currentStyleBuild);
           }
+          item.setStyleBuild(currentStyleBuild);
         }
       });
       for (const index in styleBuildMap) {
@@ -463,6 +461,15 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
           // 如果不一致那么说明当前单元格必须做出修改,且新生成一个样式表
           const styleBuild = styleBuildMap[index].style;
           if (styleBuild.isOnlyStyle(key)) {
+            if (!currentStyleBuild) {
+              currentStyleBuild = new StyleBuild({
+                metaInfo: {
+                  [key]: value
+                },
+                excelBuild: this
+              });
+              this.styleBuilds.push(currentStyleBuild);
+            }
             // 如果样式表只包含了当前修改的样式则单元格可以直接使用currentStyleBuild
             styleBuildMap[index].cells.forEach(item => item.setStyleBuild(currentStyleBuild));
           } else {
