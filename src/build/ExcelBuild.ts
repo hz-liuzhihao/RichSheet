@@ -346,8 +346,14 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
     return this.workbench.isDesign();
   }
 
+  /** @override */
   public setColor(color: string) {
     this.setStyleProperty('color', color);
+  }
+
+  /** @override */
+  public setBackgroundColor(color: string) {
+    this.setStyleProperty('backgroundColor', color);
   }
 
   /**
@@ -365,7 +371,7 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
         cells?: CellBuild[]
       }
     } = {};
-    let currentStyleBuild = this.styleBuilds.find(item => item.isOnlyStyle(key, value));
+    let currentStyleBuild = this.styleBuilds.find(item => item.isOnlyStyleValue(key, value));
     selectCells.forEach(item => {
       // 获取选中单元格的所有样式表
       const cellStyleBuild = item.getStyleBuild();
@@ -408,27 +414,30 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
       } else {
         // 如果不一致那么说明当前单元格必须做出修改,且新生成一个样式表
         const styleBuild = styleBuildMap[index].style;
-        const metaInfo = styleBuild.toJSON();
-        // 特殊样式处理
-        if (key == 'textDecorationLine') {
-          if (isCheck) {
-            if (metaInfo.textDecorationLine) {
-              metaInfo.textDecorationLine += ` ${value}`;
+        if (styleBuild.isOnlyStyle(key)) {
+          // 如果样式表只包含了当前修改的样式则单元格可以直接使用currentStyleBuild
+          styleBuildMap[index].cells.forEach(item => item.setStyleBuild(currentStyleBuild));
+        } else {
+          const metaInfo = styleBuild.toJSON();
+          // 特殊样式处理
+          if (key == 'textDecorationLine') {
+            if (isCheck) {
+              if (metaInfo.textDecorationLine) {
+                metaInfo.textDecorationLine += ` ${value}`;
+              } else {
+                metaInfo.textDecorationLine = value;
+              }
             } else {
-              metaInfo.textDecorationLine = value;
+              metaInfo.textDecorationLine && metaInfo.textDecorationLine.replace(value, '');
             }
-          } else {
-            metaInfo.textDecorationLine && metaInfo.textDecorationLine.replace(value, '');
           }
+          const newStyleBuild = new StyleBuild({
+            excelBuild: this,
+            metaInfo
+          });
+          this.styleBuilds.push(newStyleBuild);
+          styleBuildMap[index].cells.forEach(item => item.setStyleBuild(newStyleBuild));
         }
-        const newStyleBuild = new StyleBuild({
-          excelBuild: this,
-          metaInfo
-        });
-        this.styleBuilds.push(newStyleBuild);
-        styleBuildMap[index].cells.forEach(item => {
-          item.setStyleBuild(newStyleBuild);
-        });
       }
     }
   }

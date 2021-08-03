@@ -180,14 +180,26 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
   }
 
   /**
-   * 样式表是否只有这一个单一样式
+   * 样式表是否只有这一个单一样式且值相等
    * @param property 
    * @param value 
    * @returns 
    */
-  public isOnlyStyle(property: StyleMetaKey, value: any) {
+  public isOnlyStyleValue(property: StyleMetaKey, value: any) {
     const keys = Object.keys(this.metaInfo);
     if (keys.length == 1 && keys.indexOf(property) > -1 && this.metaInfo[property] === value) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * 样式表是否只有这一个样式
+   * @param property 
+   */
+  public isOnlyStyle(property: StyleMetaKey) {
+    const keys = Object.keys(this.metaInfo);
+    if (keys.length == 1 && keys.indexOf(property) > -1) {
       return true;
     }
     return false;

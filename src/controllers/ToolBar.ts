@@ -77,7 +77,7 @@ export interface IExcelBehavior {
   /**
    * 背景颜色
    */
-  setBackgroundColor?: (color: String) => void;
+  setBackgroundColor?: (color: string) => void;
 
   /**
    * 获取背景颜色列表
