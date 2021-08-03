@@ -356,6 +356,51 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
     this.setStyleProperty('backgroundColor', color);
   }
 
+  /** @override */
+  public setFontFamily(fontFamily: string) {
+    this.setStyleProperty('fontFamily', fontFamily);
+  }
+
+  /** @override */
+  public setFontSize(fontSize: number) {
+    this.setStyleProperty('fontSize', fontSize);
+  }
+
+  /** @override */
+  public setFontWeight(fontWeight: number) {
+    this.setStyleProperty('fontWeight', fontWeight);
+  }
+
+  /** @override */
+  public setTextAlign(textAlign: string) {
+    this.setStyleProperty('textAlign', textAlign);
+  }
+
+  /** @override */
+  public setTextDecorationColor(decorationColor: string) {
+    this.setStyleProperty('textDecorationColor', decorationColor);
+  }
+
+  /** @override */
+  public setTextDecorationLine(decorationLine: string) {
+    this.setStyleProperty('textDecorationLine', decorationLine);
+  }
+
+  /** @override */
+  public setTextDecorationStyle(decorationStyle: string) {
+    this.setStyleProperty('textDecorationStyle', decorationStyle);
+  }
+
+  /** @override */
+  public setFontStyle(fontStyle: string) {
+    this.setStyleProperty('fontStyle', fontStyle);
+  }
+
+  /** @override */
+  public setVerticalAlign(verticalAlign: string) {
+    this.setStyleProperty('verticalAlign', verticalAlign);
+  }
+
   /**
    * 设置样式属性方法
    * @param key 
