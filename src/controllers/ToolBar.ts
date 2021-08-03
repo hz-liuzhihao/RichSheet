@@ -59,7 +59,120 @@ export interface IExcelBehavior {
    */
   canSave?: () => boolean;
 
+  /**
+   * 行为改变监听
+   */
   addBahaviorChangeListener?: (func: Function) => void;
+
+  /**
+   * 字体颜色
+   */
+  setColor?: (color: string) => void;
+
+  /**
+   * 获取当前框选单元格的字体颜色,如果有多个则返回数组
+   */
+  getColor?: () => string[];
+
+  /**
+   * 背景颜色
+   */
+  setBackgroundColor?: (color: String) => void;
+
+  /**
+   * 获取背景颜色列表
+   */
+  getBackgroundColor?: () => string[];
+
+  /**
+   * 水平位置
+   */
+  setTextAlign?: (textAlign: string) => void;
+
+  /**
+   * 获取水平位置
+   */
+  getTextAlign?: () => string[];
+
+  /**
+   * 垂直位置
+   */
+  setVerticalAlign?: (verticalAlign: string) => void;
+
+  /**
+   * 获取垂直位置
+   */
+  getVerticalAlign?: () => string[];
+
+  /**
+   * 字体大小
+   */
+  setFontSize?: (fontSize: number) => void;
+
+  /**
+   * 获取字体大小
+   */
+  getFontSize?: () => number[];
+
+  /**
+   * 字体粗细
+   */
+  setFontWeight?: (fontWeight: number) => void;
+
+  /**
+   * 获取字体粗细
+   */
+  getFontWeight?: () => number[];
+
+  /**
+   * 字体样式,斜体
+   */
+  setFontStyle?: (fontStyle: string) => void;
+
+  /**
+   * 获取字体大小
+   */
+  getFontStyle?: () => string[];
+
+  /**
+   * 字体
+   */
+  setFontFamily?: (fontFamily: string) => void;
+
+  /**
+   * 获取字体
+   */
+  getFontFamily?: () => string[];
+
+  /**
+   * 文本装饰样式
+   */
+  setTextDecorationStyle?: (textDecorationStyle: string) => void;
+
+  /**
+   * 获取文本装饰样式
+   */
+  getTextDecorationStyle?: () => string[];
+
+  /**
+   * 文本装饰线类型,上划线,删除线,下划线
+   */
+  setTextDecorationLine?: (textDecorationLine: string) => void;
+
+  /**
+   * 获取文本装饰线类型,上划线,删除线,下划线
+   */
+  getTextDecorationLine?: () => string[];
+
+  /**
+   * 文本装饰线颜色
+   */
+  setTextDecorationColor?: (textDecorationColor: string) => void;
+
+  /**
+   * 获取文本装饰线颜色
+   */
+  getTextDecorationColor?: () => string[];
 }
 
 export interface AbsToolbarArgs {

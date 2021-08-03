@@ -170,6 +170,14 @@ export class CellBuild extends BaseBuild<CellMeta> {
   }
 
   /**
+   * 获取单元格样式数据层
+   * @returns 
+   */
+  public getStyleBuild() {
+    return this.styleBuild;
+  }
+
+  /**
    * 获取主题样式类名
    */
   public getThemeClassName() {

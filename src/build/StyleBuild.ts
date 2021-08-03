@@ -14,52 +14,52 @@ export interface StyleMeta {
   /**
    * 背景颜色
    */
-  backgroundColor: string;
+  backgroundColor?: string;
 
   /**
    * 水平位置
    */
-  textAlign: string;
+  textAlign?: string;
 
   /**
    * 垂直位置
    */
-  verticalAlign: string;
+  verticalAlign?: string;
 
   /**
    * 字体大小
    */
-  fontSize: number;
+  fontSize?: number;
 
   /**
    * 字体粗细
    */
-  fontWeight: number;
+  fontWeight?: number;
 
   /**
    * 字体样式,斜体
    */
-  fontStyle: string;
+  fontStyle?: string;
 
   /**
    * 字体
    */
-  fontFamily: string;
+  fontFamily?: string;
 
   /**
    * 文本装饰样式
    */
-  textDecorationStyle: string;
+  textDecorationStyle?: string;
 
   /**
    * 文本装饰线类型,上划线,删除线,下划线
    */
-  textDecorationLine: string;
+  textDecorationLine?: string;
 
   /**
    * 文本装饰线颜色
    */
-  textDecorationColor: string;
+  textDecorationColor?: string;
 }
 
 type StyleMetaKey = keyof StyleMeta;
@@ -135,9 +135,18 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
    * @param key 
    * @param value 
    */
-  public setProperty(key: StyleMetaKey, value: any) {
+  public setProperty(key: StyleMetaKey, value: any, isCheck: boolean = true) {
     const undoManage = this.excelBuild.getUndoManage();
     const oldValue = this.metaInfo[key];
+    if (key == 'textDecorationLine') {
+      if (isCheck) {
+        if (oldValue) {
+          value = ((oldValue as string) += ` ${value}`);
+        }
+      } else {
+        oldValue && (value = (oldValue as string).replace(value, ''));
+      }
+    }
     if (oldValue == value) {
       return;
     }
@@ -170,6 +179,20 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
   }
 
   /**
+   * 样式表是否只有这一个单一样式
+   * @param property 
+   * @param value 
+   * @returns 
+   */
+  public isOnlyStyle(property: StyleMetaKey, value: any) {
+    const keys = Object.keys(this.metaInfo);
+    if (keys.length == 1 && keys.indexOf(property) > -1 && this.metaInfo[property] === value) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * 刷新最新样式类
    * 当样式只关联一个单元格或者选中的单元格是此样式的所有单元格才可以刷新,否则需要复制一个新的样式层来赋给新的单元格
    */
@@ -192,7 +215,7 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
   public copy() {
     return new StyleBuild({
       excelBuild: this.excelBuild,
-      metaInfo: this.metaInfo
+      metaInfo: JSON.parse(JSON.stringify(this.metaInfo))
     });
   }
 

@@ -43,6 +43,8 @@ class ExcelBehavior implements IExcelBehavior {
 
   @Behavior
   public mergeCell() { }
+
+  
 }
 
 class Workbench extends ExcelBehavior implements IWorkBench, IExcelBehavior {

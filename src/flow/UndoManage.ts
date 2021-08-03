@@ -107,7 +107,7 @@ export abstract class BaseBuild<T> extends CommondProvider {
   /**
    * 转换元数据
    */
-  public toJSON() {
+  public toJSON(): T {
     return JSON.parse(JSON.stringify(this.metaInfo));
   }
 

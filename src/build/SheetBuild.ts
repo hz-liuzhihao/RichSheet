@@ -78,6 +78,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
   /**
    * 预处理单元格元数据信息,将rowSpan和colSpan进行处理
    * 解析合并单元格
+   * TODO 暂不需要
    * @param cells 
    */
   private prepareCells(cells: CellMeta[][] = []) {
@@ -791,6 +792,27 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
   }
 
   /**
+   * 获取框选的单元格
+   */
+  public getSelectorCells() {
+    const set = new Set<CellBuild>();
+    const selectors = this.selector.selectors;
+    selectors.forEach(selector => {
+      const startRow = selector.rowStart;
+      const endRow = selector.rowEnd;
+      const startCol = selector.colStart;
+      const endCol = selector.colEnd;
+      for (let i = startRow; i <= endRow; i++) {
+        for (let j = startCol; j <= endCol; j++) {
+          const cell = this.getCell(i, j);
+          set.add(cell);
+        }
+      }
+    });
+    return set;
+  }
+
+  /**
    * 返回主题
    * @returns 
    */
@@ -831,6 +853,10 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
         }
         break;
     }
+  }
+
+  public setColor(color: string) {
+
   }
 
   /** @override */
