@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import ReactDom from 'react-dom';
 import { IExcelBehavior } from '../../src/controllers/ToolBar';
 import { createFromIconfontCN } from '@ant-design/icons';
-import { Tabs } from 'antd';
+import { Divider, Select, Tabs } from 'antd';
 import { debounce } from 'lodash';
 import 'antd/dist/antd.css';
 import './index.css';
@@ -12,7 +12,7 @@ const TabPanel = Tabs.TabPane;
 
 function CustomIcon(props) {
   const Wrapper = createFromIconfontCN({
-    scriptUrl: '//at.alicdn.com/t/font_2705379_l89i2n8h2os.js'
+    scriptUrl: '//at.alicdn.com/t/font_2705379_g2wym70zwn6.js'
   });
   return <Wrapper {...props} onClick={() => {
     if (!props.disabled && typeof props.onClick == 'function') {
@@ -20,6 +20,33 @@ function CustomIcon(props) {
     }
   }} className="customicon" />
 }
+
+interface CustomButtonArgs {
+  icon?: string;
+
+  text?: string;
+
+  orientation?: 'row' | 'column';
+
+  width?: number;
+
+  height?: number;
+
+  disabled?: boolean;
+
+  iconSize?: number;
+
+  style?: any;
+}
+
+function CustomButton(props: CustomButtonArgs) {
+  const { icon, text, orientation, width, height, disabled = false, iconSize, style = {} } = props;
+  return <div className="custom_btn" style={{ display: 'flex', flexDirection: orientation, width: `${width}px`, height: `${height}px`, ...style }}>
+    <CustomIcon type={icon} disabled={disabled} style={{ fontSize: `${iconSize}px` }} />
+    {text && <span>{text}</span>}
+  </div>
+}
+
 class TableContainer extends Component<JSONObject, {
   workbench?: IExcelBehavior
 }> {
@@ -62,6 +89,53 @@ class TableContainer extends Component<JSONObject, {
     </div>;
   }
 
+  public renderStartMenu() {
+    return <div className="start_menu_container">
+      <div>
+        <CustomButton text="粘贴" icon="icon-paste" iconSize={24} orientation='column' width={60} height={60} />
+        <div className="btn_height">
+          <CustomButton text="剪切" icon="icon-cut" iconSize={16} orientation="row" width={70} height={30} />
+          <CustomButton text="复制" icon="icon-fuzhi" iconSize={18} orientation="row" width={70} height={30} />
+        </div>
+        <CustomButton text="格式刷" icon="icon-zu" iconSize={24} orientation="column" width={60} height={60} />
+      </div>
+      <Divider type='vertical' className="app_divider" />
+      <div>
+        <div className="btn_height">
+          <div className="flex_row">
+            <Select placeholder="选择字体" />
+            <Select placeholder="选择字体大小" />
+            <CustomButton icon="icon-Word-add" style={{marginLeft: '5px'}} iconSize={24} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-Word-minus" iconSize={24} orientation="row" width={35} height={30} />
+          </div>
+          <div className="flex_row">
+
+          </div>
+        </div>
+      </div>
+      <Divider type='vertical' className="app_divider" />
+      <div>
+
+      </div>
+      <Divider type='vertical' className="app_divider" />
+      <div>
+
+      </div>
+      <Divider type='vertical' className="app_divider" />
+      <div>
+
+      </div>
+      <Divider type='vertical' className="app_divider" />
+      <div>
+
+      </div>
+      <Divider type='vertical' className="app_divider" />
+      <div>
+
+      </div>
+    </div>;
+  }
+
   public render() {
     const { workbench } = this.state;
     return <div className="main_container">
@@ -70,7 +144,7 @@ class TableContainer extends Component<JSONObject, {
           "left": this.renderBasicOperate()
         }} style={{ width: '100%' }}>
           <TabPanel tab="开始" key="1">
-            开始菜单
+            {this.renderStartMenu()}
           </TabPanel>
           <TabPanel tab="插入" key="2">
             插入菜单

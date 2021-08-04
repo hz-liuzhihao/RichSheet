@@ -45,3 +45,52 @@ html,body,#root {
 .customicon[disabled] {
   color: #d9d9d9;
 }
+
+.start_menu_container {
+  display: flex;
+  flex-direction: row;
+}
+
+.ant-tabs-content {
+  height: 100%;
+}
+
+.start_menu_container {
+  height: 100%;
+  padding-bottom: 16px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.start_menu_container > div {
+  display: flex;
+  align-items: center;
+}
+
+.app_divider {
+  color: #d9d9d9;
+  height: 100%;
+}
+
+.custom_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.custom_btn:hover {
+  background-color: #d9d9d9;
+}
+
+.btn_height {
+  height: 60px;
+}
+
+.flex_row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
