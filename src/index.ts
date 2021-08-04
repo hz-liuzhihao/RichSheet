@@ -44,7 +44,71 @@ class ExcelBehavior implements IExcelBehavior {
   @Behavior
   public mergeCell() { }
 
-  
+  @Behavior
+  public setBackgroundColor(color: string) {}
+
+  @Behavior
+  public getBackgroundColor(): any {}
+
+  @Behavior
+  public setColor(color: string) {}
+
+  @Behavior
+  public getColor(): any {}
+
+  @Behavior
+  public setFontFamily(fontFamily: string) {}
+
+  @Behavior
+  public getFontFamily(): any {}
+
+  @Behavior
+  public setFontSize(fontSize: number) {}
+
+  @Behavior
+  public getFontSize(): any {}
+
+  @Behavior
+  public setFontStyle(fontStyle: string) {}
+
+  @Behavior
+  public getFontStyle(): any {}
+
+  @Behavior
+  public setFontWeight(fontWeight: number) {}
+
+  @Behavior
+  public getFontWeight(): any {}
+
+  @Behavior
+  public setTextAlign(textAlign: string) {}
+
+  @Behavior
+  public getTextAlign(): any {}
+
+  @Behavior
+  public setVerticalAlign(verticalAlign: string) {}
+
+  @Behavior
+  public getVerticalAlign(): any {}
+
+  @Behavior
+  public setTextDecorationColor(color: string) {}
+
+  @Behavior
+  public getTextDecorationColor(): any {}
+
+  @Behavior
+  public setTextDecorationStyle(style: string) {}
+
+  @Behavior
+  public getTextDecorationStyle(): any {}
+
+  @Behavior
+  public setTextDecorationLine(line: string) {}
+
+  @Behavior
+  public getTextDecorationLine(): any {}
 }
 
 class Workbench extends ExcelBehavior implements IWorkBench, IExcelBehavior {
