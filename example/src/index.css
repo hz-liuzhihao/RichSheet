@@ -85,6 +85,10 @@ html,body,#root {
   background-color: #d9d9d9;
 }
 
+.custom_drop:hover {
+  background-color: #d9d9d9;
+}
+
 .btn_height {
   height: 60px;
 }
@@ -93,4 +97,39 @@ html,body,#root {
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.flex_column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ant-tabs-content-holder {
+  overflow-x: auto;
+}
+
+.custom_drop {
+  border-radius: 4px;
+  padding-left: 2px;
+}
+
+.custom_drop>.ant-btn {
+  background-color: transparent;
+  width: 20px;
+  height: 30px;
+  border: none;
+  padding: 0;
+}
+
+.bg_color {
+  height: 4px;
+  border-radius: 3px;
+  width: 100%;
+}
+
+.font_color {
+  height: 3px;
+  border-radius: 2px;
+  width: 100%;
 }

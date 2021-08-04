@@ -2,19 +2,21 @@ import RichSheet from '../../src/index';
 import React, { Component } from 'react';
 import ReactDom from 'react-dom';
 import { IExcelBehavior } from '../../src/controllers/ToolBar';
-import { createFromIconfontCN } from '@ant-design/icons';
+import { createFromIconfontCN, DownOutlined } from '@ant-design/icons';
 import { Divider, Select, Tabs } from 'antd';
-import { debounce } from 'lodash';
+import { SketchPicker } from 'react-color';
 import 'antd/dist/antd.css';
 import './index.css';
+import DropdownButton from '_antd@4.16.8@antd/lib/dropdown/dropdown-button';
 
 const TabPanel = Tabs.TabPane;
 
+const AppIcon = createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_2705379_7xx5gtc7582.js'
+});
+
 function CustomIcon(props) {
-  const Wrapper = createFromIconfontCN({
-    scriptUrl: '//at.alicdn.com/t/font_2705379_g2wym70zwn6.js'
-  });
-  return <Wrapper {...props} onClick={() => {
+  return <AppIcon {...props} onClick={() => {
     if (!props.disabled && typeof props.onClick == 'function') {
       props.onClick();
     }
@@ -103,35 +105,78 @@ class TableContainer extends Component<JSONObject, {
       <div>
         <div className="btn_height">
           <div className="flex_row">
-            <Select placeholder="选择字体" />
-            <Select placeholder="选择字体大小" />
-            <CustomButton icon="icon-Word-add" style={{marginLeft: '5px'}} iconSize={24} orientation="row" width={35} height={30} />
+            <Select placeholder="选择字体" size='small' />
+            <Select placeholder="选择字体大小" size='small' />
+            <CustomButton icon="icon-Word-add" style={{ marginLeft: '5px' }} iconSize={24} orientation="row" width={35} height={30} />
             <CustomButton icon="icon-Word-minus" iconSize={24} orientation="row" width={35} height={30} />
           </div>
           <div className="flex_row">
-
+            <CustomButton icon="icon-zitijiacu" iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-xieti" iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-ziyuan" iconSize={18} orientation="row" width={35} height={30} />
+            <DropdownButton className="custom_drop" overlay={<SketchPicker />} icon={<DownOutlined />}>
+              <div className="flex_column">
+                <AppIcon type="icon-beijingyanse" style={{ fontSize: '18px', padding: 0 }} className="customicon" />
+                <div className="bg_color" style={{backgroundColor: '#ff0000'}}></div>
+              </div>
+            </DropdownButton>
+            <DropdownButton className="custom_drop" overlay={<SketchPicker />} icon={<DownOutlined />}>
+              <div className="flex_column">
+                <AppIcon type="icon-Font-color" style={{ fontSize: '18px', padding: 0 }} className="customicon" />
+                <div className="font_color" style={{backgroundColor: '#ff0000'}}></div>
+              </div>
+            </DropdownButton>
+            <CustomButton icon="icon-jurassic_delete-line" iconSize={15} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-jurassic_delete-column" iconSize={15} orientation="row" width={35} height={30} />
           </div>
         </div>
       </div>
       <Divider type='vertical' className="app_divider" />
       <div>
-
+        <div className="btn_height">
+          <div className="flex_row">
+            <CustomButton icon="icon-chuizhidingduiqi" iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-chuizhijuzhongduiqi" iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-chuizhididuiqi" iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-suojinindent3" iconSize={22} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-suojin" iconSize={22} orientation="row" width={35} height={30} />
+          </div>
+          <div className="flex_row">
+            <CustomButton icon="icon-shuipingzuoduiqi" iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-shuipingjuzhongduiqi" iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-shuipingyouduiqi" iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-liangduanduiqi" iconSize={22} orientation="row" width={35} height={30} />
+          </div>
+        </div>
       </div>
       <Divider type='vertical' className="app_divider" />
       <div>
-
+        <CustomButton text="合并居中" icon="icon-hebinghoujuzhong" iconSize={24} orientation='column' width={80} height={60} />
+        <CustomButton text="自动换行" icon="icon-jurassic_word-wrap" iconSize={24} orientation='column' width={80} height={60} />
       </div>
       <Divider type='vertical' className="app_divider" />
       <div>
-
+        <div className="btn_height">
+          <div className="flex_row">
+            <Select placeholder="选择显示格式" size='small' />
+          </div>
+          <div className="flex_row" style={{ marginTop: '5px' }}>
+            <CustomButton icon="icon-shuzihuobi" iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-baifenhao" iconSize={18} orientation="row" width={35} height={30} />
+          </div>
+        </div>
       </div>
       <Divider type='vertical' className="app_divider" />
       <div>
-
+        <CustomButton text="条件格式" icon="icon-biaoge" iconSize={24} orientation='column' width={80} height={60} />
+        <CustomButton text="表格样式" icon="icon-biaoge" iconSize={24} orientation='column' width={80} height={60} />
       </div>
       <Divider type='vertical' className="app_divider" />
       <div>
-
+        <CustomButton text="符号" icon="icon-paste" iconSize={24} orientation='column' width={60} height={60} />
+        <CustomButton text="求和" icon="icon-qiuhe" iconSize={24} orientation='column' width={60} height={60} />
+        <CustomButton text="筛选" icon="icon-shaixuan" iconSize={24} orientation='column' width={60} height={60} />
+        <CustomButton text="排序" icon="icon-paixu" iconSize={24} orientation='column' width={60} height={60} />
       </div>
     </div>;
   }
