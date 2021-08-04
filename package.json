@@ -6,6 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --config ./build/webpack.example.config.js --open development",
     "build-example": "webpack --config ./build/webpack.example.config.js",
+    "build-example-pro": "webpack --config ./build/webpack.example.pro.config.js",
     "build-dev": "webpack --config ./build/webpack.dev.config.js --progress && npm run build-typings",
     "build-pro": "webpack --config ./build/webpack.pro.config.js --progress && npm run build-typings",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
