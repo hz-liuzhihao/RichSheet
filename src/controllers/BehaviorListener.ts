@@ -255,7 +255,8 @@ export default class BehaviorListener {
    */
   private doMouseUp = (event: MouseEvent) => {
     this.downEvent = null;
-    if (!document.activeElement.closest('.behavior_input') && document.activeElement.closest('.richsheet')) {
+    const srcElement = event.srcElement as HTMLElement;
+    if (!document.activeElement.closest('.behavior_input') && srcElement.closest('.richsheet')) {
       this.shortCutDom.focus();
     }
     this.listeners.forEach(item => {
