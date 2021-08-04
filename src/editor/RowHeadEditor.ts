@@ -19,6 +19,11 @@ export default class RowHeadEditor extends BaseEditor {
     super(args);
   }
 
+  protected initData(args: RowHeadEditorArgs) {
+    super.initData(args);
+    this.mainClassName = 'rowheadeditor';
+  }
+
   /** @override */
   protected initDom() {
     const textDom = this.textDom = document.createElement('span');

@@ -27,6 +27,7 @@ export default class ColHeadEditor extends BaseEditor {
 
   protected initData(args: ColHeadEditorArgs) {
     super.initData(args);
+    this.mainClassName = 'colheadeditor';
     this.tds = [];
   }
 

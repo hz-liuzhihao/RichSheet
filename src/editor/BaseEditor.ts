@@ -31,6 +31,8 @@ export default abstract class BaseEditor {
 
   protected workbench: IWorkBench;
 
+  protected mainClassName: string;
+
   public constructor(args: BaseEditorArgs) {
     this.initData(args);
     this.initMainDom(args.type);
@@ -92,7 +94,7 @@ export default abstract class BaseEditor {
   protected initMainDom(type = 'div'): void {
     const mainDom = this.mainDom = document.createElement(type);
     mainDom.__build__ = this.build;
-    mainDom.classList.add(`${this.constructor.name.toLowerCase()}_main`);
+    mainDom.classList.add(`${this.mainClassName.toLowerCase()}_main`);
   }
 
   protected abstract initDom(): void;

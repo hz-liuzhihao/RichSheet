@@ -24,6 +24,11 @@ export default class CellEditor extends BaseEditor {
     super(args);
   }
 
+  protected initData(args: CellEditorArgs) {
+    super.initData(args);
+    this.mainClassName = "celleditor";
+  }
+
   protected initDom() {
     const textContainerDom = document.createElement('div');
     textContainerDom.classList.add('cell_text_container');

@@ -21,6 +21,7 @@ export default class ExcelEditor extends BaseEditor {
 
   protected initData(args: ExcelEditorArgs) {
     super.initData(args);
+    this.mainClassName = "exceleditor";
     this.sheetEditors = [];
   }
 

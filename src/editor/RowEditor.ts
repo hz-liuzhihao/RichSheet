@@ -54,6 +54,7 @@ export default class RowEditor extends BaseEditor {
    */
   protected initData(args: RowEditorArgs) {
     super.initData(args);
+    this.mainClassName = 'roweditor';
     this.cells = [];
   }
 

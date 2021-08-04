@@ -34,6 +34,7 @@ export default class SheetEditor extends BaseEditor {
 
   protected initData(args: SheetEditorArgs) {
     super.initData(args);
+    this.mainClassName = 'sheeteditor';
     this.rows = [];
   }
 
