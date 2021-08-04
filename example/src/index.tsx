@@ -4,7 +4,7 @@ import ReactDom from 'react-dom';
 import { IExcelBehavior } from '../../src/controllers/ToolBar';
 import { createFromIconfontCN, DownOutlined } from '@ant-design/icons';
 import { Divider, Select, Tabs } from 'antd';
-import { SketchPicker } from 'react-color';
+import { SketchPicker, RGBColor } from 'react-color';
 import 'antd/dist/antd.css';
 import './index.css';
 import DropdownButton from '_antd@4.16.8@antd/lib/dropdown/dropdown-button';
@@ -12,7 +12,7 @@ import DropdownButton from '_antd@4.16.8@antd/lib/dropdown/dropdown-button';
 const TabPanel = Tabs.TabPane;
 
 const AppIcon = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_2705379_7xx5gtc7582.js'
+  scriptUrl: '//at.alicdn.com/t/font_2705379_oqz3tcnolj.js'
 });
 
 function CustomIcon(props) {
@@ -39,18 +39,26 @@ interface CustomButtonArgs {
   iconSize?: number;
 
   style?: any;
+
+  onClick?: () => void;
 }
 
 function CustomButton(props: CustomButtonArgs) {
-  const { icon, text, orientation, width, height, disabled = false, iconSize, style = {} } = props;
-  return <div className="custom_btn" style={{ display: 'flex', flexDirection: orientation, width: `${width}px`, height: `${height}px`, ...style }}>
+  const { icon, text, orientation, width, height, disabled = false, iconSize, style = {}, onClick } = props;
+  return <div className="custom_btn" onClick={onClick} style={{ display: 'flex', flexDirection: orientation, width: `${width}px`, height: `${height}px`, ...style }}>
     <CustomIcon type={icon} disabled={disabled} style={{ fontSize: `${iconSize}px` }} />
     {text && <span>{text}</span>}
   </div>
 }
 
+function getRgba(rgb: RGBColor) {
+  return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${rgb.a})`;
+}
+
 class TableContainer extends Component<JSONObject, {
-  workbench?: IExcelBehavior
+  workbench?: IExcelBehavior,
+  color: RGBColor,
+  bgColor: RGBColor,
 }> {
 
   private tableElement: HTMLElement;
@@ -62,6 +70,18 @@ class TableContainer extends Component<JSONObject, {
   public constructor(props) {
     super(props);
     this.state = {
+      color: {
+        r: 0,
+        g: 0,
+        b: 0,
+        a: 1
+      },
+      bgColor: {
+        r: 255,
+        g: 255,
+        b: 255,
+        a: 1
+      }
     };
   }
 
@@ -92,6 +112,7 @@ class TableContainer extends Component<JSONObject, {
   }
 
   public renderStartMenu() {
+    const { workbench, color, bgColor } = this.state;
     return <div className="start_menu_container">
       <div>
         <CustomButton text="粘贴" icon="icon-paste" iconSize={24} orientation='column' width={60} height={60} />
@@ -114,18 +135,36 @@ class TableContainer extends Component<JSONObject, {
             <CustomButton icon="icon-zitijiacu" iconSize={18} orientation="row" width={35} height={30} />
             <CustomButton icon="icon-xieti" iconSize={18} orientation="row" width={35} height={30} />
             <CustomButton icon="icon-ziyuan" iconSize={18} orientation="row" width={35} height={30} />
-            <DropdownButton className="custom_drop" overlay={<SketchPicker />} icon={<DownOutlined />}>
-              <div className="flex_column">
+            <DropdownButton className="custom_drop" overlay={<SketchPicker width="300px" color={bgColor} onChangeComplete={(color) => {
+              this.setState({
+                bgColor: color.rgb
+              });
+              workbench.setBackgroundColor(getRgba(color.rgb));
+            }} />} icon={<DownOutlined />}>
+              <div className="flex_column" onClick={() => {
+                const { bgColor } = this.state;
+                workbench.setBackgroundColor(getRgba(bgColor));
+              }}>
                 <AppIcon type="icon-beijingyanse" style={{ fontSize: '18px', padding: 0 }} className="customicon" />
-                <div className="bg_color" style={{backgroundColor: '#ff0000'}}></div>
+                <div className="bg_color" style={{ backgroundColor: getRgba(bgColor) }}></div>
               </div>
             </DropdownButton>
-            <DropdownButton className="custom_drop" overlay={<SketchPicker />} icon={<DownOutlined />}>
-              <div className="flex_column">
+            <DropdownButton className="custom_drop" overlay={<SketchPicker width="300px" color={color} onChangeComplete={(color) => {
+              this.setState({
+                color: color.rgb
+              });
+              workbench.setColor(getRgba(color.rgb));
+            }} />} icon={<DownOutlined />}>
+              <div className="flex_column" onClick={() => {
+                const { color } = this.state;
+                workbench.setColor(getRgba(color));
+              }}>
                 <AppIcon type="icon-Font-color" style={{ fontSize: '18px', padding: 0 }} className="customicon" />
-                <div className="font_color" style={{backgroundColor: '#ff0000'}}></div>
+                <div className="font_color" style={{ backgroundColor: getRgba(color) }}></div>
               </div>
             </DropdownButton>
+            <CustomButton icon="icon-jurassic_insert-line" iconSize={15} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-jurassic_insert-column" iconSize={15} orientation="row" width={35} height={30} />
             <CustomButton icon="icon-jurassic_delete-line" iconSize={15} orientation="row" width={35} height={30} />
             <CustomButton icon="icon-jurassic_delete-column" iconSize={15} orientation="row" width={35} height={30} />
           </div>
@@ -151,7 +190,7 @@ class TableContainer extends Component<JSONObject, {
       </div>
       <Divider type='vertical' className="app_divider" />
       <div>
-        <CustomButton text="合并居中" icon="icon-hebinghoujuzhong" iconSize={24} orientation='column' width={80} height={60} />
+        <CustomButton text="合并居中" icon="icon-hebinghoujuzhong" onClick={() => workbench.mergeCell()} iconSize={24} orientation='column' width={80} height={60} />
         <CustomButton text="自动换行" icon="icon-jurassic_word-wrap" iconSize={24} orientation='column' width={80} height={60} />
       </div>
       <Divider type='vertical' className="app_divider" />

@@ -126,10 +126,12 @@ html,body,#root {
   height: 4px;
   border-radius: 3px;
   width: 100%;
+  border: 0.5px solid #ccc;
 }
 
 .font_color {
   height: 3px;
   border-radius: 2px;
   width: 100%;
+  border: 0.5px solid #ccc;
 }
