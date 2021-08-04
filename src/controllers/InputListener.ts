@@ -39,6 +39,7 @@ export default class InputListener extends AbsListener implements IListener {
     inputDom.contentEditable = 'true';
     inputDom.onblur = () => {
       this.inputContainer.style.display = 'none';
+      this.inputContainer.classList.remove(this.cellBuild.getClassName());
       this.cellBuild.inputValue(this.inputDom.textContent);
     }
     inputContainer.appendChild(inputDom);
@@ -95,6 +96,7 @@ export default class InputListener extends AbsListener implements IListener {
       } else {
         this.inputDom.textContent = build.getProperty('value');
       }
+      this.inputContainer.classList.add(this.cellBuild.getClassName());
       this.inputContainer.style.display = 'flex';
       this.inputDom.focus();
     }
