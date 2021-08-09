@@ -25,6 +25,10 @@ export default class InputListener extends AbsListener implements IListener {
 
   private cellBuild: CellBuild;
 
+  private cellTextEle: HTMLElement;
+
+  private cellContent: string;
+
   public constructor(args: InputListenerArgs) {
     super(args.excelBuild);
     this.listenDom = args.listenDom;
@@ -40,9 +44,11 @@ export default class InputListener extends AbsListener implements IListener {
     inputDom.classList.add('cell_text');
     inputDom.contentEditable = 'true';
     inputDom.onblur = () => {
+      this.cellTextEle.textContent = this.cellContent;
+      this.cellTextEle = null;
       this.inputMain.style.display = 'none';
       this.inputMain.classList.remove(this.cellBuild.getThemeClassName());
-      this.inputMain.classList.remove(this.cellBuild.getClassName());
+      this.cellBuild.getClassName() && this.inputMain.classList.remove(this.cellBuild.getClassName());
       this.cellBuild.inputValue(this.inputDom.textContent || null);
     }
     inputMain.appendChild(inputContainer);
@@ -76,6 +82,9 @@ export default class InputListener extends AbsListener implements IListener {
     const isDesign = this.excelBuild.isDesign();
     if (srcElement.closest('.celleditor_main')) {
       const cell: HTMLElement = srcElement.closest('.celleditor_main');
+      const cellTextHtml = this.cellTextEle = cell.getElementsByClassName('cell_text')[0] as HTMLElement;
+      this.cellContent = cellTextHtml.textContent;
+      cellTextHtml.textContent = '';
       const build: CellBuild = this.cellBuild = cell.__build__;
       if (!build) {
         return;
@@ -101,7 +110,7 @@ export default class InputListener extends AbsListener implements IListener {
         this.inputDom.textContent = build.getProperty('value');
       }
       this.inputMain.classList.add(this.cellBuild.getThemeClassName());
-      this.inputMain.classList.add(this.cellBuild.getClassName());
+      this.cellBuild.getClassName() && this.inputMain.classList.add(this.cellBuild.getClassName());
       this.inputMain.style.display = 'flex';
       this.inputDom.focus();
     }
