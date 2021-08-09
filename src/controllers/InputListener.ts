@@ -19,7 +19,7 @@ export default class InputListener extends AbsListener implements IListener {
 
   private inputDom: HTMLDivElement;
 
-  private inputContainer: HTMLElement;
+  private inputMain: HTMLElement;
 
   private listenDom: HTMLElement;
 
@@ -32,23 +32,27 @@ export default class InputListener extends AbsListener implements IListener {
   }
 
   protected initDom() {
+    const inputMain = this.inputMain = document.createElement('div');
     const inputDom = this.inputDom = document.createElement('div');
-    const inputContainer = this.inputContainer = document.createElement('div');
-    inputContainer.classList.add('behavior_container');
-    inputDom.classList.add('behavior_input');
+    const inputContainer = document.createElement('div');
+    inputMain.classList.add('input_main');
+    inputContainer.classList.add('cell_text_container');
+    inputDom.classList.add('cell_text');
     inputDom.contentEditable = 'true';
     inputDom.onblur = () => {
-      this.inputContainer.style.display = 'none';
-      this.inputContainer.classList.remove(this.cellBuild.getClassName());
-      this.cellBuild.inputValue(this.inputDom.textContent);
+      this.inputMain.style.display = 'none';
+      this.inputMain.classList.remove(this.cellBuild.getThemeClassName());
+      this.inputMain.classList.remove(this.cellBuild.getClassName());
+      this.cellBuild.inputValue(this.inputDom.textContent || null);
     }
+    inputMain.appendChild(inputContainer);
     inputContainer.appendChild(inputDom);
-    this.listenDom.appendChild(inputContainer);
+    this.listenDom.appendChild(inputMain);
   }
 
   private renderInput(inputArgs: InputArgs) {
-    const inputContainer = this.inputContainer;
-    setDomStyle(inputContainer, {
+    const inputMain = this.inputMain;
+    setDomStyle(inputMain, {
       top: inputArgs.top,
       left: inputArgs.left,
       width: inputArgs.width,
@@ -96,8 +100,9 @@ export default class InputListener extends AbsListener implements IListener {
       } else {
         this.inputDom.textContent = build.getProperty('value');
       }
-      this.inputContainer.classList.add(this.cellBuild.getClassName());
-      this.inputContainer.style.display = 'flex';
+      this.inputMain.classList.add(this.cellBuild.getThemeClassName());
+      this.inputMain.classList.add(this.cellBuild.getClassName());
+      this.inputMain.style.display = 'flex';
       this.inputDom.focus();
     }
   }

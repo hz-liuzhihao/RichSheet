@@ -1,4 +1,4 @@
-div.behavior_container > .behavior_input {
+.input_main > .cell_text_container > .cell_text {
   text-overflow: ellipsis;
   word-wrap: break-word;
   word-break: break-all;
@@ -6,13 +6,21 @@ div.behavior_container > .behavior_input {
   user-select: text;
 }
 
-.behavior_container > .behavior_input:focus {
+.input_main {
+  position: absolute;
+}
+
+.cell_text_container > .cell_text:focus {
   outline: none;
 }
 
-div.behavior_container {
-  position: absolute;
+.input_main > .cell_text_container {
   display: flex;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
 }
 
 .behavior_shortcut {
