@@ -7,7 +7,7 @@
   position: relative;
   border-bottom: 1px solid #d4d4d4;
   white-space: nowrap;
-  transition: all .2s;
+  transition: all 0.2s;
   flex-shrink: 0;
   flex-grow: 0;
   user-select: none;
@@ -34,7 +34,9 @@
   height: 100%;
 }
 
-html,body,#root {
+html,
+body,
+#root {
   height: 100%;
 }
 
@@ -80,13 +82,22 @@ html,body,#root {
   border-radius: 4px;
   flex-grow: 0;
   flex-shrink: 0;
+  margin: 0 4px;
 }
 
 .custom_btn:hover {
   background-color: #d9d9d9;
 }
 
+.custom_btn.disabled:hover {
+  background-color: initial;
+}
+
 .custom_drop:hover {
+  background-color: #d9d9d9;
+}
+
+.custom_btn.active {
   background-color: #d9d9d9;
 }
 
@@ -115,7 +126,7 @@ html,body,#root {
   padding-left: 2px;
 }
 
-.custom_drop>.ant-btn {
+.custom_drop > .ant-btn {
   background-color: transparent;
   width: 20px;
   height: 30px;

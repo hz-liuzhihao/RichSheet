@@ -40,12 +40,14 @@ interface CustomButtonArgs {
 
   style?: any;
 
+  isActive?: boolean;
+
   onClick?: () => void;
 }
 
 function CustomButton(props: CustomButtonArgs) {
-  const { icon, text, orientation, width, height, disabled = false, iconSize, style = {}, onClick } = props;
-  return <div className="custom_btn" onClick={onClick} style={{ display: 'flex', flexDirection: orientation, width: `${width}px`, height: `${height}px`, ...style }}>
+  const { icon, text, orientation, width, height, disabled = false, isActive, iconSize, style = {}, onClick } = props;
+  return <div className={`custom_btn ${isActive ? 'active' : ''} ${disabled ? 'disabled' : ''}`} onClick={onClick} style={{ display: 'flex', flexDirection: orientation, width: `${width}px`, height: `${height}px`, ...style }}>
     <CustomIcon type={icon} disabled={disabled} style={{ fontSize: `${iconSize}px` }} />
     {text && <span>{text}</span>}
   </div>
@@ -113,6 +115,8 @@ class TableContainer extends Component<JSONObject, {
 
   public renderStartMenu() {
     const { workbench, color, bgColor } = this.state;
+    const styleMap = workbench.getCurrentStyleMap() || {};
+    const { fontWeight = [], fontStyle = [], textDecorationLine = [] } = styleMap;
     return <div className="start_menu_container">
       <div>
         <CustomButton text="粘贴" icon="icon-paste" iconSize={24} orientation='column' width={60} height={60} />
@@ -132,9 +136,21 @@ class TableContainer extends Component<JSONObject, {
             <CustomButton icon="icon-Word-minus" iconSize={24} orientation="row" width={35} height={30} />
           </div>
           <div className="flex_row">
-            <CustomButton icon="icon-zitijiacu" iconSize={18} orientation="row" width={35} height={30} />
-            <CustomButton icon="icon-xieti" iconSize={18} orientation="row" width={35} height={30} />
-            <CustomButton icon="icon-ziyuan" iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-zitijiacu" disabled={fontWeight.length > 1} isActive={fontWeight.length == 1 && fontWeight[0] == 600} onClick={() => {
+              if (fontWeight.length == 1 && fontWeight[0] == 600) {
+                workbench.setFontWeight(null);
+              } else {
+                workbench.setFontWeight(600);
+              }
+            }} iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-xieti" disabled={fontStyle.length > 1} isActive={fontStyle.length == 1 && fontStyle[0] == 'italic'} onClick={() => {
+              if (fontStyle.length == 1 && fontStyle[0] == 'italic') {
+                workbench.setFontStyle(null);
+              } else {
+                workbench.setFontStyle('italic');
+              }
+            }} iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-ziyuan" disabled={textDecorationLine.length > 1} iconSize={18} orientation="row" width={35} height={30} />
             <DropdownButton className="custom_drop" overlay={<SketchPicker width="300px" color={bgColor} onChangeComplete={(color) => {
               this.setState({
                 bgColor: color.rgb

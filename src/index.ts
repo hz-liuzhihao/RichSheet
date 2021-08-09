@@ -109,6 +109,10 @@ class ExcelBehavior implements IExcelBehavior {
 
   @Behavior
   public getTextDecorationLine(): any {}
+
+  public getCurrentStyleMap(): JSONObject {
+    return this.excelBuild.getCurrentStyleMap();
+  }
 }
 
 class Workbench extends ExcelBehavior implements IWorkBench, IExcelBehavior {

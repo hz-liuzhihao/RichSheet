@@ -6,6 +6,6 @@
  */
 export function Behavior(target, propertyKey, descriptor) {
   descriptor.value = function(...params) {
-    this.excelBuild && this.excelBuild.commond(propertyKey, ...params);
+    return this.excelBuild && this.excelBuild.commond(propertyKey, ...params);
   }
 }

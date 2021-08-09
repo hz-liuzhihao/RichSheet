@@ -401,6 +401,61 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
     this.setStyleProperty('verticalAlign', verticalAlign);
   }
 
+  /** @override */
+  public getCurrentStyleMap() {
+    const valueMap = {
+      fontWeight: new Set(),
+      textAlign: new Set(),
+      verticalAlign: new Set(),
+      fontStyle: new Set(),
+      textDecorationStyle: new Set(),
+      overline: new Set(),
+      underline: new Set(),
+      lineThrough: new Set(),
+    } as any;
+    const selectCells = this.getCurrentSheet().getSelectorCells();
+    selectCells.forEach(item => {
+      const cellStyleBuild = item.getStyleBuild();
+        const fontWeight = cellStyleBuild && cellStyleBuild.getProperty('fontWeight');
+        valueMap.fontWeight.add(fontWeight || 'null');
+        const textAlign = cellStyleBuild && cellStyleBuild.getProperty('textAlign');
+        valueMap.textAlign.add(textAlign || 'null');
+        const verticalAlign = cellStyleBuild && cellStyleBuild.getProperty('verticalAlign');
+        valueMap.verticalAlign.add(verticalAlign || 'null');
+        const fontStyle = cellStyleBuild && cellStyleBuild.getProperty('fontStyle');
+        valueMap.fontStyle.add(fontStyle || 'null');
+        const textDecorationStyle = cellStyleBuild && cellStyleBuild.getProperty('textDecorationStyle');
+        valueMap.textDecorationStyle.add(textDecorationStyle || 'null');
+        const textDecorationLine = cellStyleBuild && cellStyleBuild.getProperty('textDecorationLine');
+        if (textDecorationLine) {
+          if (textDecorationLine.indexOf('underline') > -1) {
+            valueMap.underline.add('underline');
+          } else {
+            valueMap.underline.add('null');
+          }
+          if (textDecorationLine.indexOf('line-throuth') > -1) {
+            valueMap.lineThrough.add('line-throuth');
+          } else {
+            valueMap.lineThrough.add('null');
+          }
+          if (textDecorationLine.indexOf('overline') > -1) {
+            valueMap.overline.add('overline');
+          } else {
+            valueMap.overline.add('null');
+          }
+        }
+    });
+    valueMap.fontStyle = Array.from(valueMap.fontStyle);
+    valueMap.fontWeight = Array.from(valueMap.fontWeight);
+    valueMap.textAlign = Array.from(valueMap.textAlign);
+    valueMap.textDecorationStyle = Array.from(valueMap.textDecorationStyle);
+    valueMap.verticalAlign = Array.from(valueMap.verticalAlign);
+    valueMap.underline = Array.from(valueMap.underline);
+    valueMap.lineThrough = Array.from(valueMap.lineThrough);
+    valueMap.overline = Array.from(valueMap.overline);
+    return valueMap;
+  }
+
   /**
    * 设置样式属性方法
    * @param key 

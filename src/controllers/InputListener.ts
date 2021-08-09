@@ -45,6 +45,7 @@ export default class InputListener extends AbsListener implements IListener {
     inputDom.contentEditable = 'true';
     inputDom.onblur = () => {
       this.cellTextEle.textContent = this.cellContent;
+      // 一定要把引用的dom置为null否则永远无法清除
       this.cellTextEle = null;
       this.inputMain.style.display = 'none';
       this.inputMain.classList.remove(this.cellBuild.getThemeClassName());

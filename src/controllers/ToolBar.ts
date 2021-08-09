@@ -173,6 +173,13 @@ export interface IExcelBehavior {
    * 获取文本装饰线颜色
    */
   getTextDecorationColor?: () => string[];
+
+
+  /**
+   * 获取当前styleMap
+   */
+  getCurrentStyleMap?: () => JSONObject;
+
 }
 
 export interface AbsToolbarArgs {
