@@ -20,7 +20,7 @@ let globalSheet: CSSStyleSheet;
  * @param index 
  * @returns 
  */
-export function addCssRule(selector: string, rules: JSONObject = {}, suffix = '', type: 'class' | 'id' = 'class') {
+export function addCssRule(selector: string, rules: JSONObject = {}, styleIndex = null, suffix = '', type: 'class' | 'id' = 'class') {
   if (globalSheet == null) {
     globalSheet = createStyleSheet();
   }
@@ -35,7 +35,7 @@ export function addCssRule(selector: string, rules: JSONObject = {}, suffix = ''
     ruleStr += `${kebabCase(key)}:${rules[key]};`;
   }
   ruleStr += '}';
-  return globalSheet.insertRule(identify + selector + suffix + ruleStr, globalSheet.cssRules.length);
+  return globalSheet.insertRule(identify + selector + suffix + ruleStr, styleIndex != null ? styleIndex : globalSheet.cssRules.length);
 }
 
 /**

@@ -97,7 +97,7 @@ export class ThemeStyle {
     if (theme.showEllipsis) {
       textStyle.overflow = 'hidden';
     }
-    addCssRule(cellTheme, styleAfter as CSSStyleDeclaration, ':after');
+    addCssRule(cellTheme, styleAfter as CSSStyleDeclaration, null, ':after');
     addCssRule(cellTheme + '>.cell_text_container', style as CSSStyleDeclaration);
     addCssRule(cellTheme + '>.cell_text_container>.cell_text', textStyle as CSSStyleDeclaration);
     return cellTheme;
@@ -117,7 +117,7 @@ export class ThemeStyle {
       borderRight: borderString,
       borderBottom: borderString
     };
-    addCssRule(rowHeadTheme, style as CSSStyleDeclaration, ':after');
+    addCssRule(rowHeadTheme, style as CSSStyleDeclaration, null, ':after');
     return rowHeadTheme;
   }
 
@@ -135,7 +135,7 @@ export class ThemeStyle {
       borderRight: borderString,
       borderBottom: borderString
     };
-    addCssRule(colHeadTheme, style as CSSStyleDeclaration, ':after');
+    addCssRule(colHeadTheme, style as CSSStyleDeclaration, null, ':after');
     return colHeadTheme;
   }
 

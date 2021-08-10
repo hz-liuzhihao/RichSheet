@@ -77,7 +77,7 @@ export class BorderStyleBuild extends CellPluginBuild<BorderStyleMeta> {
       deleteCssRule(this.styleIndex);
     }
     const style = this.toStyle();
-    this.styleIndex = addCssRule(this.className, style as CSSStyleDeclaration);
+    addCssRule(this.className, style as CSSStyleDeclaration, this.styleIndex);
   }
 
   /**
