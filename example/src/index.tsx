@@ -248,11 +248,22 @@ class TableContainer extends Component<JSONObject, {
             <Select placeholder="选择字体" value={fontFamily.length == 1 && fontFamily[0] != 'null' ? fontFamily[0] : null} style={{ width: '200px' }} options={FontFamilyOption} size='small' onChange={(value: string) => {
               workbench.setFontFamily(value);
             }} />
-            <Select placeholder="选择字体大小" value={fontSize.length == 1 && fontSize[0] != 'null' ? fontSize[0] : null} style={{width: '138px'}} options={FontSizeOption} size='small' onChange={(value: number) => {
+            <Select placeholder="选择字体大小" value={fontSize.length == 1 && fontSize[0] != 'null' ? fontSize[0] : null} style={{ width: '138px' }} options={FontSizeOption} size='small' onChange={(value: number) => {
               workbench.setFontSize(value);
             }} />
-            <CustomButton icon="icon-Word-minus" iconSize={24} orientation="row" width={35} height={30} />
-            <CustomButton icon="icon-Word-add" iconSize={24} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-Word-minus" disabled={fontSize.length > 1 || fontSize[0] == 'null' || fontSize[0] <= 12} onClick={() => {
+              if (fontSize.length > 1 || fontSize[0] == 'null' || fontSize[0] <= 12) {
+                return;
+              }
+              workbench.setFontSize(fontSize[0] - 2);
+            }} iconSize={24} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-Word-add" disabled={fontSize.length > 1} onClick={() => {
+              if (fontSize.length > 1) {
+                return;
+              }
+              let resultFontSize = fontSize[0] == 'null' ? 12 : fontSize[0] || 12
+              workbench.setFontSize(resultFontSize + 2);
+            }} iconSize={24} orientation="row" width={35} height={30} />
           </div>
           <div className="flex_row">
             <CustomButton icon="icon-zitijiacu" disabled={fontWeight.length > 1} isActive={fontWeight.length == 1 && fontWeight[0] == 600} onClick={() => {
