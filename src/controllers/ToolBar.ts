@@ -179,6 +179,16 @@ export interface IExcelBehavior {
    */
   getTextDecorationColor?: () => string[];
 
+  /**
+   * 设置是否自动换行
+   */
+  setWhiteSpace?: (whiteSpace: string) => void;
+
+  /**
+   * 设置缩进,起步12,步进2
+   */
+  setTextIndent?: (textIndent?: number) => void;
+
 
   /**
    * 获取当前styleMap

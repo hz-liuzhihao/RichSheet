@@ -72,6 +72,17 @@ export interface StyleMeta {
    * 文本装饰线颜色
    */
   textDecorationColor?: string;
+
+  /**
+   * 单元格文本是否换行
+   * normal,no-wrap
+   */
+  whiteSpace?: string;
+
+  /**
+   * 文本缩进
+   */
+  textIndent?: number;
 }
 
 type StyleMetaKey = keyof StyleMeta;
@@ -182,19 +193,26 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
     if (this.className) {
       return this.className;
     }
-    const { underline, overline, lineThrough, textDecorationStyle, textDecorationColor, textAlign, verticalAlign, fontSize, ...style } = this.toStyle() as CSSStyleDeclaration;
+    const { underline, overline, lineThrough, textDecorationStyle, textDecorationColor, textAlign, whiteSpace, verticalAlign, textIndent, fontSize, ...style } = this.toStyle() as CSSStyleDeclaration;
 
     const className = this.className = uniqueId(AppConst.classNamePrefix);
     (style as any).fontSize = `${fontSize}px`;
-    const cellTextStyle = {
+    // 单元格文本样式
+    const cellTextStyle: JSONObject = {
       textDecorationLine: `${underline || ''} ${overline || ''} ${lineThrough || ''}`,
       textDecorationStyle,
       textDecorationColor,
+      whiteSpace,
       textAlign,
     }
+    if (textIndent != null) {
+      cellTextStyle.textIndent = `${textIndent || 0}px`;
+    }
+    // 单元格容器样式
     const cellContainerStyle = {
       alignItems: verticalAlign
     };
+    // td单元格总样式
     this.styleIndex = addCssRule(className, style);
     this.cellContainerIndex = addCssRule(className + '>.cell_text_container', cellContainerStyle);
     this.cellTextStyleIndex = addCssRule(className + '>.cell_text_container>.cell_text', cellTextStyle);
@@ -245,13 +263,17 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
     if (this.styleIndex != null) {
       deleteCssRule(this.styleIndex);
     }
-    const { underline, overline, lineThrough, textDecorationStyle, textDecorationColor, textAlign, verticalAlign, fontSize, ...style } = this.toStyle() as CSSStyleDeclaration;
+    const { underline, overline, lineThrough, textDecorationStyle, textDecorationColor, whiteSpace, textIndent, textAlign, verticalAlign, fontSize, ...style } = this.toStyle() as CSSStyleDeclaration;
     (style as any).fontSize = `${fontSize}px`;
-    const cellTextStyle = {
+    const cellTextStyle: JSONObject = {
       textDecorationLine: `${underline || ''} ${overline || ''} ${lineThrough || ''}`,
       textDecorationStyle,
       textDecorationColor,
       textAlign,
+      whiteSpace,
+    }
+    if (textIndent != null) {
+      cellTextStyle.textIndent = `${textIndent || 0}px`;
     }
     const cellContainerStyle = {
       alignItems: verticalAlign,

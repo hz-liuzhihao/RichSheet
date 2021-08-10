@@ -231,7 +231,7 @@ class TableContainer extends Component<JSONObject, {
   public renderStartMenu() {
     const { workbench, color, bgColor } = this.state;
     const styleMap = workbench.getCurrentStyleMap() || {};
-    const { fontWeight = [], fontStyle = [], underline = [], lineThrough = [], overline = [], fontFamily = [], fontSize = [], textAlign = [], verticalAlign = [] } = styleMap;
+    const { fontWeight = [], fontStyle = [], underline = [], lineThrough = [], overline = [], fontFamily = [], fontSize = [], textAlign = [], verticalAlign = [], whiteSpace = [], textIndent = [] } = styleMap;
     return <div className="start_menu_container">
       <div>
         <CustomButton text="粘贴" icon="icon-paste" iconSize={24} orientation='column' width={60} height={60} />
@@ -349,8 +349,19 @@ class TableContainer extends Component<JSONObject, {
             <CustomButton icon="icon-chuizhididuiqi" isActive={verticalAlign.length == 1 && verticalAlign[0] == 'flex-end'} onClick={() => {
               workbench.setVerticalAlign('flex-end');
             }} iconSize={18} orientation="row" width={35} height={30} />
-            <CustomButton icon="icon-suojinindent3" iconSize={22} orientation="row" width={35} height={30} />
-            <CustomButton icon="icon-suojin" iconSize={22} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-suojinindent3" disabled={textIndent.length > 1} onClick={() => {
+              if (textIndent.length > 1) {
+                return;
+              }
+              let resultTextIndent = textIndent[0] == 'null' ? 14 : textIndent[0] || 14
+              workbench.setTextIndent(resultTextIndent + 2);
+            }} iconSize={22} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-suojin" disabled={textIndent.length > 1 || textIndent[0] == 'null' || textIndent[0] <= 0} onClick={() => {
+              if (textIndent.length > 1 || textIndent[0] == 'null' || textIndent[0] <= 0) {
+                return;
+              }
+              workbench.setTextIndent(textIndent[0] - 2);
+            }} iconSize={22} orientation="row" width={35} height={30} />
           </div>
           <div className="flex_row">
             <CustomButton icon="icon-shuipingzuoduiqi" isActive={textAlign.length == 1 && textAlign[0] == 'left'} onClick={() => {
@@ -362,14 +373,22 @@ class TableContainer extends Component<JSONObject, {
             <CustomButton icon="icon-shuipingyouduiqi" isActive={textAlign.length == 1 && textAlign[0] == 'right'} onClick={() => {
               workbench.setTextAlign('right');
             }} iconSize={18} orientation="row" width={35} height={30} />
-            <CustomButton icon="icon-liangduanduiqi" iconSize={22} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-liangduanduiqi" isActive={textAlign.length == 1 && textAlign[0] == 'justify'} onClick={() => {
+              workbench.setTextAlign('justify');
+            }} iconSize={22} orientation="row" width={35} height={30} />
           </div>
         </div>
       </div>
       <Divider type='vertical' className="app_divider" />
       <div>
         <CustomButton text="合并居中" icon="icon-hebinghoujuzhong" onClick={() => workbench.mergeCell()} iconSize={24} orientation='column' width={80} height={60} />
-        <CustomButton text="自动换行" icon="icon-jurassic_word-wrap" iconSize={24} orientation='column' width={80} height={60} />
+        <CustomButton text="自动换行" icon="icon-jurassic_word-wrap" disabled={whiteSpace.length > 1} isActive={whiteSpace.length == 1 && whiteSpace[0] == 'normal'} onClick={() => {
+          if (whiteSpace.length == 1 && whiteSpace[0] == 'normal') {
+            workbench.setWhiteSpace('nowrap');
+          } else {
+            workbench.setWhiteSpace('normal');
+          }
+        }} iconSize={24} orientation='column' width={80} height={60} />
       </div>
       <Divider type='vertical' className="app_divider" />
       <div>

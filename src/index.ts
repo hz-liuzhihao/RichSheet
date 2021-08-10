@@ -113,6 +113,12 @@ class ExcelBehavior implements IExcelBehavior {
   @Behavior
   public setLineThrough(lineThrough: string) {}
 
+  @Behavior
+  public setWhiteSpace(whiteSpace: string) {}
+
+  @Behavior
+  public setTextIndent(textIndent: number) {}
+
   public getCurrentStyleMap(): JSONObject {
     return this.excelBuild.getCurrentStyleMap();
   }

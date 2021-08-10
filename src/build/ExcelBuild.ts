@@ -412,6 +412,16 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
   }
 
   /** @override */
+  public setWhiteSpace(whiteSpace: string) {
+    this.setStyleProperty('whiteSpace', whiteSpace);
+  }
+
+  /** @override */
+  public setTextIndent(textIndent: number) {
+    this.setStyleProperty('textIndent', textIndent);
+  }
+
+  /** @override */
   public getCurrentStyleMap() {
     const valueMap = {
       fontWeight: new Set(),
@@ -424,30 +434,36 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
       lineThrough: new Set(),
       fontFamily: new Set(),
       fontSize: new Set(),
+      whiteSpace: new Set(),
+      textIndent: new Set(),
     } as any;
     const selectCells = this.getCurrentSheet().getSelectorCells();
     selectCells.forEach(item => {
       const cellStyleBuild = item.getStyleBuild();
-        const fontWeight = cellStyleBuild && cellStyleBuild.getProperty('fontWeight');
-        valueMap.fontWeight.add(fontWeight || 'null');
-        const textAlign = cellStyleBuild && cellStyleBuild.getProperty('textAlign');
-        valueMap.textAlign.add(textAlign || 'null');
-        const verticalAlign = cellStyleBuild && cellStyleBuild.getProperty('verticalAlign');
-        valueMap.verticalAlign.add(verticalAlign || 'null');
-        const fontStyle = cellStyleBuild && cellStyleBuild.getProperty('fontStyle');
-        valueMap.fontStyle.add(fontStyle || 'null');
-        const textDecorationStyle = cellStyleBuild && cellStyleBuild.getProperty('textDecorationStyle');
-        valueMap.textDecorationStyle.add(textDecorationStyle || 'null');
-        const underline = cellStyleBuild && cellStyleBuild.getProperty('underline');
-        valueMap.underline.add(underline || 'null');
-        const lineThrough = cellStyleBuild && cellStyleBuild.getProperty('lineThrough');
-        valueMap.lineThrough.add(lineThrough || 'null');
-        const overline = cellStyleBuild && cellStyleBuild.getProperty('overline');
-        valueMap.overline.add(overline || 'null');
-        const fontFamily = cellStyleBuild && cellStyleBuild.getProperty('fontFamily');
-        valueMap.fontFamily.add(fontFamily || 'null');
-        const fontSize = cellStyleBuild && cellStyleBuild.getProperty('fontSize');
-        valueMap.fontSize.add(fontSize || 'null');
+      const fontWeight = cellStyleBuild && cellStyleBuild.getProperty('fontWeight');
+      valueMap.fontWeight.add(fontWeight || 'null');
+      const textAlign = cellStyleBuild && cellStyleBuild.getProperty('textAlign');
+      valueMap.textAlign.add(textAlign || 'null');
+      const verticalAlign = cellStyleBuild && cellStyleBuild.getProperty('verticalAlign');
+      valueMap.verticalAlign.add(verticalAlign || 'null');
+      const fontStyle = cellStyleBuild && cellStyleBuild.getProperty('fontStyle');
+      valueMap.fontStyle.add(fontStyle || 'null');
+      const textDecorationStyle = cellStyleBuild && cellStyleBuild.getProperty('textDecorationStyle');
+      valueMap.textDecorationStyle.add(textDecorationStyle || 'null');
+      const underline = cellStyleBuild && cellStyleBuild.getProperty('underline');
+      valueMap.underline.add(underline || 'null');
+      const lineThrough = cellStyleBuild && cellStyleBuild.getProperty('lineThrough');
+      valueMap.lineThrough.add(lineThrough || 'null');
+      const overline = cellStyleBuild && cellStyleBuild.getProperty('overline');
+      valueMap.overline.add(overline || 'null');
+      const fontFamily = cellStyleBuild && cellStyleBuild.getProperty('fontFamily');
+      valueMap.fontFamily.add(fontFamily || 'null');
+      const fontSize = cellStyleBuild && cellStyleBuild.getProperty('fontSize');
+      valueMap.fontSize.add(fontSize || 'null');
+      const whiteSpace = cellStyleBuild && cellStyleBuild.getProperty('whiteSpace');
+      valueMap.whiteSpace.add(whiteSpace || 'null');
+      const textIndent = cellStyleBuild && cellStyleBuild.getProperty('textIndent');
+      valueMap.textIndent.add(textIndent || 'null');
     });
     valueMap.fontStyle = Array.from(valueMap.fontStyle);
     valueMap.fontWeight = Array.from(valueMap.fontWeight);
@@ -459,6 +475,8 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
     valueMap.overline = Array.from(valueMap.overline);
     valueMap.fontFamily = Array.from(valueMap.fontFamily);
     valueMap.fontSize = Array.from(valueMap.fontSize);
+    valueMap.whiteSpace = Array.from(valueMap.whiteSpace);
+    valueMap.textIndent = Array.from(valueMap.textIndent);
     return valueMap;
   }
 
