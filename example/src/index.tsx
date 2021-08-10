@@ -23,6 +23,103 @@ function CustomIcon(props) {
   }} className="customicon" />
 }
 
+const FontFamilyOption = [{
+  label: 'Arial',
+  value: 'Arial, Helvetica, sans-serif'
+}, {
+  label: 'Arial Black',
+  value: "'Arial Black', Gadget, sans-serif"
+}, {
+  label: 'Arial Narrow',
+  value: "'Arial Narrow', sans-serif"
+}, {
+  label: 'Verdana',
+  value: 'Verdana, Geneva, sans-serif'
+}, {
+  label: 'Georgia',
+  value: 'Georgia, serif'
+}, {
+  label: 'Times New Roman',
+  value: "'Times New Roman', Times, serif"
+}, {
+  label: 'Trebuchet MS',
+  value: "'Trebuchet MS', Helvetica, sans-serif"
+}, {
+  label: 'Courier New',
+  value: "'Courier New', Courier, monospace"
+}, {
+  label: 'Impact',
+  value: "Impact, Charcoal, sans-serif"
+}, {
+  label: 'Comic Sans MS',
+  value: "'Comic Sans MS', cursive"
+}, {
+  label: 'Tahoma',
+  value: 'Tahoma, Geneva, sans-serif'
+}, {
+  label: 'Courier',
+  value: 'Courier, monospace'
+}, {
+  label: 'Lucida Sans Unicode',
+  value: "'Lucida Sans Unicode', 'Lucida Grande', sans-serif"
+}, {
+  label: 'Lucida Console',
+  value: "'Lucida Console', Monaco, monospace"
+}, {
+  label: 'Garamond',
+  value: "Garamond, serif"
+}, {
+  label: 'MS Sans Serif',
+  value: "'MS Sans Serif', Geneva, sans-serif"
+}, {
+  label: 'MS Serif',
+  value: "'MS Serif', 'New York', sans-serif"
+}, {
+  label: 'Palatino Linotype',
+  value: "'Palatino Linotype', 'Book Antiqua', Palatino, serif"
+}, {
+  label: 'Symbol',
+  value: "Symbol, sans-serif"
+}, {
+  label: 'Bookman Old Style',
+  value: "'Bookman Old Style', serif"
+}];
+
+const FontSizeOption = [{
+  label: '12',
+  value: 12
+}, {
+  label: '14',
+  value: 14
+}, {
+  label: '16',
+  value: 16
+}, {
+  label: '18',
+  value: 18
+}, {
+  label: '20',
+  value: 20
+}, {
+  label: '22',
+  value: 22
+}, {
+  label: '24',
+  value: 24
+}, {
+  label: '26',
+  value: 26
+}, {
+  label: '28',
+  value: 28
+}, {
+  label: '30',
+  value: 30
+}, {
+  label: '32',
+  value: 32
+}]
+
 interface CustomButtonArgs {
   icon?: string;
 
@@ -116,7 +213,7 @@ class TableContainer extends Component<JSONObject, {
   public renderStartMenu() {
     const { workbench, color, bgColor } = this.state;
     const styleMap = workbench.getCurrentStyleMap() || {};
-    const { fontWeight = [], fontStyle = [], underline = [], lineThrough = [], overline = [] } = styleMap;
+    const { fontWeight = [], fontStyle = [], underline = [], lineThrough = [], overline = [], fontFamily = [], fontSize = [] } = styleMap;
     return <div className="start_menu_container">
       <div>
         <CustomButton text="粘贴" icon="icon-paste" iconSize={24} orientation='column' width={60} height={60} />
@@ -130,10 +227,14 @@ class TableContainer extends Component<JSONObject, {
       <div>
         <div className="btn_height">
           <div className="flex_row">
-            <Select placeholder="选择字体" size='small' />
-            <Select placeholder="选择字体大小" size='small' />
-            <CustomButton icon="icon-Word-add" style={{ marginLeft: '5px' }} iconSize={24} orientation="row" width={35} height={30} />
+            <Select placeholder="选择字体" value={fontFamily.length == 1 && fontFamily[0] != 'null' ? fontFamily[0] : null} style={{ width: '200px' }} options={FontFamilyOption} size='small' onChange={(value: string) => {
+              workbench.setFontFamily(value);
+            }} />
+            <Select placeholder="选择字体大小" value={fontSize.length == 1 && fontSize[0] != 'null' ? fontSize[0] : null} style={{width: '138px'}} options={FontSizeOption} size='small' onChange={(value: number) => {
+              workbench.setFontSize(value);
+            }} />
             <CustomButton icon="icon-Word-minus" iconSize={24} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-Word-add" iconSize={24} orientation="row" width={35} height={30} />
           </div>
           <div className="flex_row">
             <CustomButton icon="icon-zitijiacu" disabled={fontWeight.length > 1} isActive={fontWeight.length == 1 && fontWeight[0] == 600} onClick={() => {
@@ -163,14 +264,14 @@ class TableContainer extends Component<JSONObject, {
               } else {
                 workbench.setLineThrough('line-through');
               }
-            }} iconSize={25} orientation="row" width={35} height={30}  />
+            }} iconSize={25} orientation="row" width={35} height={30} />
             <CustomButton icon="icon-zhidingxian" disabled={overline.length > 1} isActive={overline.length == 1 && overline[0] == 'overline'} onClick={() => {
               if (overline.length == 1 && overline[0] == 'overline') {
                 workbench.setOverline(null);
               } else {
                 workbench.setOverline('overline');
               }
-            }} iconSize={18} orientation="row" width={35} height={30}  />
+            }} iconSize={18} orientation="row" width={35} height={30} />
             <DropdownButton className="custom_drop" overlay={<SketchPicker width="300px" color={bgColor} onChangeComplete={(color) => {
               this.setState({
                 bgColor: color.rgb

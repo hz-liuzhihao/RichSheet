@@ -177,9 +177,10 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
     if (this.className) {
       return this.className;
     }
-    const { underline, overline, lineThrough, textDecorationStyle, textDecorationColor, ...style } = this.toStyle() as CSSStyleDeclaration;
+    const { underline, overline, lineThrough, textDecorationStyle, textDecorationColor, fontSize, ...style } = this.toStyle() as CSSStyleDeclaration;
 
     const className = this.className = uniqueId(AppConst.classNamePrefix);
+    (style as any).fontSize = `${fontSize}px`;
     const cellTextStyle = {
       textDecorationLine: `${underline || ''} ${overline || ''} ${lineThrough || ''}`,
       textDecorationStyle,
@@ -231,7 +232,8 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
     if (this.styleIndex != null) {
       deleteCssRule(this.styleIndex);
     }
-    const { underline, overline, lineThrough, textDecorationStyle, textDecorationColor, ...style } = this.toStyle() as CSSStyleDeclaration;
+    const { underline, overline, lineThrough, textDecorationStyle, textDecorationColor, fontSize, ...style } = this.toStyle() as CSSStyleDeclaration;
+    (style as any).fontSize = `${fontSize}px`;
     const cellTextStyle = {
       textDecorationLine: `${underline || ''} ${overline || ''} ${lineThrough || ''}`,
       textDecorationStyle,

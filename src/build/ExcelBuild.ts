@@ -422,6 +422,8 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
       overline: new Set(),
       underline: new Set(),
       lineThrough: new Set(),
+      fontFamily: new Set(),
+      fontSize: new Set(),
     } as any;
     const selectCells = this.getCurrentSheet().getSelectorCells();
     selectCells.forEach(item => {
@@ -442,6 +444,10 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
         valueMap.lineThrough.add(lineThrough || 'null');
         const overline = cellStyleBuild && cellStyleBuild.getProperty('overline');
         valueMap.overline.add(overline || 'null');
+        const fontFamily = cellStyleBuild && cellStyleBuild.getProperty('fontFamily');
+        valueMap.fontFamily.add(fontFamily || 'null');
+        const fontSize = cellStyleBuild && cellStyleBuild.getProperty('fontSize');
+        valueMap.fontSize.add(fontSize || 'null');
     });
     valueMap.fontStyle = Array.from(valueMap.fontStyle);
     valueMap.fontWeight = Array.from(valueMap.fontWeight);
@@ -451,6 +457,8 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
     valueMap.underline = Array.from(valueMap.underline);
     valueMap.lineThrough = Array.from(valueMap.lineThrough);
     valueMap.overline = Array.from(valueMap.overline);
+    valueMap.fontFamily = Array.from(valueMap.fontFamily);
+    valueMap.fontSize = Array.from(valueMap.fontSize);
     return valueMap;
   }
 
