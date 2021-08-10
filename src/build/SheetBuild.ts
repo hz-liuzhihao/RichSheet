@@ -570,6 +570,12 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const colLength = this.cols.length;
     const needChangeRows = this.rows.slice(start + 1);
     needChangeRows.forEach(item => item.setIndex(item.getIndex() + count));
+    const selector = this.selector;
+    const selectors = selector.selectors;
+    const lastSelector = selectors[selectors.length - 1];
+    const selectRowCount = lastSelector.rowEnd - lastSelector.rowStart;
+    const currentRowCells = this.rows[start].getCells();
+    const rowSpanBuilds = currentRowCells.filter(item => item.getRowSpan() > selectRowCount);
     for (let i = 0; i < count; i++) {
       // 如果传进来的有rowBuild则使用传进来的
       if (addRows[i]) {
@@ -599,6 +605,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
       }
       this.rows.splice(start + i + 1, 0, rowBuild);
     }
+    rowSpanBuilds.forEach(item => item.setProperty('rowSpan', item.getProperty('rowSpan') + count));
   }
 
   /**
@@ -708,6 +715,12 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const rowLength = this.rows.length;
     const needChangeCols = this.cols.slice(start + 1);
     needChangeCols.forEach(item => item.setIndex(item.getIndex() + count));
+    const selector = this.selector;
+    const selectors = selector.selectors;
+    const lastSelector = selectors[selectors.length - 1];
+    const selectColCount = lastSelector.colEnd - lastSelector.colStart;
+    const currentColCells = this.cols[start].getCells();
+    const colSpanBuilds = currentColCells.filter(item => item.getRowSpan() > selectColCount);
     for (let i = 0; i < count; i++) {
       // 如果传进来的colBuild则使用传进来的
       if (addCols[i]) {
@@ -736,6 +749,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
       }
       this.cols.splice(start + i + 1, 0, colBuild);
     }
+    colSpanBuilds.forEach(item => item.setProperty('colSpan', item.getProperty('colSpan') + count));
   }
 
   /**
