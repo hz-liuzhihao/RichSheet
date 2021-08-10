@@ -12,7 +12,7 @@ import DropdownButton from '_antd@4.16.8@antd/lib/dropdown/dropdown-button';
 const TabPanel = Tabs.TabPane;
 
 const AppIcon = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_2705379_oqz3tcnolj.js'
+  scriptUrl: '//at.alicdn.com/t/font_2705379_oczjmx69q4c.js'
 });
 
 function CustomIcon(props) {
@@ -116,7 +116,7 @@ class TableContainer extends Component<JSONObject, {
   public renderStartMenu() {
     const { workbench, color, bgColor } = this.state;
     const styleMap = workbench.getCurrentStyleMap() || {};
-    const { fontWeight = [], fontStyle = [], underline = [] } = styleMap;
+    const { fontWeight = [], fontStyle = [], underline = [], lineThrough = [], overline = [] } = styleMap;
     return <div className="start_menu_container">
       <div>
         <CustomButton text="粘贴" icon="icon-paste" iconSize={24} orientation='column' width={60} height={60} />
@@ -157,6 +157,20 @@ class TableContainer extends Component<JSONObject, {
                 workbench.setUnderline('underline');
               }
             }} iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-shanchuxian" disabled={lineThrough.length > 1} isActive={lineThrough.length == 1 && lineThrough[0] == 'line-through'} onClick={() => {
+              if (lineThrough.length == 1 && lineThrough[0] == 'line-through') {
+                workbench.setLineThrough(null);
+              } else {
+                workbench.setLineThrough('line-through');
+              }
+            }} iconSize={25} orientation="row" width={35} height={30}  />
+            <CustomButton icon="icon-zhidingxian" disabled={overline.length > 1} isActive={overline.length == 1 && overline[0] == 'overline'} onClick={() => {
+              if (overline.length == 1 && overline[0] == 'overline') {
+                workbench.setOverline(null);
+              } else {
+                workbench.setOverline('overline');
+              }
+            }} iconSize={18} orientation="row" width={35} height={30}  />
             <DropdownButton className="custom_drop" overlay={<SketchPicker width="300px" color={bgColor} onChangeComplete={(color) => {
               this.setState({
                 bgColor: color.rgb
