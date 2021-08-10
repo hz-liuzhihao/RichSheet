@@ -18,11 +18,13 @@ export interface StyleMeta {
 
   /**
    * 水平位置
+   * left, center, right
    */
   textAlign?: string;
 
   /**
    * 垂直位置
+   * flex-start, center, flex-end
    */
   verticalAlign?: string;
 
@@ -86,6 +88,9 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
 
   // cssRule索引
   private styleIndex: number;
+
+  // 单元格容器样式索引
+  private cellContainerIndex: number;
 
   // 单元格文本样式索引
   private cellTextStyleIndex: number;
@@ -177,7 +182,7 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
     if (this.className) {
       return this.className;
     }
-    const { underline, overline, lineThrough, textDecorationStyle, textDecorationColor, fontSize, ...style } = this.toStyle() as CSSStyleDeclaration;
+    const { underline, overline, lineThrough, textDecorationStyle, textDecorationColor, textAlign, verticalAlign, fontSize, ...style } = this.toStyle() as CSSStyleDeclaration;
 
     const className = this.className = uniqueId(AppConst.classNamePrefix);
     (style as any).fontSize = `${fontSize}px`;
@@ -185,8 +190,13 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
       textDecorationLine: `${underline || ''} ${overline || ''} ${lineThrough || ''}`,
       textDecorationStyle,
       textDecorationColor,
+      textAlign,
     }
+    const cellContainerStyle = {
+      alignItems: verticalAlign
+    };
     this.styleIndex = addCssRule(className, style);
+    this.cellContainerIndex = addCssRule(className + '>.cell_text_container', cellContainerStyle);
     this.cellTextStyleIndex = addCssRule(className + '>.cell_text_container>.cell_text', cellTextStyle);
     return className;
   }
@@ -229,17 +239,25 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
     if (this.cellTextStyleIndex != null) {
       deleteCssRule(this.cellTextStyleIndex);
     }
+    if (this.cellContainerIndex != null) {
+      deleteCssRule(this.cellContainerIndex);
+    }
     if (this.styleIndex != null) {
       deleteCssRule(this.styleIndex);
     }
-    const { underline, overline, lineThrough, textDecorationStyle, textDecorationColor, fontSize, ...style } = this.toStyle() as CSSStyleDeclaration;
+    const { underline, overline, lineThrough, textDecorationStyle, textDecorationColor, textAlign, verticalAlign, fontSize, ...style } = this.toStyle() as CSSStyleDeclaration;
     (style as any).fontSize = `${fontSize}px`;
     const cellTextStyle = {
       textDecorationLine: `${underline || ''} ${overline || ''} ${lineThrough || ''}`,
       textDecorationStyle,
       textDecorationColor,
+      textAlign,
     }
+    const cellContainerStyle = {
+      alignItems: verticalAlign,
+    };
     addCssRule(this.className, style, this.styleIndex);
+    addCssRule(this.className + '>.cell_text_container', cellContainerStyle, this.cellContainerIndex);
     addCssRule(this.className + '>.cell_text_container>.cell_text', cellTextStyle, this.cellTextStyleIndex);
   }
 

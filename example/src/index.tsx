@@ -231,7 +231,7 @@ class TableContainer extends Component<JSONObject, {
   public renderStartMenu() {
     const { workbench, color, bgColor } = this.state;
     const styleMap = workbench.getCurrentStyleMap() || {};
-    const { fontWeight = [], fontStyle = [], underline = [], lineThrough = [], overline = [], fontFamily = [], fontSize = [] } = styleMap;
+    const { fontWeight = [], fontStyle = [], underline = [], lineThrough = [], overline = [], fontFamily = [], fontSize = [], textAlign = [], verticalAlign = [] } = styleMap;
     return <div className="start_menu_container">
       <div>
         <CustomButton text="粘贴" icon="icon-paste" iconSize={24} orientation='column' width={60} height={60} />
@@ -340,16 +340,28 @@ class TableContainer extends Component<JSONObject, {
       <div>
         <div className="btn_height">
           <div className="flex_row">
-            <CustomButton icon="icon-chuizhidingduiqi" iconSize={18} orientation="row" width={35} height={30} />
-            <CustomButton icon="icon-chuizhijuzhongduiqi" iconSize={18} orientation="row" width={35} height={30} />
-            <CustomButton icon="icon-chuizhididuiqi" iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-chuizhidingduiqi" isActive={verticalAlign.length == 1 && verticalAlign[0] == 'flex-start'} onClick={() => {
+              workbench.setVerticalAlign('flex-start');
+            }} iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-chuizhijuzhongduiqi" isActive={verticalAlign.length == 1 && verticalAlign[0] == 'center'} onClick={() => {
+              workbench.setVerticalAlign('center');
+            }} iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-chuizhididuiqi" isActive={verticalAlign.length == 1 && verticalAlign[0] == 'flex-end'} onClick={() => {
+              workbench.setVerticalAlign('flex-end');
+            }} iconSize={18} orientation="row" width={35} height={30} />
             <CustomButton icon="icon-suojinindent3" iconSize={22} orientation="row" width={35} height={30} />
             <CustomButton icon="icon-suojin" iconSize={22} orientation="row" width={35} height={30} />
           </div>
           <div className="flex_row">
-            <CustomButton icon="icon-shuipingzuoduiqi" iconSize={18} orientation="row" width={35} height={30} />
-            <CustomButton icon="icon-shuipingjuzhongduiqi" iconSize={18} orientation="row" width={35} height={30} />
-            <CustomButton icon="icon-shuipingyouduiqi" iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-shuipingzuoduiqi" isActive={textAlign.length == 1 && textAlign[0] == 'left'} onClick={() => {
+              workbench.setTextAlign('left');
+            }} iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-shuipingjuzhongduiqi" isActive={textAlign.length == 1 && textAlign[0] == 'center'} onClick={() => {
+              workbench.setTextAlign('center');
+            }} iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-shuipingyouduiqi" isActive={textAlign.length == 1 && textAlign[0] == 'right'} onClick={() => {
+              workbench.setTextAlign('right');
+            }} iconSize={18} orientation="row" width={35} height={30} />
             <CustomButton icon="icon-liangduanduiqi" iconSize={22} orientation="row" width={35} height={30} />
           </div>
         </div>
