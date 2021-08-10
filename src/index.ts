@@ -105,7 +105,7 @@ class ExcelBehavior implements IExcelBehavior {
   public getTextDecorationStyle(): any {}
 
   @Behavior
-  public setTextDecorationLine(line: string) {}
+  public setTextDecorationLine(line: string, isChecked: boolean) {}
 
   @Behavior
   public getTextDecorationLine(): any {}

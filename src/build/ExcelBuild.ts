@@ -382,8 +382,8 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
   }
 
   /** @override */
-  public setTextDecorationLine(decorationLine: string) {
-    this.setStyleProperty('textDecorationLine', decorationLine);
+  public setTextDecorationLine(decorationLine: string, isChecked: boolean) {
+    this.setStyleProperty('textDecorationLine', decorationLine, isChecked);
   }
 
   /** @override */

@@ -116,7 +116,7 @@ class TableContainer extends Component<JSONObject, {
   public renderStartMenu() {
     const { workbench, color, bgColor } = this.state;
     const styleMap = workbench.getCurrentStyleMap() || {};
-    const { fontWeight = [], fontStyle = [], textDecorationLine = [] } = styleMap;
+    const { fontWeight = [], fontStyle = [], underline = [] } = styleMap;
     return <div className="start_menu_container">
       <div>
         <CustomButton text="粘贴" icon="icon-paste" iconSize={24} orientation='column' width={60} height={60} />
@@ -150,7 +150,13 @@ class TableContainer extends Component<JSONObject, {
                 workbench.setFontStyle('italic');
               }
             }} iconSize={18} orientation="row" width={35} height={30} />
-            <CustomButton icon="icon-ziyuan" disabled={textDecorationLine.length > 1} iconSize={18} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-ziyuan" disabled={underline.length > 1} isActive={underline.length == 1 && underline[0] == 'underline'} onClick={() => {
+              if (underline.length == 1 && underline[0] == 'underline') {
+                workbench.setTextDecorationLine('underline', false);
+              } else {
+                workbench.setTextDecorationLine('underline', true);
+              }
+            }} iconSize={18} orientation="row" width={35} height={30} />
             <DropdownButton className="custom_drop" overlay={<SketchPicker width="300px" color={bgColor} onChangeComplete={(color) => {
               this.setState({
                 bgColor: color.rgb

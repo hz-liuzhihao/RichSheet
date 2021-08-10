@@ -76,6 +76,9 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
 
   // cssRule索引
   private styleIndex: number;
+
+  // 单元格文本样式索引
+  private cellTextStyleIndex: number;
   // 样式类名
   private className: string;
 
@@ -173,9 +176,16 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
     if (this.className) {
       return this.className;
     }
-    const style = this.toStyle();
+    const {textDecorationLine, textDecorationStyle, textDecorationColor, ...style} = this.toStyle() as CSSStyleDeclaration;
+
     const className = this.className = uniqueId(AppConst.classNamePrefix);
-    this.styleIndex = addCssRule(className, style as CSSStyleDeclaration);
+    const cellTextStyle = {
+      textDecorationLine,
+      textDecorationStyle,
+      textDecorationColor,
+    }
+    this.styleIndex = addCssRule(className, style);
+    this.cellTextStyleIndex = addCssRule(className + '>.cell_text_container>.cell_text', cellTextStyle);
     return className;
   }
 
@@ -214,11 +224,20 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
       this.className = uniqueId(AppConst.classNamePrefix);
     }
     // 如果样式索引不为空,删除样式表中的规则
+    if (this.cellTextStyleIndex != null) {
+      deleteCssRule(this.cellTextStyleIndex);
+    }
     if (this.styleIndex != null) {
       deleteCssRule(this.styleIndex);
     }
-    const style = this.toStyle();
-    addCssRule(this.className, style as CSSStyleDeclaration, this.styleIndex);
+    const {textDecorationLine, textDecorationStyle, textDecorationColor, ...style} = this.toStyle() as CSSStyleDeclaration;
+    const cellTextStyle = {
+      textDecorationLine,
+      textDecorationStyle,
+      textDecorationColor,
+    }
+    addCssRule(this.className, style, this.styleIndex);
+    addCssRule(this.className + '>.cell_text_container>.cell_text', cellTextStyle, this.cellTextStyleIndex);
   }
 
   /**

@@ -157,7 +157,7 @@ export interface IExcelBehavior {
   /**
    * 文本装饰线类型,上划线,删除线,下划线
    */
-  setTextDecorationLine?: (textDecorationLine: string) => void;
+  setTextDecorationLine?: (decorationLine: string, isChecked: boolean) => void;
 
   /**
    * 获取文本装饰线类型,上划线,删除线,下划线
