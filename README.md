@@ -25,4 +25,6 @@
 如果有问题请给我提issue,注明操作步骤,感谢!!! 如果还有其他任何问题可以通过 1319135082@qq.com 邮箱联系本人！！！
 ## 截图
 
+[线上访问地址](https://hz-liuzhihao.github.io/RichSheet/example/dist/)
+
 ![大致截图](https://hz-liuzhihao.github.io/RichSheet/1.png)
