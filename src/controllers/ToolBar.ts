@@ -155,14 +155,19 @@ export interface IExcelBehavior {
   getTextDecorationStyle?: () => string[];
 
   /**
-   * 文本装饰线类型,上划线,删除线,下划线
+   * 文本装饰线类型,下划线
    */
-  setTextDecorationLine?: (decorationLine: string, isChecked: boolean) => void;
+  setUnderline?: (underline: string) => void;
 
   /**
-   * 获取文本装饰线类型,上划线,删除线,下划线
+   * 文本装饰线类型,上划线
    */
-  getTextDecorationLine?: () => string[];
+  setOverline?: (overline: string) => void;
+
+  /**
+   * 文本装饰线类型,删除线
+   */
+  setLineThrough?: (lineThrough: string) => void;
 
   /**
    * 文本装饰线颜色

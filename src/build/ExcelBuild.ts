@@ -382,8 +382,18 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
   }
 
   /** @override */
-  public setTextDecorationLine(decorationLine: string, isChecked: boolean) {
-    this.setStyleProperty('textDecorationLine', decorationLine, isChecked);
+  setUnderline(underline: string) {
+    this.setStyleProperty('underline', underline);
+  }
+
+  /** @override */
+  setOverline(overline: string) {
+    this.setStyleProperty('overline', overline);
+  }
+
+  /** @override */
+  setLineThrough(lineThrough: string) {
+    this.setStyleProperty('lineThrough', lineThrough);
   }
 
   /** @override */
@@ -426,24 +436,12 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
         valueMap.fontStyle.add(fontStyle || 'null');
         const textDecorationStyle = cellStyleBuild && cellStyleBuild.getProperty('textDecorationStyle');
         valueMap.textDecorationStyle.add(textDecorationStyle || 'null');
-        const textDecorationLine = cellStyleBuild && cellStyleBuild.getProperty('textDecorationLine');
-        if (textDecorationLine) {
-          if (textDecorationLine.indexOf('underline') > -1) {
-            valueMap.underline.add('underline');
-          } else {
-            valueMap.underline.add('null');
-          }
-          if (textDecorationLine.indexOf('line-throuth') > -1) {
-            valueMap.lineThrough.add('line-throuth');
-          } else {
-            valueMap.lineThrough.add('null');
-          }
-          if (textDecorationLine.indexOf('overline') > -1) {
-            valueMap.overline.add('overline');
-          } else {
-            valueMap.overline.add('null');
-          }
-        }
+        const underline = cellStyleBuild && cellStyleBuild.getProperty('underline');
+        valueMap.underline.add(underline || 'null');
+        const lineThrough = cellStyleBuild && cellStyleBuild.getProperty('lineThrough');
+        valueMap.lineThrough.add(lineThrough || 'null');
+        const overline = cellStyleBuild && cellStyleBuild.getProperty('overline');
+        valueMap.overline.add(overline || 'null');
     });
     valueMap.fontStyle = Array.from(valueMap.fontStyle);
     valueMap.fontWeight = Array.from(valueMap.fontWeight);
@@ -529,20 +527,7 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
             styleBuildMap[index].cells.forEach(item => item.setStyleBuild(currentStyleBuild));
           } else {
             const metaInfo = styleBuild.toJSON();
-            // 特殊样式处理
-            if (key == 'textDecorationLine') {
-              if (isCheck) {
-                if (metaInfo.textDecorationLine) {
-                  metaInfo.textDecorationLine += ` ${value}`;
-                } else {
-                  metaInfo.textDecorationLine = value;
-                }
-              } else {
-                metaInfo.textDecorationLine && metaInfo.textDecorationLine.replace(value, '');
-              }
-            } else {
-              metaInfo[key] = value as never;
-            }
+            metaInfo[key] = value as never;
             const newStyleBuild = new StyleBuild({
               excelBuild: this,
               metaInfo

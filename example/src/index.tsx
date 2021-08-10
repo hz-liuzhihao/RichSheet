@@ -152,9 +152,9 @@ class TableContainer extends Component<JSONObject, {
             }} iconSize={18} orientation="row" width={35} height={30} />
             <CustomButton icon="icon-ziyuan" disabled={underline.length > 1} isActive={underline.length == 1 && underline[0] == 'underline'} onClick={() => {
               if (underline.length == 1 && underline[0] == 'underline') {
-                workbench.setTextDecorationLine('underline', false);
+                workbench.setUnderline(null);
               } else {
-                workbench.setTextDecorationLine('underline', true);
+                workbench.setUnderline('underline');
               }
             }} iconSize={18} orientation="row" width={35} height={30} />
             <DropdownButton className="custom_drop" overlay={<SketchPicker width="300px" color={bgColor} onChangeComplete={(color) => {

@@ -52,9 +52,19 @@ export interface StyleMeta {
   textDecorationStyle?: string;
 
   /**
-   * 文本装饰线类型,上划线,删除线,下划线
+   * 下划线
    */
-  textDecorationLine?: string;
+  underline?: string;
+
+  /**
+   * 上划线
+   */
+  overline?: string;
+
+  /**
+   * 穿越线
+   */
+  lineThrough?: string;
 
   /**
    * 文本装饰线颜色
@@ -141,15 +151,6 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
   public setProperty(key: StyleMetaKey, value: any, isCheck: boolean = true) {
     const undoManage = this.excelBuild.getUndoManage();
     const oldValue = this.metaInfo[key];
-    if (key == 'textDecorationLine') {
-      if (isCheck) {
-        if (oldValue) {
-          value = ((oldValue as string) += ` ${value}`);
-        }
-      } else {
-        oldValue && (value = (oldValue as string).replace(value, ''));
-      }
-    }
     if (oldValue == value) {
       return;
     }
@@ -176,11 +177,11 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
     if (this.className) {
       return this.className;
     }
-    const {textDecorationLine, textDecorationStyle, textDecorationColor, ...style} = this.toStyle() as CSSStyleDeclaration;
+    const { underline, overline, lineThrough, textDecorationStyle, textDecorationColor, ...style } = this.toStyle() as CSSStyleDeclaration;
 
     const className = this.className = uniqueId(AppConst.classNamePrefix);
     const cellTextStyle = {
-      textDecorationLine,
+      textDecorationLine: `${underline || ''} ${overline || ''} ${lineThrough || ''}`,
       textDecorationStyle,
       textDecorationColor,
     }
@@ -230,9 +231,9 @@ export class StyleBuild extends CellPluginBuild<StyleMeta> {
     if (this.styleIndex != null) {
       deleteCssRule(this.styleIndex);
     }
-    const {textDecorationLine, textDecorationStyle, textDecorationColor, ...style} = this.toStyle() as CSSStyleDeclaration;
+    const { underline, overline, lineThrough, textDecorationStyle, textDecorationColor, ...style } = this.toStyle() as CSSStyleDeclaration;
     const cellTextStyle = {
-      textDecorationLine,
+      textDecorationLine: `${underline || ''} ${overline || ''} ${lineThrough || ''}`,
       textDecorationStyle,
       textDecorationColor,
     }

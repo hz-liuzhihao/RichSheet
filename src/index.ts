@@ -105,10 +105,13 @@ class ExcelBehavior implements IExcelBehavior {
   public getTextDecorationStyle(): any {}
 
   @Behavior
-  public setTextDecorationLine(line: string, isChecked: boolean) {}
+  public setUnderline(underline: string) {}
 
   @Behavior
-  public getTextDecorationLine(): any {}
+  public setOverline(overline: string) {}
+
+  @Behavior
+  public setLineThrough(lineThrough: string) {}
 
   public getCurrentStyleMap(): JSONObject {
     return this.excelBuild.getCurrentStyleMap();

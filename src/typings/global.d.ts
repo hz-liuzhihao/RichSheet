@@ -87,3 +87,9 @@ interface HTMLElement {
   __build__: any;
   __editor__: any;
 }
+
+interface CSSStyleDeclaration {
+  underline: string;
+  overline: string;
+  lineThrough: string;
+}
