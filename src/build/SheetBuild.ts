@@ -631,8 +631,17 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
   public deleteRowBuild(start: number, count: number) {
     const undoManage = this.excelBuild.getUndoManage();
     const needChangeRows = this.rows.slice(start + count + 1);
+    const deleteStartRowCells = this.rows[start + 1].getCells();
+    const validRow = needChangeRows[0];
     undoManage.beginUpdate();
     try {
+      deleteStartRowCells.forEach(item => {
+        // 当单元格的跨行数大于删除行数且单元格的行在删除行的后面时需要进行调整
+        if (item.getRowSpan() > count && item.getRow() > start) {
+          item.setRowBuild(validRow);
+          item.setProperty('rowSpan', item.getProperty('rowSpan') - count);
+        }
+      });
       needChangeRows.forEach(item => item.setIndex(item.getIndex() - count));
       const deleteRows = this.rows.splice(start + 1, count);
       this.cols.forEach(item => {
@@ -775,8 +784,16 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
   public deleteColBuild(start: number, count: number) {
     const undoManage = this.excelBuild.getUndoManage();
     const needChangeCols = this.cols.slice(start + count + 1);
+    const deleteStartColCells = this.cols[start + 1].getCells();
+    const validCol = needChangeCols[0];
     undoManage.beginUpdate();
     try {
+      deleteStartColCells.forEach(item => {
+        if (item.getColSpan() > count && item.getCol() > start) {
+          item.setColBuild(validCol);
+          item.setProperty('colSpan', item.getProperty('colSpan') - count);
+        }
+      });
       needChangeCols.forEach(item => item.setIndex(item.getIndex() - count));
       const deleteCols = this.cols.splice(start + 1, count);
       this.rows.forEach(item => {
