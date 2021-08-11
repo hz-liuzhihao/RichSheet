@@ -168,6 +168,10 @@ export default class RowEditor extends BaseEditor {
    */
   public insertCellEditor(i: number, cellBuild: CellBuild) {
     let beforeEditor: CellEditor = null;
+    if (cellBuild.getCol() != i - 1 || cellBuild.getRow() != this.build.getIndex()) {
+      this.cells.splice(i, 0, null);
+      return;
+    }
     for (let index = i; index < this.cells.length; index++) {
       if (this.cells[index] != null) {
         beforeEditor = this.cells[index];
