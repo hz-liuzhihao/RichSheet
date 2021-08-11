@@ -107,6 +107,56 @@ export class CellBuild extends BaseBuild<CellMeta> {
   }
 
   /**
+   * 设置行build
+   * @param rowBuild 
+   */
+  public setRowBuild(rowBuild: RowBuild) {
+    const oldBuild = this.row;
+    if (oldBuild == rowBuild) {
+      return;
+    }
+    const undoManage = this.excelBuild.getUndoManage();
+    undoManage.beginUpdate();
+    try {
+      this.row = rowBuild;
+      undoManage.storeUndoItem({
+        c: this,
+        op: Operate.Modify,
+        p: 'rowBuild',
+        v: rowBuild,
+        ov: oldBuild,
+      });
+    } finally {
+      undoManage.endUpdate();
+    }
+  }
+
+  /**
+   * 设置列build
+   * @param colBuild 
+   */
+  public setColBuild(colBuild: ColBuild) {
+    const oldBuild = this.col;
+    if (oldBuild == colBuild) {
+      return;
+    }
+    const undoManage = this.excelBuild.getUndoManage();
+    undoManage.beginUpdate();
+    try {
+      this.col = colBuild;
+      undoManage.storeUndoItem({
+        c: this,
+        op: Operate.Modify,
+        p: 'colBuild',
+        v: colBuild,
+        ov: oldBuild,
+      });
+    } finally {
+      undoManage.endUpdate();
+    }
+  }
+
+  /**
    * 设置单元格的属性数据层
    * @param cellProperty 
    * @returns 
@@ -300,6 +350,14 @@ export class CellBuild extends BaseBuild<CellMeta> {
           return;
         }
         if (key == 'expression') {
+          return;
+        }
+        if (key == 'rowBuild') {
+          this.setRowBuild(value);
+          return;
+        }
+        if (key === 'colBuild') {
+          this.setColBuild(value);
           return;
         }
         if ((key as string).indexOf('.') > -1) {
