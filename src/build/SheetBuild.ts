@@ -388,6 +388,33 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
   }
 
   /**
+   * 刷新选中区域
+   */
+  public refreshSelect() {
+    const selector = this.selector;
+    const selectors = selector.selectors;
+    const focusCell = selector.focusCell;
+    const currentSelectors = selectors.filter(item => item.colEnd < this.cols.length - 1 && item.rowEnd < this.rows.length - 1);
+    selector.selectors = currentSelectors;
+    const isInner = this.isSelect(focusCell);
+    if (!isInner) {
+      selector.focusCell = null;
+    }
+    const undoManage = this.excelBuild.getUndoManage();
+    undoManage.beginUpdate();
+    try {
+      undoManage.storeUndoItem({
+        c: this,
+        op: Operate.Query,
+        p: 'select',
+        v: this.selector
+      });
+    } finally {
+      undoManage.endUpdate();
+    }
+  }
+
+  /**
    * 是否已经选中
    * @param cell 
    */
@@ -657,6 +684,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
           builds: deleteRows
         }
       });
+      this.refreshSelect();
     } finally {
       undoManage.endUpdate();
     }
@@ -809,6 +837,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
           builds: deleteCols
         }
       });
+      this.refreshSelect();
     } finally {
       undoManage.endUpdate();
     }
