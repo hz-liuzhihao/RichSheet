@@ -113,6 +113,7 @@ export default class RowEditor extends BaseEditor {
    * @param count 
    */
   public removeCol(start: number, count: number) {
+    this.refreshCell();
     const deleteCols = this.cells.splice(start + 1, count);
     deleteCols.forEach(editor => {
       editor.destroy();
@@ -232,7 +233,29 @@ export default class RowEditor extends BaseEditor {
    * @param build 
    */
   public setBuild(build: RowBuild) {
+    if (build == this.build) {
+      return;
+    }
     const cells = build.getCells();
+    const row = this.build.getIndex();
+    this.build = build;
+    cells.forEach((cell, index) => {
+      const cellRow = cell.getRow();
+      const cellCol = cell.getCol();
+      const cellEditor = this.cells[index];
+      if (cellEditor == null) {
+        if (cellRow == row && cellCol == index) {
+          this.addCellEditor(index, cell);
+        }
+      }
+    });
+  }
+
+  /**
+   * 重新刷新当前行的单元格
+   */
+  public refreshCell() {
+    const cells = this.build.getCells();
     const row = this.build.getIndex();
     cells.forEach((cell, index) => {
       const cellRow = cell.getRow();
@@ -241,6 +264,13 @@ export default class RowEditor extends BaseEditor {
       if (cellEditor == null) {
         if (cellRow == row && cellCol == index) {
           this.addCellEditor(index, cell);
+        }
+      } else {
+        if (cellRow == row && cellCol == index) {
+          cellEditor.setBuild(cell);
+          cellEditor.render();
+        } else {
+          this.removeCellEditor(index);
         }
       }
     });

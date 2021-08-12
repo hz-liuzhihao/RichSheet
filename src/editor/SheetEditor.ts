@@ -8,6 +8,7 @@ import { Operate, UndoItem, getOperate } from '../flow/UndoManage';
 import { upperFirst } from 'lodash';
 import { setDomStyle } from '../utils/style';
 import { ColBuild } from '../build/ColBuild';
+import { CellBuild } from '../build/CellBuild';
 export interface SheetEditorArgs extends BaseEditorArgs {
 
 }
@@ -186,7 +187,7 @@ export default class SheetEditor extends BaseEditor {
       const mainDom = rowEditor.getMainDom();
       this.rows.splice(i, 0, rowEditor);
       rowEditor.requestRender();
-      needRenderRows.forEach(e => e.renderRowHead());
+      needRenderRows.forEach(e => { e.renderRowHead(); e.refreshCell(); });
       if (rowMainDom) {
         tableDom.insertBefore(mainDom, rowMainDom);
       } else {
@@ -207,7 +208,7 @@ export default class SheetEditor extends BaseEditor {
       this.acceptDom.push(editor);
       editor.destroy();
     });
-    needChangeRows.forEach(i => i.renderRowHead());
+    needChangeRows.forEach(i => { i.renderRowHead(); i.refreshCell(); });
   }
 
   /**
@@ -251,7 +252,7 @@ export default class SheetEditor extends BaseEditor {
     this.needRenderUndoItems.forEach(item => {
       const { p, c, isUndo } = item;
       const op = getOperate(item.op, isUndo);
-      if (c == this.build) {
+      if (c == this.build || c instanceof CellBuild) {
         let method;
         if (op == Operate.Add) {
           const opName = 'add';
@@ -275,6 +276,9 @@ export default class SheetEditor extends BaseEditor {
   protected renderBuild(undoItem: UndoItem) {
     const { c, p } = undoItem;
     if (c == this.build) {
+      this.needRenderUndoItems.push(undoItem);
+    }
+    if (c instanceof CellBuild && (p == 'rowBuild' || p == 'colBuild')) {
       this.needRenderUndoItems.push(undoItem);
     }
     if (c instanceof ColBuild && p == 'width') {

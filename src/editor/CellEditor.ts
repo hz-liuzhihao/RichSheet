@@ -127,6 +127,22 @@ export default class CellEditor extends BaseEditor {
   }
 
   /**
+   * 渲染行修改
+   * @param item 
+   */
+  protected renderRowBuild(item: UndoItem) {
+
+  }
+
+  /**
+   * 修然列修改
+   * @param item 
+   */
+  protected renderColBuild(item: UndoItem) {
+
+  }
+
+  /**
    * 渲染每个undo信息
    */
   protected renderUndoItem() {
