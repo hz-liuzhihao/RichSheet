@@ -623,7 +623,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const selectors = selector.selectors;
     const lastSelector = selectors[selectors.length - 1];
     if (lastSelector) {
-      const selectRowCount = lastSelector.rowEnd - lastSelector.rowStart;
+      const selectRowCount = lastSelector.rowEnd - lastSelector.rowStart + 1;
       const currentRowCells = this.rows[start].getCells();
       const rowSpanBuilds = currentRowCells.filter(item => item.getRowSpan() > selectRowCount);
       rowSpanBuilds.forEach(item => item.setProperty('rowSpan', item.getProperty('rowSpan') + count));
@@ -780,7 +780,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const selectors = selector.selectors;
     const lastSelector = selectors[selectors.length - 1];
     if (lastSelector) {
-      const selectColCount = lastSelector.colEnd - lastSelector.colStart;
+      const selectColCount = lastSelector.colEnd - lastSelector.colStart + 1;
       const currentColCells = this.cols[start].getCells();
       const colSpanBuilds = currentColCells.filter(item => item.getRowSpan() > selectColCount);
       colSpanBuilds.forEach(item => item.setProperty('colSpan', item.getProperty('colSpan') + count));
