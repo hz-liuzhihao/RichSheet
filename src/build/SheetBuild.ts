@@ -622,9 +622,12 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const selector = this.selector;
     const selectors = selector.selectors;
     const lastSelector = selectors[selectors.length - 1];
-    const selectRowCount = lastSelector.rowEnd - lastSelector.rowStart;
-    const currentRowCells = this.rows[start].getCells();
-    const rowSpanBuilds = currentRowCells.filter(item => item.getRowSpan() > selectRowCount);
+    if (lastSelector) {
+      const selectRowCount = lastSelector.rowEnd - lastSelector.rowStart;
+      const currentRowCells = this.rows[start].getCells();
+      const rowSpanBuilds = currentRowCells.filter(item => item.getRowSpan() > selectRowCount);
+      rowSpanBuilds.forEach(item => item.setProperty('rowSpan', item.getProperty('rowSpan') + count));
+    }
     for (let i = 0; i < count; i++) {
       // 如果传进来的有rowBuild则使用传进来的
       if (addRows[i]) {
@@ -654,7 +657,6 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
       }
       this.rows.splice(start + i + 1, 0, rowBuild);
     }
-    rowSpanBuilds.forEach(item => item.setProperty('rowSpan', item.getProperty('rowSpan') + count));
   }
 
   /**
@@ -777,9 +779,12 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const selector = this.selector;
     const selectors = selector.selectors;
     const lastSelector = selectors[selectors.length - 1];
-    const selectColCount = lastSelector.colEnd - lastSelector.colStart;
-    const currentColCells = this.cols[start].getCells();
-    const colSpanBuilds = currentColCells.filter(item => item.getRowSpan() > selectColCount);
+    if (lastSelector) {
+      const selectColCount = lastSelector.colEnd - lastSelector.colStart;
+      const currentColCells = this.cols[start].getCells();
+      const colSpanBuilds = currentColCells.filter(item => item.getRowSpan() > selectColCount);
+      colSpanBuilds.forEach(item => item.setProperty('colSpan', item.getProperty('colSpan') + count));
+    }
     for (let i = 0; i < count; i++) {
       // 如果传进来的colBuild则使用传进来的
       if (addCols[i]) {
@@ -808,7 +813,6 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
       }
       this.cols.splice(start + i + 1, 0, colBuild);
     }
-    colSpanBuilds.forEach(item => item.setProperty('colSpan', item.getProperty('colSpan') + count));
   }
 
   /**

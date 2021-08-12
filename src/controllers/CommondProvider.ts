@@ -12,7 +12,7 @@ export default abstract class CommondProvider {
     if (typeof this[cmd] == 'function') {
       this[cmd](...params);
     } else {
-      this.fallback(cmd, params);
+      this.fallback(cmd, ...params);
     }
   }
 
@@ -21,7 +21,7 @@ export default abstract class CommondProvider {
    * @param cmd 
    * @param params 
    */
-  public fallback(cmd: string, params: any[]) {
+  public fallback(cmd: string, ...params: any[]) {
 
   }
 }

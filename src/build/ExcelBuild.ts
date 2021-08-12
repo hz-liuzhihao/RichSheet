@@ -298,9 +298,9 @@ export class ExcelBuild extends BaseBuild<ExcelMeta> implements IExcelBehavior {
 
 
   /** @override */
-  public fallback(cmd: string, params: any[]) {
+  public fallback(cmd: string, ...params: any[]) {
     const currentSheet = this.getCurrentSheet();
-    currentSheet.commond(cmd, params);
+    currentSheet.commond(cmd, ...params);
   }
 
   /** @implements */
