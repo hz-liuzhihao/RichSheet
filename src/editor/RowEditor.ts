@@ -169,7 +169,7 @@ export default class RowEditor extends BaseEditor {
    */
   public insertCellEditor(i: number, cellBuild: CellBuild) {
     let beforeEditor: CellEditor = null;
-    if (cellBuild.getCol() != i - 1 || cellBuild.getRow() != this.build.getIndex()) {
+    if (cellBuild.getCol() != i || cellBuild.getRow() != this.build.getIndex()) {
       this.cells.splice(i, 0, null);
       return;
     }
