@@ -394,7 +394,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const selector = this.selector;
     const selectors = selector.selectors;
     const focusCell = selector.focusCell;
-    const currentSelectors = selectors.filter(item => item.colEnd < this.cols.length - 1 && item.rowEnd < this.rows.length - 1);
+    const currentSelectors = selectors.filter(item => item.colEnd < this.cols.length && item.rowEnd < this.rows.length);
     selector.selectors = currentSelectors;
     const isInner = this.isSelect(focusCell);
     if (!isInner) {

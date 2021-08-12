@@ -121,6 +121,15 @@ export default class SheetEditor extends BaseEditor {
     const focuCell = selector.focusCell;
     const selectInfos = selector.selectors;
     const { selectDom, focusCellDom } = this;
+    if (selectInfos.length == 0) {
+      setDomStyle(selectDom, {
+        width: 0,
+        height: 0,
+        left: 0,
+        top: 0,
+      });
+      return;
+    }
     if (selectInfos.length > 1) {
       // TODO 渲染有多个选区时
     } else {
