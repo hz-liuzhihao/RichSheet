@@ -415,6 +415,28 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
   }
 
   /**
+   * 清除选中区域
+   */
+  public clearSelect() {
+    this.selector = {
+      focusCell: null,
+      selectors: []
+    };
+    const undoManage = this.excelBuild.getUndoManage();
+    undoManage.beginUpdate();
+    try {
+      undoManage.storeUndoItem({
+        c: this,
+        op: Operate.Query,
+        p: 'select',
+        v: this.selector
+      });
+    } finally {
+      undoManage.endUpdate();
+    }
+  }
+
+  /**
    * 是否已经选中
    * @param cell 
    */

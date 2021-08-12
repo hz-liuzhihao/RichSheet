@@ -88,6 +88,9 @@ export default class ColHeadEditor extends BaseEditor {
     if (focusCell) {
       const rowBuild = rows[focusCell.getRow()] as RowBuild;
       const colBuild = cols[focusCell.getCol()] as ColBuild;
+      this.thHead.onclick = function () {
+        sheetBuild.clearSelect();
+      }
       this.thHead.textContent = `${colBuild.getColName()}${rowBuild.getRowName()}`
     }
   }
