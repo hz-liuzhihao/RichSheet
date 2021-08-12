@@ -329,10 +329,18 @@ class TableContainer extends Component<JSONObject, {
                 <div className="font_color" style={{ backgroundColor: getRgba(color) }}></div>
               </div>
             </DropdownButton>
-            <CustomButton icon="icon-jurassic_insert-line" iconSize={15} orientation="row" width={35} height={30} />
-            <CustomButton icon="icon-jurassic_insert-column" iconSize={15} orientation="row" width={35} height={30} />
-            <CustomButton icon="icon-jurassic_delete-line" iconSize={15} orientation="row" width={35} height={30} />
-            <CustomButton icon="icon-jurassic_delete-column" iconSize={15} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-jurassic_insert-line" onClick={() => {
+              workbench.addRow();
+            }} iconSize={15} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-jurassic_insert-column" onClick={() => {
+              workbench.addCol();
+            }} iconSize={15} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-jurassic_delete-line" onClick={() => {
+              workbench.deleteRow();
+            }} iconSize={15} orientation="row" width={35} height={30} />
+            <CustomButton icon="icon-jurassic_delete-column" onClick={() => {
+              workbench.deleteCol();
+            }} iconSize={15} orientation="row" width={35} height={30} />
           </div>
         </div>
       </div>
