@@ -593,6 +593,11 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const start = isDown ? rowEnd : rowStart - 1;
     undoManage.beginUpdate();
     try {
+      const selectRowCount = lastSelector.rowEnd - lastSelector.rowStart + 1;
+      const currentRowCells = this.rows[start].getCells();
+      const rowSpanBuilds = new Set<CellBuild>();
+      currentRowCells.forEach(item => item.getRowSpan() > selectRowCount && rowSpanBuilds.add(item));
+      rowSpanBuilds.forEach(item => item.setProperty('rowSpan', item.getProperty('rowSpan') + rowCount));
       this.addRowBuild(start, rowCount);
       undoManage.storeUndoItem({
         c: this,
@@ -619,16 +624,6 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const colLength = this.cols.length;
     const needChangeRows = this.rows.slice(start + 1);
     needChangeRows.forEach(item => item.setIndex(item.getIndex() + count));
-    const selector = this.selector;
-    const selectors = selector.selectors;
-    const lastSelector = selectors[selectors.length - 1];
-    if (lastSelector) {
-      const selectRowCount = lastSelector.rowEnd - lastSelector.rowStart + 1;
-      const currentRowCells = this.rows[start].getCells();
-      const rowSpanBuilds = new Set<CellBuild>();
-      currentRowCells.forEach(item => item.getRowSpan() > selectRowCount && rowSpanBuilds.add(item));
-      rowSpanBuilds.forEach(item => item.setProperty('rowSpan', item.getProperty('rowSpan') + count));
-    }
     for (let i = 0; i < count; i++) {
       // 如果传进来的有rowBuild则使用传进来的
       if (addRows[i]) {
@@ -769,6 +764,11 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const start = isRight ? colEnd : colStart - 1;
     undoManage.beginUpdate();
     try {
+      const selectColCount = lastSelector.colEnd - lastSelector.colStart + 1;
+      const currentColCells = this.cols[start].getCells();
+      const colSpanBuilds = new Set<CellBuild>();
+      currentColCells.filter(item => item.getRowSpan() > selectColCount && colSpanBuilds.add(item));
+      colSpanBuilds.forEach(item => item.setProperty('colSpan', item.getProperty('colSpan') + colCount));
       this.addColbuild(start, colCount);
       undoManage.storeUndoItem({
         c: this,
@@ -795,16 +795,6 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const rowLength = this.rows.length;
     const needChangeCols = this.cols.slice(start + 1);
     needChangeCols.forEach(item => item.setIndex(item.getIndex() + count));
-    const selector = this.selector;
-    const selectors = selector.selectors;
-    const lastSelector = selectors[selectors.length - 1];
-    if (lastSelector) {
-      const selectColCount = lastSelector.colEnd - lastSelector.colStart + 1;
-      const currentColCells = this.cols[start].getCells();
-      const colSpanBuilds = new Set<CellBuild>();
-      currentColCells.filter(item => item.getRowSpan() > selectColCount && colSpanBuilds.add(item));
-      colSpanBuilds.forEach(item => item.setProperty('colSpan', item.getProperty('colSpan') + count));
-    }
     for (let i = 0; i < count; i++) {
       // 如果传进来的colBuild则使用传进来的
       if (addCols[i]) {
