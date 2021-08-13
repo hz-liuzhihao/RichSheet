@@ -238,6 +238,7 @@ export default class SheetEditor extends BaseEditor {
         const cell = rows[i].getCells()[j];
         row.insertCellEditor(j, cell);
       }
+      row.refreshCell();
     }
     this.renderTableWidth(item);
   }

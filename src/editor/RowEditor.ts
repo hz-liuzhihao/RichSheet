@@ -207,7 +207,6 @@ export default class RowEditor extends BaseEditor {
       }
       this.cells.splice(i, 0, cellEditor);
     }
-    this.refreshCell();
   }
 
   /**
