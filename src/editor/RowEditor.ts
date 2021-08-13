@@ -115,8 +115,10 @@ export default class RowEditor extends BaseEditor {
   public removeCol(start: number, count: number) {
     const deleteCols = this.cells.splice(start + 1, count);
     deleteCols.forEach(editor => {
-      editor.destroy();
-      this.acceptDom.push(editor);
+      if (editor) {
+        editor.destroy();
+        this.acceptDom.push(editor);
+      }
     });
     this.refreshCell();
   }

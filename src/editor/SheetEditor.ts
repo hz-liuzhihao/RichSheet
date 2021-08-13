@@ -214,8 +214,10 @@ export default class SheetEditor extends BaseEditor {
     const needChangeRows = this.rows.slice(start + count + 1);
     const deleteRowsEditor = this.rows.splice(start + 1, count);
     deleteRowsEditor.forEach(editor => {
-      this.acceptDom.push(editor);
-      editor.destroy();
+      if (editor) {
+        this.acceptDom.push(editor);
+        editor.destroy();
+      }
     });
     needChangeRows.forEach(i => { i.renderRowHead(); i.refreshCell(); });
   }
