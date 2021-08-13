@@ -241,6 +241,8 @@ export default class RowEditor extends BaseEditor {
     const cells = build.getCells();
     const row = this.build.getIndex();
     this.build = build;
+    this.mainDom.__build__ = build;
+    this.rowHeadEditor.setBuild(build);
     cells.forEach((cell, index) => {
       const cellRow = cell.getRow();
       const cellCol = cell.getCol();

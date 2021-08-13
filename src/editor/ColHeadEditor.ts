@@ -158,9 +158,10 @@ export default class ColHeadEditor extends BaseEditor {
     const isDesign = this.workbench.isDesign();
     addCols.forEach((item, index) => {
       const colName = item.getColName();
-      let td;
+      let td: HTMLElement;
       if (this.acceptDom.length) {
         td = this.acceptDom.shift();
+        td.__build__ = item;
         const textDom = td.getElementsByTagName('span')[0];
         textDom.textContent = colName;
       } else {
