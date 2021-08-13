@@ -643,9 +643,9 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
       });
       for (let j = 0; j < colLength; j++) {
         let cellBuild: CellBuild;
-        // 添加行的时候检查插入行的之前的行是否是跨行的,如果是跨行的则需要取这一行的前一个单元格的cellBuild
-        if (this.cols[j].getCells()[start + i].getRowSpan() > 1) {
-          cellBuild = this.cols[j].getCells()[start + i];
+        // 添加行的时候检查要插入前面的行否是跨行的,如果是跨行的则需要取这一行的前一个单元格的cellBuild
+        if (this.cols[j].getCells()[start + i + 1].getRowSpan() > 1) {
+          cellBuild = this.cols[j].getCells()[start + i + 1];
         } else {
           cellBuild = new CellBuild({
             metaInfo: {},
@@ -818,9 +818,9 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
       });
       for (let j = 0; j < rowLength; j++) {
         let cellBuild: CellBuild;
-        // 添加列的时候检查插入列的之前的列是否是跨列的,如果是跨列的则需要取前一个单元格的cellBuild
-        if (this.rows[j].getCells()[start + i].getColSpan() > 1) {
-          cellBuild = this.rows[j].getCells()[start + i];
+        // 添加列的时候检查要插入前面的列是否是跨列的,如果是跨列的则需要取这个列的cellBuild
+        if (this.rows[j].getCells()[start + i + 1].getColSpan() > 1) {
+          cellBuild = this.rows[j].getCells()[start + i + 1];
         } else {
           cellBuild = new CellBuild({
             metaInfo: {},
