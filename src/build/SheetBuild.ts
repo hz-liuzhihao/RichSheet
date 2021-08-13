@@ -692,7 +692,7 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
               }
             })
           });
-          cellBuildSet.forEach(item => item.setProperty('rowSpan', item.getProperty('rowSpan') - rowStart));
+          cellBuildSet.forEach(item => item.setProperty('rowSpan', item.getProperty('rowSpan') - rowCount));
           needCellChangeRow.forEach(item => item.setRowBuild(validRow));
           this.deleteRowBuild(rowStart - 1, rowCount);
         }

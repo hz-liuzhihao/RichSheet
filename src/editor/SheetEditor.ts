@@ -196,7 +196,7 @@ export default class SheetEditor extends BaseEditor {
       const mainDom = rowEditor.getMainDom();
       this.rows.splice(i, 0, rowEditor);
       rowEditor.requestRender();
-      needRenderRows.forEach(e => { e.renderRowHead(); });
+      needRenderRows.forEach(e => { e.renderRowHead(); e.refreshCell();});
       if (rowMainDom) {
         tableDom.insertBefore(mainDom, rowMainDom);
       } else {
