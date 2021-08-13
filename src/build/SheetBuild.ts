@@ -647,12 +647,18 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
         index: rowIndex
       });
       for (let j = 0; j < colLength; j++) {
-        const cellBuild = new CellBuild({
-          metaInfo: {},
-          row: rowBuild,
-          col: this.cols[j],
-          excelBuild: this.excelBuild
-        });
+        let cellBuild: CellBuild;
+        // 添加行的时候检查插入行的之前的行是否是跨行的,如果是跨行的则需要取这一行的前一个单元格的cellBuild
+        if (this.cols[j].getCells()[start + i].getRowSpan() > 1) {
+          cellBuild = this.cols[j].getCells()[start + i];
+        } else {
+          cellBuild = new CellBuild({
+            metaInfo: {},
+            row: rowBuild,
+            col: this.cols[j],
+            excelBuild: this.excelBuild
+          });
+        }
         rowBuild.getCells()[j] = cellBuild;
         this.cols[j].getCells().splice(start + i + 1, 0, cellBuild);
       }
@@ -668,10 +674,31 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const selectors = selector.selectors;
     const lastSelector = selectors[selectors.length - 1];
     if (lastSelector) {
-      const rowStart = lastSelector.rowStart;
-      const rowEnd = lastSelector.rowEnd;
-      const rowCount = rowEnd - rowStart + 1;
-      this.deleteRowBuild(rowStart - 1, rowCount);
+      const undoManage = this.excelBuild.getUndoManage();
+      undoManage.beginUpdate();
+      try {
+        if (lastSelector) {
+          const rowStart = lastSelector.rowStart;
+          const rowEnd = lastSelector.rowEnd;
+          const rowCount = rowEnd - rowStart + 1;
+          const deleteStartRowCells = this.rows[rowStart + 1].getCells();
+          const validRow = this.rows.slice(rowStart + rowCount)[0];
+          const cellBuildSet = new Set<CellBuild>();
+          deleteStartRowCells.forEach(item => {
+            // 当单元格的跨行数大于删除行数且单元格的行在删除行的后面时需要进行调整
+            if (item.getRowSpan() > rowCount && item.getRow() > rowStart) {
+              cellBuildSet.add(item);
+            }
+          });
+          cellBuildSet.forEach(item => {
+            item.setRowBuild(validRow);
+            item.setProperty('rowSpan', item.getProperty('rowSpan') - rowStart);
+          });
+          this.deleteRowBuild(rowStart - 1, rowCount);
+        }
+      } finally {
+        undoManage.endUpdate();
+      }
     }
   }
 
@@ -683,17 +710,8 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
   public deleteRowBuild(start: number, count: number) {
     const undoManage = this.excelBuild.getUndoManage();
     const needChangeRows = this.rows.slice(start + count + 1);
-    const deleteStartRowCells = this.rows[start + 1].getCells();
-    const validRow = needChangeRows[0];
     undoManage.beginUpdate();
     try {
-      deleteStartRowCells.forEach(item => {
-        // 当单元格的跨行数大于删除行数且单元格的行在删除行的后面时需要进行调整
-        if (item.getRowSpan() > count && item.getRow() > start) {
-          item.setRowBuild(validRow);
-          item.setProperty('rowSpan', item.getProperty('rowSpan') - count);
-        }
-      });
       needChangeRows.forEach(item => item.setIndex(item.getIndex() - count));
       const deleteRows = this.rows.splice(start + 1, count);
       this.cols.forEach(item => {
@@ -804,12 +822,18 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
         index: colIndex,
       });
       for (let j = 0; j < rowLength; j++) {
-        const cellBuild = new CellBuild({
-          metaInfo: {},
-          row: this.rows[j],
-          col: colBuild,
-          excelBuild: this.excelBuild
-        });
+        let cellBuild: CellBuild;
+        // 添加列的时候检查插入列的之前的列是否是跨列的,如果是跨列的则需要取前一个单元格的cellBuild
+        if (this.rows[j].getCells()[start + i].getColSpan() > 1) {
+          cellBuild = this.rows[j].getCells()[start + i];
+        } else {
+          cellBuild = new CellBuild({
+            metaInfo: {},
+            row: this.rows[j],
+            col: colBuild,
+            excelBuild: this.excelBuild
+          });
+        }
         this.rows[j].getCells().splice(start + i + 1, 0, cellBuild);
         colBuild.getCells()[j] = cellBuild;
       }
@@ -825,10 +849,28 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     const selectors = selector.selectors;
     const lastSelector = selectors[selectors.length - 1];
     if (lastSelector) {
-      const colStart = lastSelector.colStart;
-      const colEnd = lastSelector.colEnd;
-      const colCount = colEnd - colStart + 1;
-      this.deleteColBuild(colStart - 1, colCount);
+      const undoManage = this.excelBuild.getUndoManage();
+      undoManage.beginUpdate();
+      try {
+        const colStart = lastSelector.colStart;
+        const colEnd = lastSelector.colEnd;
+        const colCount = colEnd - colStart + 1;
+        const deleteStartColCells = this.cols[colStart].getCells();
+        const cellBuildSet = new Set<CellBuild>();
+        const validCol = this.cols[colStart + colCount];
+        deleteStartColCells.forEach(item => {
+          if (item.getColSpan() > colCount && item.getCol() > colStart) {
+            cellBuildSet.add(item);
+          }
+        });
+        cellBuildSet.forEach(item => {
+          item.setColBuild(validCol);
+          item.setProperty('colSpan', item.getProperty('colSpan') - colCount);
+        })
+        this.deleteColBuild(colStart - 1, colCount);
+      } finally {
+        undoManage.endUpdate();
+      }
     }
   }
 
@@ -840,16 +882,8 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
   public deleteColBuild(start: number, count: number) {
     const undoManage = this.excelBuild.getUndoManage();
     const needChangeCols = this.cols.slice(start + count + 1);
-    const deleteStartColCells = this.cols[start + 1].getCells();
-    const validCol = needChangeCols[0];
     undoManage.beginUpdate();
     try {
-      deleteStartColCells.forEach(item => {
-        if (item.getColSpan() > count && item.getCol() > start) {
-          item.setColBuild(validCol);
-          item.setProperty('colSpan', item.getProperty('colSpan') - count);
-        }
-      });
       needChangeCols.forEach(item => item.setIndex(item.getIndex() - count));
       const deleteCols = this.cols.splice(start + 1, count);
       this.rows.forEach(item => {
