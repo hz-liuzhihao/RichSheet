@@ -625,7 +625,8 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     if (lastSelector) {
       const selectRowCount = lastSelector.rowEnd - lastSelector.rowStart + 1;
       const currentRowCells = this.rows[start].getCells();
-      const rowSpanBuilds = currentRowCells.filter(item => item.getRowSpan() > selectRowCount);
+      const rowSpanBuilds = new Set<CellBuild>();
+      currentRowCells.forEach(item => item.getRowSpan() > selectRowCount && rowSpanBuilds.add(item));
       rowSpanBuilds.forEach(item => item.setProperty('rowSpan', item.getProperty('rowSpan') + count));
     }
     for (let i = 0; i < count; i++) {
@@ -782,7 +783,8 @@ export class SheetBuild extends BaseBuild<SheetMeta> implements IExcelBehavior {
     if (lastSelector) {
       const selectColCount = lastSelector.colEnd - lastSelector.colStart + 1;
       const currentColCells = this.cols[start].getCells();
-      const colSpanBuilds = currentColCells.filter((item, index) => item.getRowSpan() > selectColCount && item.getRow() == index && item.getCol() == start);
+      const colSpanBuilds = new Set<CellBuild>();
+      currentColCells.filter(item => item.getRowSpan() > selectColCount && colSpanBuilds.add(item));
       colSpanBuilds.forEach(item => item.setProperty('colSpan', item.getProperty('colSpan') + count));
     }
     for (let i = 0; i < count; i++) {
