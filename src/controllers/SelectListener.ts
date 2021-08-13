@@ -37,7 +37,9 @@ export default class SelectListener extends AbsListener implements IListener {
       this.downBuild = colHeadBuild;
       const sheetBuild = colHeadBuild.getSheetBuild();
       const cells = colHeadBuild.getCells();
-      sheetBuild.doSelect(cells[0], cells[cells.length - 1], isCtrl);
+      if (cells.length != 0) {
+        sheetBuild.doSelect(cells[0], cells[cells.length - 1], isCtrl);
+      }
       return;
     }
     // 当选中的是行头
@@ -50,7 +52,9 @@ export default class SelectListener extends AbsListener implements IListener {
       this.downBuild = rowHeadBuild;
       const sheetBuild = rowHeadBuild.getSheetBuild();
       const cells = rowHeadBuild.getCells();
-      sheetBuild.doSelect(cells[0], cells[cells.length - 1], isCtrl);
+      if (cells.length != 0) {
+        sheetBuild.doSelect(cells[0], cells[cells.length - 1], isCtrl);
+      }
       return;
     }
   }
